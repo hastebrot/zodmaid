@@ -34,6 +34,6 @@ describe("resvg", () => {
       },
     });
     const png = resvg.render();
-    Bun.write("dist/test.png", png.asPng());
+    Bun.write("dist/resvg.png", png.asPng());
   });
 });

@@ -1,7 +1,7 @@
 import { Resvg } from "@resvg/resvg-js";
 import { expect, test } from "bun:test";
-import { line } from "d3";
-import { graphlib, layout } from "dagre";
+import { curveBasis, line } from "d3";
+import { graphlib, layout, type GraphLabel } from "dagre";
 
 type Chart = {
   node?: string;
@@ -11,6 +11,7 @@ type Chart = {
 };
 
 // https://github.com/nitrictech/nitric/blob/v1.27.1/docs/docs/architecture/index.mdx
+// https://nitric.io/docs/architecture#example-handling-http-requests
 const chart: Chart[] = [
   { node: "Browser", "[]": "Client Browser" },
   { node: "API", "[]": "HTTP API - API Gateway" },
@@ -43,7 +44,11 @@ function textBbox(text: string) {
       defaultFontSize: 12,
     },
   });
-  return resvg.getBBox();
+  const bbox = resvg.getBBox();
+  return {
+    width: bbox?.width ?? 0,
+    height: Math.max(bbox?.height ?? 0, 12),
+  };
 }
 
 function render(g: graphlib.Graph) {
@@ -56,7 +61,7 @@ function render(g: graphlib.Graph) {
           y="${node.y}"
           width="${node.width}"
           height="${node.height}"
-          fill="none"
+          fill="white"
           stroke="black"
         />
         <text
@@ -69,13 +74,20 @@ function render(g: graphlib.Graph) {
 
   const edges = g.edges().map((e) => {
     const edge = g.edge(e);
-    const path = line()(edge.points.map((p) => [p.x, p.y]));
+    const curve = line().curve(curveBasis);
+    const path = curve(edge.points.map((p) => [p.x, p.y]));
+    const label = edge.label;
+    const point = edge.points[1];
     return /* xml */ `
       <path
         d="${path}"
         fill="none"
         stroke="black"
       />
+      <text
+        x="${point!.x}"
+        y="${point!.y}"
+        fill="black">${label}</text>
     `;
   });
 
@@ -83,8 +95,8 @@ function render(g: graphlib.Graph) {
     <svg xmlns="http://www.w3.org/2000/svg">
       <g style="text-anchor: start; dominant-baseline: hanging;">
         <rect width="100%" height="100%" fill="white" />
-        ${nodes.join("")}
         ${edges.join("")}
+        ${nodes.join("")}
       </g>
     </svg>
   `;
@@ -99,9 +111,17 @@ function render(g: graphlib.Graph) {
   return png.asPng();
 }
 
-function populate(chart: Chart[]) {
+// https://github.com/dagrejs/dagre/wiki#configuring-the-layout
+type PopulateOptions = {
+  graph: GraphLabel & {
+    rankdir?: "TB" | "BT" | "LR" | "RL";
+    align?: "UL" | "UR" | "DL" | "DR";
+  };
+};
+
+function populate(chart: Chart[], options: PopulateOptions) {
   const g = new graphlib.Graph();
-  g.setGraph({});
+  g.setGraph({ ...options.graph });
   g.setDefaultEdgeLabel(() => ({}));
 
   for (const item of chart) {
@@ -126,13 +146,19 @@ function populate(chart: Chart[]) {
 test("mermaid", () => {
   expect(chart).toBeArray();
 
-  const g = populate(chart);
-  layout(g, {
-    rankdir: "TD",
-    ranker: "network-simplex",
-    acyclicer: "greedy",
+  const g = populate(chart, {
+    graph: {
+      ranker: "network-simplex",
+      acyclicer: "greedy",
+      rankdir: "TB",
+      // align: "UL",
+      // nodesep: 0,
+      // edgesep: 0,
+      // ranksep: 0,
+    },
   });
+  layout(g);
 
   const png = render(g);
-  Bun.write("dist/g.png", png);
+  Bun.write("dist/mermaid.png", png);
 });
