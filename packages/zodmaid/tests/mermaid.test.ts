@@ -50,7 +50,7 @@ function render(g: graphlib.Graph) {
   const nodes = g.nodes().map((n) => {
     const node = g.node(n);
     return /* xml */ `
-      <g>
+      <g style="text-anchor: start; dominant-baseline: hanging;">
         <rect
           x="${node.x}"
           y="${node.y}"
@@ -59,7 +59,10 @@ function render(g: graphlib.Graph) {
           fill="none"
           stroke="black"
         />
-        <text x="${node.x}" y="${node.y}" fill="black">${node.label}</text>
+        <text
+          x="${node.x}"
+          y="${node.y}"
+          fill="black">${node.label}</text>
       </g>
     `;
   });
