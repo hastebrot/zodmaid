@@ -32,6 +32,11 @@ const chart: Chart[] = [
   { edge: ["Service", "RDS"], "-->": "Execute Queries" },
 ];
 
+const svgOptions = {
+  fontFamily: "sans-serif",
+  fontSize: 14,
+};
+
 function textBbox(text: string) {
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg">
@@ -40,14 +45,14 @@ function textBbox(text: string) {
   `;
   const resvg = new Resvg(svg, {
     font: {
-      defaultFontFamily: "sans-serif",
-      defaultFontSize: 12,
+      defaultFontFamily: svgOptions.fontFamily,
+      defaultFontSize: svgOptions.fontSize,
     },
   });
   const bbox = resvg.getBBox();
   return {
     width: bbox?.width ?? 0,
-    height: Math.max(bbox?.height ?? 0, 12),
+    height: Math.max(bbox?.height ?? 0, svgOptions.fontSize),
   };
 }
 
@@ -103,12 +108,14 @@ function render(g: graphlib.Graph) {
   const resvg = new Resvg(svg, {
     background: "white",
     font: {
-      defaultFontFamily: "sans-serif",
-      defaultFontSize: 12,
+      defaultFontFamily: svgOptions.fontFamily,
+      defaultFontSize: svgOptions.fontSize,
     },
   });
-  const png = resvg.render();
-  return png.asPng();
+  return {
+    svg: resvg.toString(),
+    png: resvg.render().asPng(),
+  };
 }
 
 // https://github.com/dagrejs/dagre/wiki#configuring-the-layout
@@ -159,6 +166,6 @@ test("mermaid", () => {
   });
   layout(g);
 
-  const png = render(g);
-  Bun.write("dist/mermaid.png", png);
+  const image = render(g);
+  Bun.write("dist/mermaid.png", image.png);
 });
