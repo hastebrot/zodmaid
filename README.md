@@ -20,3 +20,4 @@ d3 dagre:
 d3 dag:
 - https://github.com/erikbrinkman/d3-dag
   - https://github.com/erikbrinkman/d3-dag/blob/main/src/graph/stratify.ts
+  - https://app.unpkg.com/d3-dag@1.1.0/files/bundle
