@@ -8,6 +8,10 @@ zod:
 resvg:
 - https://github.com/thx/resvg-js
 
+d3:
+- `❯ bun add -d d3 @types/d3`
+- https://github.com/d3/d3
+
 elk:
 - https://github.com/kieler/elkjs
 
