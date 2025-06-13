@@ -82,6 +82,7 @@ function render(g: graphlib.Graph) {
     const curve = line().curve(curveBasis);
     const path = curve(edge.points.map((p) => [p.x, p.y]));
     const label = edge.label;
+    const bbox = textBbox(label);
     const point = edge.points[1];
     return /* xml */ `
       <path
@@ -89,9 +90,17 @@ function render(g: graphlib.Graph) {
         fill="none"
         stroke="black"
       />
+      <rect
+          x="${point!.x - bbox.width / 2}"
+          y="${point!.y - bbox.height / 2}"
+          width="${bbox.width}"
+          height="${bbox.height}"
+          fill="white"
+          stroke="none"
+        />
       <text
-        x="${point!.x}"
-        y="${point!.y}"
+        x="${point!.x - bbox.width / 2}"
+        y="${point!.y - bbox.height / 2}"
         fill="black">${label}</text>
     `;
   });
