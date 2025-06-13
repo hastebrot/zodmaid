@@ -62,16 +62,16 @@ function render(g: graphlib.Graph) {
     return /* xml */ `
       <g style="text-anchor: start; dominant-baseline: hanging;">
         <rect
-          x="${node.x}"
-          y="${node.y}"
+          x="${node.x - node.width / 2}"
+          y="${node.y - node.height / 2}"
           width="${node.width}"
           height="${node.height}"
           fill="white"
           stroke="black"
         />
         <text
-          x="${node.x}"
-          y="${node.y}"
+          x="${node.x - node.width / 2}"
+          y="${node.y - node.height / 2}"
           fill="black">${node.label}</text>
       </g>
     `;
