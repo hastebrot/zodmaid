@@ -82,7 +82,6 @@ function render(g: graphlib.Graph) {
     const curve = line().curve(curveBasis);
     const path = curve(edge.points.map((p) => [p.x, p.y]));
     const label = edge.label;
-    const bbox = textBbox(label);
     const point = edge.points[1];
     return /* xml */ `
       <path
@@ -91,16 +90,16 @@ function render(g: graphlib.Graph) {
         stroke="black"
       />
       <rect
-          x="${point!.x - bbox.width / 2}"
-          y="${point!.y - bbox.height / 2}"
-          width="${bbox.width}"
-          height="${bbox.height}"
+          x="${point!.x - edge.width / 2}"
+          y="${point!.y - edge.height / 2}"
+          width="${edge.width}"
+          height="${edge.height}"
           fill="white"
           stroke="none"
         />
       <text
-        x="${point!.x - bbox.width / 2}"
-        y="${point!.y - bbox.height / 2}"
+        x="${point!.x - edge.width / 2}"
+        y="${point!.y - edge.height / 2}"
         fill="black">${label}</text>
     `;
   });
@@ -152,7 +151,8 @@ function populate(chart: Chart[], options: PopulateOptions) {
     if (item.edge) {
       const [source, target] = item.edge;
       const label = item["-->"];
-      g.setEdge(source!, target!, { label });
+      const bbox = textBbox(label!);
+      g.setEdge(source!, target!, { label, width: bbox?.width, height: bbox?.height });
     }
   }
 
