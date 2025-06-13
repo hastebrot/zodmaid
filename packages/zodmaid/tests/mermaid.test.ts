@@ -49,32 +49,34 @@ function textBbox(text: string) {
 function render(g: graphlib.Graph) {
   const nodes = g.nodes().map((n) => {
     const node = g.node(n);
-    return `<rect
-      x="${node.x}"
-      y="${node.y}"
-      width="${node.width}"
-      height="${node.height}"
-      fill="none"
-      stroke="black"
-    />
-    <text
-      x="${node.x}"
-      y="${node.y}"
-      fill="black">${node.label}</text>
+    return /* xml */ `
+      <g>
+        <rect
+          x="${node.x}"
+          y="${node.y}"
+          width="${node.width}"
+          height="${node.height}"
+          fill="none"
+          stroke="black"
+        />
+        <text x="${node.x}" y="${node.y}" fill="black">${node.label}</text>
+      </g>
     `;
   });
 
   const edges = g.edges().map((e) => {
     const edge = g.edge(e);
     const path = line()(edge.points.map((p) => [p.x, p.y]));
-    return `<path
-      d="${path}"
-      fill="none"
-      stroke="black"
-    />`;
+    return /* xml */ `
+      <path
+        d="${path}"
+        fill="none"
+        stroke="black"
+      />
+    `;
   });
 
-  const svg = `
+  const svg = /* xml */ `
     <svg xmlns="http://www.w3.org/2000/svg">
       <g style="text-anchor: start; dominant-baseline: hanging;">
         <rect width="100%" height="100%" fill="white" />
