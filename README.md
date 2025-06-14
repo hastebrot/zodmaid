@@ -1,5 +1,16 @@
 # zodmaid
 
+- `/diagram` (flow, sequence, state)
+- `/layouter` (dagre, elk, cytoscape)
+- `/renderer` (svg, png, rough)
+
+- flowchart
+- sequence diagram
+- state diagram
+- https://en.wikipedia.org/wiki/Deployment_flowchart
+- https://en.wikipedia.org/wiki/Sequence_diagram
+- https://en.wikipedia.org/wiki/Swimlane
+
 **todo:**
 
 https://github.com/hastebrot/zodmaid/blob/2025.6.3/packages/zodmaid/tests/mermaid.test.ts
@@ -43,6 +54,7 @@ d3 dagre:
 - forks:
   - https://github.com/tbo47/dagre-es
   - https://github.com/codeStryke/dagre-esm
+  - https://github.com/skanaar/graphre
 
 d3 dag:
 - https://github.com/erikbrinkman/d3-dag
@@ -52,6 +64,94 @@ d3 dag:
 ---
 
 **references:**
+
+- https://www.nomnoml.com
+- https://github.com/skanaar/nomnoml
+
+```html
+<script src="//unpkg.com/graphre/dist/graphre.js"></script>
+<script src="//unpkg.com/nomnoml/dist/nomnoml.js"></script>
+
+<canvas id="target-canvas"></canvas>
+<script>
+  var canvas = document.getElementById('target-canvas')
+  var source = '[nomnoml] is -> [awesome]'
+  nomnoml.draw(canvas, source)
+</script>
+```
+
+- `graphre.js` (38.7 kB), https://app.unpkg.com/graphre@0.1.3/files/dist
+- `nomnoml.js` (71.8 kB), https://app.unpkg.com/nomnoml@1.7.0/files/dist
+- `nomnoml.css` (5.99 kB),
+- https://cdn.jsdelivr.net/npm/graphre@0.1.3/dist/graphre.js (transferred 13.77 kB, 38.69 kB size)
+- https://cdn.jsdelivr.net/npm/nomnoml@1.7.0 (transferred 10.35 kB, 30.18 kB size)
+
+```
+#padding: 6
+#spacing: 60
+#.blob: fill=pink
+
+[«Browser»|Client Browser] -> Sends HTTP Request [«API»|HTTP API - API Gateway]
+[«API»|HTTP API - API Gateway] -> Triggers Service [GET Route]
+[«API»|HTTP API - API Gateway] -> Triggers Service [POST Route]
+[«API»|HTTP API - API Gateway] -> [Other Services/APIs]
+[GET Route] -> Read/Write [<blob>Storage Bucket]
+[GET Route] -> Access [<blob>Secrets Manager]
+[GET Route] -> Read/Write [<blob>Key/Value Store]
+[GET Route] -> Execute Queries [<blob>Relational Database Service]
+```
+
+```
+#padding: 6
+#spacing: 60
+#.blob: fill=pink
+
+[<class id=browser>«Browser»|Client Browser]
+[<class id=api>«API»|HTTP API - API Gateway]
+
+[browser] -> Sends HTTP Request [api]
+[api] -> Triggers Service [GET Route]
+[api] -> Triggers Service [POST Route]
+[api] -> [Other Services/APIs]
+[GET Route] -> Read/Write [<blob>Storage Bucket]
+[GET Route] -> Access [<blob>Secrets Manager]
+[GET Route] -> Read/Write [<blob>Key/Value Store]
+[GET Route] -> Execute Queries [<blob>Relational Database Service]
+```
+
+```
+#padding: 6
+#spacing: 60
+#bendSize: 0.3
+#direction: down
+#edgeMargin: 2
+#arrowSize: 0.5
+#.rect: fill=lightgreen align=center visual=class bold
+#.blob: fill=pink align=center visual=class bold
+
+[browser|
+	[<rect id=browser>«Browser»|Client Browser]
+]
+[<rect id=api>«API»|HTTP API - API Gateway]
+
+[browser] -> Sends HTTP Request [api]
+[api] -> Triggers Service [GET Route]
+[api] -> Triggers Service [POST Route]
+[api] -> [Other Services/APIs]
+[GET Route] -> Read/Write [<blob>Storage Bucket]
+[GET Route] -> Access [<blob>Secrets Manager]
+[GET Route] -> Read/Write [<blob>Key/Value Store]
+[GET Route] -> Execute Queries [<blob>Relational Database Service]
+```
+
+- https://github.com/skanaar/nomnoml/issues/220
+- https://github.com/dagrejs/dagre/blob/master/lib/nesting-graph.js
+- https://github.com/skanaar/graphre/blob/master/lib/nesting-graph.ts
+- https://github.com/dagrejs/dagre/issues/238
+- https://github.com/dagrejs/dagre/pull/293
+
+
+---
 
 mindmaps:
 - https://github.com/mermaid-js/mermaid/blob/mermaid%4011.6.0/packages/mermaid/src/diagrams/mindmap/mindmapRenderer.ts
@@ -67,6 +167,9 @@ mindmaps:
 - https://github.com/Klortho/d3-flextree
 - https://github.com/rough-stuff/rough
 - https://github.com/excalidraw/excalidraw/blob/v0.18.0/packages/excalidraw/renderer/staticSvgScene.ts#L42-L56
+- https://github.com/shannpersand/comic-shanns
+- https://github.com/kaBeech/serious-shanns
+- https://github.com/maragudk/gomponents/blob/main/LLMs.md
 
 https://github.com/dagrejs/dagre/wiki#recommended-reading
 

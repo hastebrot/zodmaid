@@ -131,6 +131,8 @@ type PopulateOptions = {
   graph: GraphLabel & {
     rankdir?: "TB" | "BT" | "LR" | "RL";
     align?: "UL" | "UR" | "DL" | "DR";
+    // greedy
+    // network-simplex, tight-tree or longest-path
   };
 };
 
