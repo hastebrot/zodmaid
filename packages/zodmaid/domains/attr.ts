@@ -1,16 +1,13 @@
 import { z } from "zod/v4";
 
-export type Node = z.infer<typeof Node>;
+export const attr = (key: string, value: string) => {
+  return Attr.parse({ type: "attr", key, value });
+};
 
-export const node = (node: Node) => Node.parse(node);
+export type Attr = z.infer<typeof Attr>;
 
-export const Node = z.object({
-  id: z.string(),
-  label: z.string(),
-  shape: z.string().optional(),
-  x: z.number().optional(),
-  y: z.number().optional(),
-  width: z.number().optional(),
-  height: z.number().optional(),
-  fill: z.string().optional(),
+export const Attr = z.strictObject({
+  type: z.literal("attr"),
+  key: z.string(),
+  value: z.string().optional(),
 });
