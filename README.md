@@ -185,3 +185,71 @@ https://github.com/dagrejs/dagre/wiki#recommended-reading
 > For positioning (or coordinate assignment), we derived our algorithm from Brandes and Köpf, "Fast and Simple Horizontal Coordinate Assignment". We made some adjustments to get tighter graphs when node and edges sizes vary greatly.
 >
 > The implementation for clustering derives extensively from Sander, "Layout of Compound Directed Graphs." It is an excellent paper that details the impact of clustering on all phases of layout and also covers many of the associated problems. Crossing reduction with clustered graphs derives from two papers by Michael Forster, "Applying Crossing Reduction Strategies to Layered Compound Graphs" and "A Fast and Simple Heuristic for Constrained Two-Level Crossing Reduction."
+
+aesthetics:
+- nomnoml text-based diagram tool
+- kmime dataflow analysis
+- brat annotation tool
+
+---
+
+- schemas
+	- graph
+	- node
+	- attr, directive
+	- cell
+	- port
+	- edge
+	- label
+- renderers
+	- colors
+		- brush (neutral, emphasis: base, subtle, muted; accent: accent-blue, critical-red, warning-orange, success-blue)
+		- surface
+		- frame
+- layouters
+- engines
+- graphics
+- diagrams
+- shapes
+
+----
+
+- brat annotation tool, [https://github.com/nlplab/brat](https://github.com/nlplab/brat)
+
+```ts
+const Test = () => {
+  return (
+    <div
+      className="p-4"
+      style={
+        {
+          // https://www.tints.dev/sandstone/EEE8D5 (300 locked, 10 saturation, perceived)
+          "--color-sandstone-50": "#fefcf6",
+          "--color-sandstone-100": "#fcf6e6",
+          "--color-sandstone-200": "#f7f1db",
+          "--color-sandstone-300": "#eee8d5",
+          "--color-sandstone-400": "#d1c490",
+          "--color-sandstone-500": "#afa066",
+          "--color-sandstone-600": "#8d7f3d",
+          "--color-sandstone-700": "#695c13",
+          "--color-sandstone-800": "#473e00",
+          "--color-sandstone-900": "#282200",
+          "--color-sandstone-950": "#1a1500",
+        } as CSSProperties
+      }
+    >
+      <div>
+        <div className="p-4 bg-[#eee8d5] border-b-3 border-[#33322E]">test</div>
+        <div className="p-4 bg-[#fdf6e3]">test</div>
+      </div>
+      <div>&nbsp;</div>
+      <div className="text-(--color-sandstone-900)">
+        <div className="p-4 bg-(--color-sandstone-300) border-b-3 border-(--color-sandstone-900)">
+          test
+        </div>
+        <div className="p-4 bg-(--color-sandstone-100)">test</div>
+      </div>
+    </div>
+  );
+};
+```
