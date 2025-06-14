@@ -211,6 +211,24 @@ aesthetics:
 - graphics
 - diagrams
 - shapes
+	- class diagram
+		- class, abstract, instance, reference
+		- package
+		- frame
+	- component diagram
+		- socket, lollipop
+	- flow chart
+		- start, end
+		- state, choice, sync
+		- input, sender, receiver, transceiver
+	- use case
+		- actor, usecase
+	- misc
+		- note
+		- label, hidden
+		- database, pipe
+		- table
+
 
 ----
 
