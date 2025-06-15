@@ -33,9 +33,26 @@ const diagram = [
   edge(node("service"), arrow("->"), node("rds"), "Execute Queries"),
 ];
 
+const colors = {
+  "--color-sandstone-50": "#fefcf6",
+  "--color-sandstone-100": "#fcf6e6",
+  "--color-sandstone-200": "#f7f1db",
+  "--color-sandstone-300": "#eee8d5",
+  "--color-sandstone-400": "#d1c490",
+  "--color-sandstone-500": "#afa066",
+  "--color-sandstone-600": "#8d7f3d",
+  "--color-sandstone-700": "#695c13",
+  "--color-sandstone-800": "#473e00",
+  "--color-sandstone-900": "#282200",
+  "--color-sandstone-950": "#1a1500",
+};
+
 const svgOptions = {
   fontFamily: "sans-serif",
   fontSize: 14,
+  fill: colors["--color-sandstone-300"],
+  fillSecondary: colors["--color-sandstone-100"],
+  stroke: colors["--color-sandstone-900"],
 };
 
 function textBbox(text: string) {
@@ -67,13 +84,13 @@ function render(g: graphlib.Graph) {
           y="${node.y - node.height / 2}"
           width="${node.width}"
           height="${node.height}"
-          fill="white"
-          stroke="black"
+          fill="${svgOptions.fill}"
+          stroke="${svgOptions.stroke}"
         />
         <text
           x="${node.x - node.width / 2}"
           y="${node.y - node.height / 2}"
-          fill="black">${node.label}</text>
+          fill="${svgOptions.stroke}">${node.label}</text>
       </g>
     `;
   });
@@ -88,34 +105,33 @@ function render(g: graphlib.Graph) {
       <path
         d="${path}"
         fill="none"
-        stroke="black"
+        stroke="${svgOptions.stroke}"
       />
       <rect
           x="${point!.x - edge.width / 2}"
           y="${point!.y - edge.height / 2}"
           width="${edge.width}"
           height="${edge.height}"
-          fill="white"
+          fill="${svgOptions.fill}"
           stroke="none"
         />
       <text
         x="${point!.x - edge.width / 2}"
         y="${point!.y - edge.height / 2}"
-        fill="black">${label}</text>
+        fill="${svgOptions.stroke}">${label}</text>
     `;
   });
 
   const svg = /* xml */ `
     <svg xmlns="http://www.w3.org/2000/svg">
       <g style="text-anchor: start; dominant-baseline: hanging;">
-        <rect width="100%" height="100%" fill="white" />
         ${edges.join("")}
         ${nodes.join("")}
       </g>
     </svg>
   `;
   const resvg = new Resvg(svg, {
-    background: "white",
+    background: svgOptions.fillSecondary,
     font: {
       defaultFontFamily: svgOptions.fontFamily,
       defaultFontSize: svgOptions.fontSize,
@@ -132,8 +148,8 @@ type PopulateOptions = {
   graph: GraphLabel & {
     rankdir?: "TB" | "BT" | "LR" | "RL";
     align?: "UL" | "UR" | "DL" | "DR";
-    // greedy
-    // network-simplex, tight-tree or longest-path
+    acyclicer?: "greedy";
+    ranker?: "network-simplex" | "tight-tree" | "longest-path";
   };
 };
 
@@ -194,8 +210,8 @@ test("mermaid", () => {
   console.log("populate");
   const g = populate(diagram, {
     graph: {
-      ranker: "network-simplex",
       acyclicer: "greedy",
+      ranker: "network-simplex",
       rankdir: "TB",
       // align: "UL",
       // nodesep: 0,
