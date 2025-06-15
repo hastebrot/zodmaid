@@ -33,6 +33,7 @@ const diagram = [
   edge(node("service"), arrow("->"), node("rds"), "Execute Queries"),
 ];
 
+// https://www.tints.dev/sandstone/EEE8D5 (300 locked, 10 saturation, perceived)
 const colors = {
   "--color-sandstone-50": "#fefcf6",
   "--color-sandstone-100": "#fcf6e6",
@@ -59,6 +60,11 @@ const svgOptions = {
   stroke: colors["--color-sandstone-900"],
 };
 
+const layoutOptions = {
+  padding: 8,
+  spacing: 40,
+};
+
 function textBbox(text: string, fontWeight: "normal" | "bold" = "normal") {
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg">
@@ -83,11 +89,13 @@ function textBbox(text: string, fontWeight: "normal" | "bold" = "normal") {
 function render(g: graphlib.Graph) {
   const nodes = g.nodes().map((n) => {
     const node = g.node(n);
+    const x = node.x - node.width / 2;
+    const y = node.y - node.height / 2;
     return /* xml */ `
       <g>
         <rect
-          x="${node.x - node.width / 2}"
-          y="${node.y - node.height / 2}"
+          x="${x}"
+          y="${y}"
           width="${node.width}"
           height="${node.height}"
           fill="${svgOptions.fill}"
@@ -95,8 +103,8 @@ function render(g: graphlib.Graph) {
           stroke-width="2"
         />
         <text
-          x="${node.x - node.width / 2}"
-          y="${node.y - node.height / 2}"
+          x="${x + layoutOptions.padding}"
+          y="${y + layoutOptions.padding}"
           fill="${svgOptions.stroke}"
           font-weight="bold"
           dominant-baseline="middle"
@@ -112,6 +120,8 @@ function render(g: graphlib.Graph) {
     const path = curve(edge.points.map((p) => [p.x, p.y]));
     const label = edge.label;
     const point = edge.points[1];
+    const x = point!.x - edge.width / 2;
+    const y = point!.y - edge.height / 2;
     return /* xml */ `
       <path
         d="${path}"
@@ -120,16 +130,16 @@ function render(g: graphlib.Graph) {
         stroke-width="2"
       />
       <rect
-        x="${point!.x - edge.width / 2}"
-        y="${point!.y - edge.height / 2}"
+        x="${x}"
+        y="${y}"
         width="${edge.width}"
         height="${edge.height}"
-        fill="${svgOptions.fill}"
+        fill="${svgOptions.fillSecondary}"
         stroke="none"
       />
       <text
-        x="${point!.x - edge.width / 2}"
-        y="${point!.y - edge.height / 2}"
+        x="${x}"
+        y="${y}"
         fill="${svgOptions.stroke}"
         dominant-baseline="middle"
         dy="0.5em">${label}</text>
@@ -208,7 +218,11 @@ function populate(diagram: DiagramType, options: PopulateOptions) {
       const label = nodeLabel(item) ?? "";
       const bbox = textBbox(label, "bold");
       // console.log("node", id, label);
-      g.setNode(id, { label, width: bbox.width, height: bbox.height });
+      g.setNode(id, {
+        label,
+        width: bbox.width + layoutOptions.padding * 2,
+        height: bbox.height + layoutOptions.padding * 2,
+      });
     }
   }
   for (const item of diagram) {
