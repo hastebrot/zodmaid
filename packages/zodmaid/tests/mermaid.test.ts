@@ -48,21 +48,27 @@ const colors = {
 };
 
 const svgOptions = {
-  fontFamily: "sans-serif",
+  fontFamily: "Inter",
   fontSize: 14,
+  fontFiles: [
+    import.meta.resolve("../assets/font-inter/Inter-Regular.ttf").slice("file://".length),
+    import.meta.resolve("../assets/font-inter/Inter-Bold.ttf").slice("file://".length),
+  ],
   fill: colors["--color-sandstone-300"],
   fillSecondary: colors["--color-sandstone-100"],
   stroke: colors["--color-sandstone-900"],
 };
 
-function textBbox(text: string) {
+function textBbox(text: string, fontWeight: "normal" | "bold" = "normal") {
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg">
-      <text>${text}</text>
+      <text font-weight="${fontWeight}">${text}</text>
     </svg>
   `;
   const resvg = new Resvg(svg, {
     font: {
+      loadSystemFonts: svgOptions.fontFiles === undefined ? true : false,
+      fontFiles: svgOptions.fontFiles,
       defaultFontFamily: svgOptions.fontFamily,
       defaultFontSize: svgOptions.fontSize,
     },
@@ -78,7 +84,7 @@ function render(g: graphlib.Graph) {
   const nodes = g.nodes().map((n) => {
     const node = g.node(n);
     return /* xml */ `
-      <g style="text-anchor: start; dominant-baseline: hanging;">
+      <g>
         <rect
           x="${node.x - node.width / 2}"
           y="${node.y - node.height / 2}"
@@ -86,11 +92,16 @@ function render(g: graphlib.Graph) {
           height="${node.height}"
           fill="${svgOptions.fill}"
           stroke="${svgOptions.stroke}"
+          stroke-width="2"
         />
         <text
           x="${node.x - node.width / 2}"
           y="${node.y - node.height / 2}"
-          fill="${svgOptions.stroke}">${node.label}</text>
+          fill="${svgOptions.stroke}"
+          font-weight="bold"
+          dominant-baseline="middle"
+          dy="0.5em">${node.label}</text>
+
       </g>
     `;
   });
@@ -106,25 +117,28 @@ function render(g: graphlib.Graph) {
         d="${path}"
         fill="none"
         stroke="${svgOptions.stroke}"
+        stroke-width="2"
       />
       <rect
-          x="${point!.x - edge.width / 2}"
-          y="${point!.y - edge.height / 2}"
-          width="${edge.width}"
-          height="${edge.height}"
-          fill="${svgOptions.fill}"
-          stroke="none"
-        />
+        x="${point!.x - edge.width / 2}"
+        y="${point!.y - edge.height / 2}"
+        width="${edge.width}"
+        height="${edge.height}"
+        fill="${svgOptions.fill}"
+        stroke="none"
+      />
       <text
         x="${point!.x - edge.width / 2}"
         y="${point!.y - edge.height / 2}"
-        fill="${svgOptions.stroke}">${label}</text>
+        fill="${svgOptions.stroke}"
+        dominant-baseline="middle"
+        dy="0.5em">${label}</text>
     `;
   });
 
   const svg = /* xml */ `
     <svg xmlns="http://www.w3.org/2000/svg">
-      <g style="text-anchor: start; dominant-baseline: hanging;">
+      <g>
         ${edges.join("")}
         ${nodes.join("")}
       </g>
@@ -133,9 +147,14 @@ function render(g: graphlib.Graph) {
   const resvg = new Resvg(svg, {
     background: svgOptions.fillSecondary,
     font: {
+      loadSystemFonts: svgOptions.fontFiles === undefined ? true : false,
+      fontFiles: svgOptions.fontFiles,
       defaultFontFamily: svgOptions.fontFamily,
       defaultFontSize: svgOptions.fontSize,
     },
+    shapeRendering: 2,
+    textRendering: 2,
+    imageRendering: 0,
   });
   return {
     svg: resvg.toString(),
@@ -187,7 +206,7 @@ function populate(diagram: DiagramType, options: PopulateOptions) {
     if (item.type === "node") {
       const id = nodeId(item) ?? throwError("node id missing");
       const label = nodeLabel(item) ?? "";
-      const bbox = textBbox(label);
+      const bbox = textBbox(label, "bold");
       // console.log("node", id, label);
       g.setNode(id, { label, width: bbox.width, height: bbox.height });
     }
