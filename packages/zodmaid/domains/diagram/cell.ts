@@ -3,6 +3,7 @@ import { AttrType } from "./attr";
 import { EdgeType } from "./edge";
 import { LabelString, LabelType } from "./label";
 import { NodeType } from "./node";
+import { fixObject } from "./utils";
 
 export type CellType = z.infer<typeof CellType>;
 export const CellType = z.strictObject({
@@ -39,26 +40,15 @@ const CellInput = z.lazy(() =>
 );
 
 export const cell = (...inputs: CellInput[]) => {
-  const _inputs = CellInput.array().parse(inputs);
+  const cellInputs = CellInput.array().parse(inputs);
   return CellType.parse({
     type: "cell",
     ...fixObject({
-      labels: _inputs.filter((input) => input.type === "label"),
-      attrs: _inputs.filter((input) => input.type === "attr"),
-      nodes: _inputs.filter((input) => input.type === "node"),
-      edges: _inputs.filter((input) => input.type === "edge"),
-      cells: _inputs.filter((input) => input.type === "cell"),
+      labels: cellInputs.filter((input) => input.type === "label"),
+      attrs: cellInputs.filter((input) => input.type === "attr"),
+      nodes: cellInputs.filter((input) => input.type === "node"),
+      edges: cellInputs.filter((input) => input.type === "edge"),
+      cells: cellInputs.filter((input) => input.type === "cell"),
     }),
   });
-};
-
-const fixObject = (value: Record<string, unknown>) => {
-  return Object.fromEntries(
-    Object.entries(value).filter(([_, value]) => {
-      if (Array.isArray(value) && value.length === 0) {
-        return false;
-      }
-      return true;
-    })
-  );
 };

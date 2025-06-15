@@ -10,19 +10,3 @@ export const AttrType = z.strictObject({
 export const attr = (key: string, value: string) => {
   return AttrType.parse({ type: "attr", key, value });
 };
-
-type KeyVal = [string, string];
-type KeyVals =
-  | [...KeyVal]
-  | [...KeyVal, ...KeyVal]
-  | [...KeyVal, ...KeyVal, ...KeyVal]
-  | [...KeyVal, ...KeyVal, ...KeyVal, ...KeyVal]
-  | [...KeyVal, ...KeyVal, ...KeyVal, ...KeyVal, ...KeyVal]
-  | [...KeyVal, ...KeyVal, ...KeyVal, ...KeyVal, ...KeyVal, ...KeyVal]
-  | [...KeyVal, ...KeyVal, ...KeyVal, ...KeyVal, ...KeyVal, ...KeyVal, ...KeyVal]
-  | [...KeyVal, ...KeyVal, ...KeyVal, ...KeyVal, ...KeyVal, ...KeyVal, ...KeyVal, ...KeyVal];
-type Attrs = { [key: string]: string };
-
-export const attrs = (...text: KeyVals) => {};
-attrs("k", "v");
-attrs("k", "v", "k", "v");
