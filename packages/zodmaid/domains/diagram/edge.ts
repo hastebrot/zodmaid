@@ -2,6 +2,7 @@ import { z } from "zod/v4";
 import { AttrType } from "./attr";
 import { LabelString, LabelType } from "./label";
 import { NodeType } from "./node";
+import { fixObject } from "./utils";
 
 export type EdgeType = z.infer<typeof EdgeType>;
 export const EdgeType = z.strictObject({
@@ -27,24 +28,13 @@ const EdgeInput = z.union([
 ]);
 
 export const edge = (...inputs: EdgeInput[]) => {
-  const _inputs = EdgeInput.array().parse(inputs);
+  const edgeInputs = EdgeInput.array().parse(inputs);
   return EdgeType.parse({
     type: "edge",
     ...fixObject({
-      attrs: _inputs.filter((input) => input.type === "attr"),
-      labels: _inputs.filter((input) => input.type === "label"),
-      nodes: _inputs.filter((input) => input.type === "node"),
+      attrs: edgeInputs.filter((input) => input.type === "attr"),
+      labels: edgeInputs.filter((input) => input.type === "label"),
+      nodes: edgeInputs.filter((input) => input.type === "node"),
     }),
   });
-};
-
-const fixObject = (value: Record<string, unknown>) => {
-  return Object.fromEntries(
-    Object.entries(value).filter(([_, value]) => {
-      if (Array.isArray(value) && value.length === 0) {
-        return false;
-      }
-      return true;
-    })
-  );
 };
