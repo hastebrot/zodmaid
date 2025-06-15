@@ -1,35 +1,36 @@
 import { Resvg } from "@resvg/resvg-js";
-import { expect, test } from "bun:test";
-import { curveBasis, line } from "d3";
+import { test } from "bun:test";
+import { curveBasis, line } from "d3-shape";
 import { graphlib, layout, type GraphLabel } from "dagre";
+import {
+  arrow,
+  edge,
+  id,
+  node,
+  type DiagramType,
+  type EdgeType,
+  type NodeType,
+} from "../domains/diagramDomain";
 
-type Chart = {
-  node?: string;
-  edge?: [string, string];
-  "[]"?: string;
-  "-->"?: string;
-};
+const diagram = [
+  node(id("browser"), "Client Browser"),
+  node(id("api"), "HTTP API - API Gateway"),
+  node(id("service"), "GET Route"),
+  node(id("service2"), "POST Route"),
+  node(id("service3"), "Other Services/APIs"),
+  node(id("bucket"), "Storage Bucket"),
+  node(id("secrets"), "Secrets Manager"),
+  node(id("kvstore"), "Key/Value Store"),
+  node(id("rds"), "Relational Database Service"),
 
-// https://github.com/nitrictech/nitric/blob/v1.27.1/docs/docs/architecture/index.mdx
-// https://nitric.io/docs/architecture#example-handling-http-requests
-const chart: Chart[] = [
-  { node: "Browser", "[]": "Client Browser" },
-  { node: "API", "[]": "HTTP API - API Gateway" },
-  { node: "Service", "[]": "GET Route" },
-  { node: "Service2", "[]": "POST Route" },
-  { node: "Service3", "[]": "Other Services/APIs" },
-  { node: "Bucket", "[]": "Storage Bucket" },
-  { node: "Secrets", "[]": "Secrets Manager" },
-  { node: "KVStore", "[]": "Key/Value Store" },
-  { node: "RDS", "[]": "Relational Database Service" },
-  { edge: ["Browser", "API"], "-->": "Sends HTTP Request" },
-  { edge: ["API", "Service"], "-->": "Triggers Service" },
-  { edge: ["API", "Service2"], "-->": "Triggers Service" },
-  { edge: ["API", "Service3"], "-->": "" },
-  { edge: ["Service", "Bucket"], "-->": "Read/Write" },
-  { edge: ["Service", "Secrets"], "-->": "Access" },
-  { edge: ["Service", "KVStore"], "-->": "Read/Write" },
-  { edge: ["Service", "RDS"], "-->": "Execute Queries" },
+  edge(node("browser"), arrow("->"), node("api"), "Sends HTTP Request"),
+  edge(node("api"), arrow("->"), node("service"), "Triggers Service"),
+  edge(node("api"), arrow("->"), node("service2"), "Triggers Service"),
+  edge(node("api"), arrow("->"), node("service3")),
+  edge(node("service"), arrow("->"), node("bucket"), "Read/Write"),
+  edge(node("service"), arrow("->"), node("secrets"), "Access"),
+  edge(node("service"), arrow("->"), node("kvstore"), "Read/Write"),
+  edge(node("service"), arrow("->"), node("rds"), "Execute Queries"),
 ];
 
 const svgOptions = {
@@ -82,7 +83,6 @@ function render(g: graphlib.Graph) {
     const curve = line().curve(curveBasis);
     const path = curve(edge.points.map((p) => [p.x, p.y]));
     const label = edge.label;
-    const bbox = textBbox(label);
     const point = edge.points[1];
     return /* xml */ `
       <path
@@ -91,16 +91,16 @@ function render(g: graphlib.Graph) {
         stroke="black"
       />
       <rect
-          x="${point!.x - bbox.width / 2}"
-          y="${point!.y - bbox.height / 2}"
-          width="${bbox.width}"
-          height="${bbox.height}"
+          x="${point!.x - edge.width / 2}"
+          y="${point!.y - edge.height / 2}"
+          width="${edge.width}"
+          height="${edge.height}"
           fill="white"
           stroke="none"
         />
       <text
-        x="${point!.x - bbox.width / 2}"
-        y="${point!.y - bbox.height / 2}"
+        x="${point!.x - edge.width / 2}"
+        y="${point!.y - edge.height / 2}"
         fill="black">${label}</text>
     `;
   });
@@ -132,27 +132,58 @@ type PopulateOptions = {
   graph: GraphLabel & {
     rankdir?: "TB" | "BT" | "LR" | "RL";
     align?: "UL" | "UR" | "DL" | "DR";
+    // greedy
+    // network-simplex, tight-tree or longest-path
   };
 };
 
-function populate(chart: Chart[], options: PopulateOptions) {
+function populate(diagram: DiagramType, options: PopulateOptions) {
+  const throwError = (message: string): never => {
+    throw new Error(message);
+  };
+  const nodeId = (node: NodeType): string | null => {
+    const attrId = node.attrs?.find((it) => it.key === "id")?.value;
+    const labelId = node.labels && node.labels[0] && node.labels[0].text[0];
+    return attrId ?? labelId ?? null;
+  };
+  const nodeLabel = (node: NodeType): string | null => {
+    const labelText = node.labels && node.labels[0] && node.labels[0].text[0];
+    return labelText ?? null;
+  };
+  const edgeSourceId = (edge: EdgeType): string | null => {
+    const sourceId = edge.nodes && edge.nodes[0] && nodeId(edge.nodes[0]);
+    return sourceId ?? null;
+  };
+  const edgeTargetId = (edge: EdgeType): string | null => {
+    const targetId = edge.nodes && edge.nodes[1] && nodeId(edge.nodes[1]);
+    return targetId ?? null;
+  };
+  const edgeLabel = (edge: EdgeType): string | null => {
+    const label = edge.labels && edge.labels[0] && edge.labels[0].text[0];
+    return label ?? null;
+  };
+
   const g = new graphlib.Graph();
   g.setGraph({ ...options.graph });
   g.setDefaultEdgeLabel(() => ({}));
 
-  for (const item of chart) {
-    if (item.node) {
-      const node = item.node;
-      const label = item["[]"];
-      const bbox = textBbox(label!);
-      g.setNode(node, { label, width: bbox?.width, height: bbox?.height });
+  for (const item of diagram) {
+    if (item.type === "node") {
+      const id = nodeId(item) ?? throwError("node id missing");
+      const label = nodeLabel(item) ?? "";
+      const bbox = textBbox(label);
+      // console.log("node", id, label);
+      g.setNode(id, { label, width: bbox.width, height: bbox.height });
     }
   }
-  for (const item of chart) {
-    if (item.edge) {
-      const [source, target] = item.edge;
-      const label = item["-->"];
-      g.setEdge(source!, target!, { label });
+  for (const item of diagram) {
+    if (item.type === "edge") {
+      const sourceId = edgeSourceId(item) ?? throwError("edge source id missing");
+      const targetId = edgeTargetId(item) ?? throwError("edge target id missing");
+      const label = edgeLabel(item) ?? "";
+      const bbox = textBbox(label!);
+      // console.log("edge", sourceId, targetId, label);
+      g.setEdge(sourceId, targetId, { label, width: bbox.width, height: bbox.height });
     }
   }
 
@@ -160,9 +191,8 @@ function populate(chart: Chart[], options: PopulateOptions) {
 }
 
 test("mermaid", () => {
-  expect(chart).toBeArray();
-
-  const g = populate(chart, {
+  console.log("populate");
+  const g = populate(diagram, {
     graph: {
       ranker: "network-simplex",
       acyclicer: "greedy",
@@ -173,8 +203,11 @@ test("mermaid", () => {
       // ranksep: 0,
     },
   });
+
+  console.log("layout");
   layout(g);
 
+  console.log("render");
   const image = render(g);
   Bun.write("dist/mermaid.png", image.png);
 });
