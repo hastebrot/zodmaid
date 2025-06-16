@@ -199,20 +199,22 @@ function populate(diagram: DiagramType, options: PopulateOptions) {
     const attr = attrs && attrs.find((it) => it.key === key);
     return attr?.value ?? null;
   };
-  const nodeId = (node: NodeType | undefined): string | null => {
-    return valueOrNull(node?.attrs, "id") ?? labelOrNull(node?.labels, 0);
+  const nodeId = (node: NodeType): string | null => {
+    return valueOrNull(node.attrs, "id") ?? labelOrNull(node.labels, 0);
   };
-  const nodeLabel = (node: NodeType | undefined): string | null => {
-    return labelOrNull(node?.labels, 0);
+  const nodeLabel = (node: NodeType): string | null => {
+    return labelOrNull(node.labels, 0);
   };
-  const edgeSourceId = (edge: EdgeType | undefined): string | null => {
-    return nodeId(edge?.nodes && edge.nodes[0]);
+  const edgeSourceId = (edge: EdgeType): string | null => {
+    const node = edge.nodes && edge.nodes[0];
+    return node ? nodeId(node) : null;
   };
-  const edgeTargetId = (edge: EdgeType | undefined): string | null => {
-    return nodeId(edge?.nodes && edge.nodes[1]);
+  const edgeTargetId = (edge: EdgeType): string | null => {
+    const node = edge.nodes && edge.nodes[1];
+    return node ? nodeId(node) : null;
   };
-  const edgeLabel = (edge: EdgeType | undefined): string | null => {
-    return labelOrNull(edge?.labels, 0);
+  const edgeLabel = (edge: EdgeType): string | null => {
+    return labelOrNull(edge.labels, 0);
   };
 
   const g = new graphlib.Graph();
