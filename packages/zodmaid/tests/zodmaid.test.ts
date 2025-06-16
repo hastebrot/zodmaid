@@ -50,17 +50,31 @@ const colors = {
   "--color-sandstone-950": "#1a1500",
 };
 
+const fontFile = (path: string) => {
+  return import.meta.resolve(path).slice("file://".length);
+};
+
 const svgOptions = {
-  fontFamily: "Inter",
+  fontFamily: "inter",
   fontSize: 14,
   fontFiles: [
-    import.meta.resolve("../assets/font-inter/Inter-Regular.ttf").slice("file://".length),
-    import.meta.resolve("../assets/font-inter/Inter-Bold.ttf").slice("file://".length),
+    fontFile("../assets/font-inter/inter-latin-400-normal.ttf"),
+    fontFile("../assets/font-inter/inter-latin-400-italic.ttf"),
+    fontFile("../assets/font-inter/inter-latin-700-normal.ttf"),
+    fontFile("../assets/font-inter/inter-latin-700-italic.ttf"),
+    // fontFile("../node_modules/@fontsource/inter/files/inter-latin-400-normal.woff2"),
+    // fontFile("../node_modules/@fontsource/inter/files/inter-latin-700-normal.woff2"),
   ],
   fill: colors["--color-sandstone-300"],
   fillSecondary: colors["--color-sandstone-100"],
   stroke: colors["--color-sandstone-900"],
 };
+
+// const fontBuffers = await Promise.all(
+//   svgOptions.fontFiles.map(async (fontFile) => {
+//     return new Uint8Array(await Bun.file(fontFile).arrayBuffer());
+//   })
+// );
 
 const layoutOptions = {
   nodePadding: 8,
@@ -149,6 +163,7 @@ function render(g: graphlib.Graph) {
         x="${x + layoutOptions.edgePadding}"
         y="${y + layoutOptions.edgePadding}"
         fill="${svgOptions.stroke}"
+        font-style="italic"
         dominant-baseline="middle"
         dy="0.5em">${label}</text>
     `;
@@ -156,7 +171,7 @@ function render(g: graphlib.Graph) {
 
   const svg = /* xml */ `
     <svg xmlns="http://www.w3.org/2000/svg">
-      <g>
+      <g transform="scale(1.0)">
         ${edges.join("")}
         ${nodes.join("")}
       </g>
