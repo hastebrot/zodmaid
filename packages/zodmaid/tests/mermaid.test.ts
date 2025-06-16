@@ -33,6 +33,7 @@ const diagram = [
   edge(node("service"), arrow("->"), node("rds"), "Execute Queries"),
 ];
 
+// https://www.tints.dev/sandstone/EEE8D5 (300 locked, 10 saturation, perceived)
 const colors = {
   "--color-sandstone-50": "#fefcf6",
   "--color-sandstone-100": "#fcf6e6",
@@ -59,6 +60,13 @@ const svgOptions = {
   stroke: colors["--color-sandstone-900"],
 };
 
+const layoutOptions = {
+  nodePadding: 8,
+  edgePadding: 2,
+  nodeSpacing: 50,
+  edgeSpacing: 10,
+};
+
 function textBbox(text: string, fontWeight: "normal" | "bold" = "normal") {
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg">
@@ -80,14 +88,20 @@ function textBbox(text: string, fontWeight: "normal" | "bold" = "normal") {
   };
 }
 
+const throwError = (message: string): never => {
+  throw new Error(message);
+};
+
 function render(g: graphlib.Graph) {
   const nodes = g.nodes().map((n) => {
     const node = g.node(n);
+    const x = node.x - node.width / 2;
+    const y = node.y - node.height / 2;
     return /* xml */ `
       <g>
         <rect
-          x="${node.x - node.width / 2}"
-          y="${node.y - node.height / 2}"
+          x="${x}"
+          y="${y}"
           width="${node.width}"
           height="${node.height}"
           fill="${svgOptions.fill}"
@@ -95,8 +109,8 @@ function render(g: graphlib.Graph) {
           stroke-width="2"
         />
         <text
-          x="${node.x - node.width / 2}"
-          y="${node.y - node.height / 2}"
+          x="${x + layoutOptions.nodePadding}"
+          y="${y + layoutOptions.nodePadding}"
           fill="${svgOptions.stroke}"
           font-weight="bold"
           dominant-baseline="middle"
@@ -111,7 +125,9 @@ function render(g: graphlib.Graph) {
     const curve = line().curve(curveBasis);
     const path = curve(edge.points.map((p) => [p.x, p.y]));
     const label = edge.label;
-    const point = edge.points[1];
+    const point = edge.points[1] ?? throwError("no point");
+    const x = point.x - edge.width / 2;
+    const y = point.y - edge.height / 2;
     return /* xml */ `
       <path
         d="${path}"
@@ -120,16 +136,16 @@ function render(g: graphlib.Graph) {
         stroke-width="2"
       />
       <rect
-        x="${point!.x - edge.width / 2}"
-        y="${point!.y - edge.height / 2}"
+        x="${x}"
+        y="${y}"
         width="${edge.width}"
         height="${edge.height}"
-        fill="${svgOptions.fill}"
+        fill="${svgOptions.fillSecondary}"
         stroke="none"
       />
       <text
-        x="${point!.x - edge.width / 2}"
-        y="${point!.y - edge.height / 2}"
+        x="${x + layoutOptions.edgePadding}"
+        y="${y + layoutOptions.edgePadding}"
         fill="${svgOptions.stroke}"
         dominant-baseline="middle"
         dy="0.5em">${label}</text>
@@ -173,9 +189,6 @@ type PopulateOptions = {
 };
 
 function populate(diagram: DiagramType, options: PopulateOptions) {
-  const throwError = (message: string): never => {
-    throw new Error(message);
-  };
   const nodeId = (node: NodeType): string | null => {
     const attrId = node.attrs?.find((it) => it.key === "id")?.value;
     const labelId = node.labels && node.labels[0] && node.labels[0].text[0];
@@ -204,21 +217,29 @@ function populate(diagram: DiagramType, options: PopulateOptions) {
 
   for (const item of diagram) {
     if (item.type === "node") {
-      const id = nodeId(item) ?? throwError("node id missing");
+      const id = nodeId(item) ?? throwError("no node id");
       const label = nodeLabel(item) ?? "";
       const bbox = textBbox(label, "bold");
       // console.log("node", id, label);
-      g.setNode(id, { label, width: bbox.width, height: bbox.height });
+      g.setNode(id, {
+        label,
+        width: bbox.width + layoutOptions.nodePadding * 2,
+        height: bbox.height + layoutOptions.nodePadding * 2,
+      });
     }
   }
   for (const item of diagram) {
     if (item.type === "edge") {
-      const sourceId = edgeSourceId(item) ?? throwError("edge source id missing");
-      const targetId = edgeTargetId(item) ?? throwError("edge target id missing");
+      const sourceId = edgeSourceId(item) ?? throwError("no edge source id");
+      const targetId = edgeTargetId(item) ?? throwError("no edge target id");
       const label = edgeLabel(item) ?? "";
       const bbox = textBbox(label!);
       // console.log("edge", sourceId, targetId, label);
-      g.setEdge(sourceId, targetId, { label, width: bbox.width, height: bbox.height });
+      g.setEdge(sourceId, targetId, {
+        label,
+        width: bbox.width + layoutOptions.edgePadding * 2,
+        height: bbox.height + layoutOptions.edgePadding * 2,
+      });
     }
   }
 
@@ -232,10 +253,10 @@ test("mermaid", () => {
       acyclicer: "greedy",
       ranker: "network-simplex",
       rankdir: "TB",
-      // align: "UL",
-      // nodesep: 0,
-      // edgesep: 0,
-      // ranksep: 0,
+      // align: "DR,
+      ranksep: layoutOptions.nodeSpacing,
+      nodesep: layoutOptions.nodeSpacing,
+      edgesep: layoutOptions.edgeSpacing,
     },
   });
 
