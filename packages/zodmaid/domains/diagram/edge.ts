@@ -7,6 +7,8 @@ import { fixObject } from "./utils";
 export type EdgeType = z.infer<typeof EdgeType>;
 export const EdgeType = z.strictObject({
   type: z.literal("edge"),
+  sourceId: z.string().optional(),
+  targetId: z.string().optional(),
   get attrs() {
     return AttrType.array().optional();
   },
