@@ -30,4 +30,4 @@ const diagram = [
 - `git clone https://github.com/hastebrot/zodmaid`
 - `cd zodmaid/packages/zodmaid`
 - `bun install`
-- `bun run test`
+- `bun run test --watch zodmaid`

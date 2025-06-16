@@ -246,7 +246,7 @@ function populate(diagram: DiagramType, options: PopulateOptions) {
   return g;
 }
 
-test("mermaid", () => {
+test("zodmaid", () => {
   console.log("populate");
   const g = populate(diagram, {
     graph: {
@@ -265,5 +265,5 @@ test("mermaid", () => {
 
   console.log("render");
   const image = render(g);
-  Bun.write("dist/mermaid.png", image.png);
+  Bun.write("dist/zodmaid.png", image.png);
 });
