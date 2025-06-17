@@ -20,7 +20,27 @@ const fontFile = (path: string) => {
 // );
 
 test("zodmaid", async () => {
-  const diagram = [
+  const diagram1 = [
+    node(id("browser"), "Client Browser"),
+    node(id("api"), "HTTP API - API Gateway"),
+    node(id("service"), "GET Route"),
+    node(id("service2"), "POST Route"),
+    node(id("service3"), "Other Services/APIs"),
+    node(id("bucket"), "Storage Bucket"),
+    node(id("secrets"), "Secrets Manager"),
+    node(id("kvstore"), "Key/Value Store"),
+    node(id("rds"), "Relational Database Service"),
+
+    edge(node("browser"), arrow("->"), node("api"), "Sends HTTP Request"),
+    edge(node("api"), arrow("->"), node("service"), "Triggers Service"),
+    edge(node("api"), arrow("->"), node("service2"), "Triggers Service"),
+    edge(node("api"), arrow("->"), node("service3")),
+    edge(node("service"), arrow("->"), node("bucket"), "Read/Write"),
+    edge(node("service"), arrow("->"), node("secrets"), "Access"),
+    edge(node("service"), arrow("->"), node("kvstore"), "Read/Write"),
+    edge(node("service"), arrow("->"), node("rds"), "Execute Queries"),
+  ];
+  const diagram2 = [
     node(id("main"), ["«api»", "main"]),
     node(id("events"), ["«topic»", "events"]),
     node(id("services/reader.ts"), ["«service»", "services/reader.ts"]),
@@ -63,6 +83,8 @@ test("zodmaid", async () => {
     "--color-sandstone-950": "#1a1500",
   };
 
+  const nodeSpacing = 40;
+  const edgeSpacing = 10;
   const options: DiagramOptions = {
     zodmaid: {
       fill: colors["--color-sandstone-300"],
@@ -70,19 +92,19 @@ test("zodmaid", async () => {
       stroke: colors["--color-sandstone-900"],
       nodePadding: 8,
       edgePadding: 2,
-      nodeSpacing: 40,
-      edgeSpacing: 10,
+      nodeSpacing,
+      edgeSpacing,
     },
     dagre: {
       acyclicer: "greedy",
       ranker: "network-simplex",
       rankdir: "TB",
       // align: "UL",
-      ranksep: 40, // zodmaid.nodeSpacing
-      nodesep: 40, // zodmaid.nodeSpacing
-      edgesep: 10, // zodmaid.edgeSpacing
-      marginx: 40,
-      marginy: 40,
+      ranksep: nodeSpacing,
+      nodesep: nodeSpacing,
+      edgesep: edgeSpacing,
+      marginx: nodeSpacing,
+      marginy: nodeSpacing,
     },
     resvg: {
       font: {
@@ -100,13 +122,27 @@ test("zodmaid", async () => {
     },
   };
 
-  console.log("populate");
-  const g = populate(diagram, options) as DaGraph;
+  {
+    console.log("populate");
+    const g = populate(diagram1, options) as DaGraph;
 
-  console.log("layout");
-  layout(g);
+    console.log("layout");
+    layout(g);
 
-  console.log("render");
-  const image = render(g, options);
-  await Bun.write("dist/zodmaid.png", image.png);
+    console.log("render");
+    const image = render(g, options);
+    await Bun.write("dist/zodmaid-1.png", image.png);
+  }
+
+  {
+    console.log("populate");
+    const g = populate(diagram2, options) as DaGraph;
+
+    console.log("layout");
+    layout(g);
+
+    console.log("render");
+    const image = render(g, options);
+    await Bun.write("dist/zodmaid-2.png", image.png);
+  }
 });
