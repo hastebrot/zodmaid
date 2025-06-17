@@ -19,7 +19,7 @@ const fontFile = (path: string) => {
 //   })
 // );
 
-test("zodmaid", () => {
+test("zodmaid", async () => {
   const diagram = [
     node(id("main"), ["«api»", "main"]),
     node(id("events"), ["«topic»", "events"]),
@@ -108,5 +108,5 @@ test("zodmaid", () => {
 
   console.log("render");
   const image = render(g, options);
-  Bun.write("dist/zodmaid.png", image.png);
+  await Bun.write("dist/zodmaid.png", image.png);
 });
