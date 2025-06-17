@@ -106,14 +106,20 @@ const d3 = [
 
 describe("diagram domain", () => {
   test("d1", () => {
-    console.log(d1);
+    if (!process.env.CI) {
+      console.log(d1);
+    }
   });
 
   test("d2", () => {
-    console.log(d2);
+    if (!process.env.CI) {
+      console.log(d2);
+    }
   });
 
   test("d3", () => {
-    console.log(d3);
+    if (!process.env.CI) {
+      console.log(d3);
+    }
   });
 });
