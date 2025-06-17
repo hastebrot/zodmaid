@@ -1,4 +1,16 @@
-import { arrow, edge, id, node, type DiagramType } from "zodmaid";
+import { useEffect, useRef } from "react";
+import {
+  arrow,
+  collect,
+  edge,
+  id,
+  layout,
+  node,
+  render,
+  type DaGraph,
+  type DiagramOptions,
+  type DiagramType,
+} from "zodmaid";
 
 export const DiagramPage = () => {
   const diagram: DiagramType = [
@@ -29,5 +41,83 @@ export const DiagramPage = () => {
     edge(node("jobs/generate-story.ts"), arrow("->"), node("model_key"), "access"),
   ];
 
-  return <div className="p-4">{JSON.stringify(diagram)}</div>;
+  const colors = {
+    "--color-sandstone-50": "#fefcf6",
+    "--color-sandstone-100": "#fcf6e6",
+    "--color-sandstone-200": "#f7f1db",
+    "--color-sandstone-300": "#eee8d5",
+    "--color-sandstone-400": "#d1c490",
+    "--color-sandstone-500": "#afa066",
+    "--color-sandstone-600": "#8d7f3d",
+    "--color-sandstone-700": "#695c13",
+    "--color-sandstone-800": "#473e00",
+    "--color-sandstone-900": "#282200",
+    "--color-sandstone-950": "#1a1500",
+  };
+
+  const nodeSpacing = 40;
+  const edgeSpacing = 10;
+  const options: DiagramOptions = {
+    svg: {
+      defaultFontFamily: "inter",
+      defaultFontSize: 14,
+      measureText: (text, fontWeight, fontStyle) => {
+        return {
+          width: Math.max(...text.map((it) => measureText(it, "inter", 14, fontWeight, fontStyle))),
+          height: text.length * 14,
+        };
+      },
+    },
+    zodmaid: {
+      fill: colors["--color-sandstone-300"],
+      fillAlternate: colors["--color-sandstone-100"],
+      stroke: colors["--color-sandstone-900"],
+      nodePadding: 8,
+      edgePadding: 2,
+      nodeSpacing,
+      edgeSpacing,
+    },
+    dagre: {
+      acyclicer: "greedy",
+      ranker: "network-simplex",
+      rankdir: "TB",
+      // align: "UL",
+      ranksep: nodeSpacing,
+      nodesep: nodeSpacing,
+      edgesep: edgeSpacing,
+      marginx: nodeSpacing,
+      marginy: nodeSpacing,
+    },
+  };
+
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (ref.current) {
+      const g = collect(diagram, options) as DaGraph;
+      layout(g);
+      const svg = render(g, options);
+      ref.current.innerHTML = svg;
+    }
+  }, [ref]);
+
+  return (
+    <div className="p-4">
+      <div ref={ref}></div>
+    </div>
+  );
+};
+
+const measureText = (
+  text: string,
+  fontFamily: string,
+  fontSize: number,
+  fontWeight: string,
+  fontStyle: string
+): number => {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  if (ctx === null) return 0;
+
+  ctx.font = `${fontStyle} ${fontWeight} ${fontSize}pt ${fontFamily}`;
+  return ctx.measureText(text).width;
 };

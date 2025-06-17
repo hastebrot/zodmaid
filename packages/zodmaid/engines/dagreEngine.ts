@@ -197,7 +197,11 @@ export function render(g: DaGraph, options: DiagramOptions) {
   });
 
   const svg = /* xml */ `
-    <svg xmlns="http://www.w3.org/2000/svg">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="${g.graph().width}"
+      height="${g.graph().height}"
+    >
       <g transform="scale(1.0)">
         <rect
           width="${g.graph().width}"
