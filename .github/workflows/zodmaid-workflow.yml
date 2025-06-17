@@ -1,0 +1,45 @@
+name: Zodmaid Workflow
+
+on:
+  workflow_dispatch:
+    # manual trigger.
+
+  push:
+    branches:
+      # trigger on push to main branch.
+      - main
+
+  pull_request:
+    branches:
+      # trigger on pull requests to main branch.
+      - main
+
+jobs:
+  zodmaid-job:
+    name: zodmaid Job
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/zodmaid/
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - run: FORCE_COLOR=1 bun run build
+      - run: FORCE_COLOR=1 bun run test
+
+  zodmaid-app-job:
+    name: zodmaid-app Job
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/zodmaid-app/
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - run: FORCE_COLOR=1 bun run build
