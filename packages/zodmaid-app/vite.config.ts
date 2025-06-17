@@ -37,6 +37,12 @@ export default defineConfig({
       output: {
         advancedChunks: {
           groups: [
+            {
+              name: "zodmaid",
+              test: (id) => {
+                return id.includes("packages/zodmaid/")
+              }
+            },
             { name: "react-router", test: "react-router" },
             { name: "react", test: "react|react-dom" },
             { name: "modules", test: "[\\\\/]node_modules" },
