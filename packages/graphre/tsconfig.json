@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "es6",
+    "target": "es6",
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "outDir": "build",
+    "moduleResolution": "node",
+    "declaration": true,
+    "declarationDir": "decl"
+  },
+  "include": ["**/*"]
+}

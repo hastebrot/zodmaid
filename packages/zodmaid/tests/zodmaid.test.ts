@@ -1,7 +1,8 @@
 import { Resvg, type ResvgRenderOptions } from "@resvg/resvg-js";
 import { test } from "bun:test";
 import { curveBasis, line } from "d3-shape";
-import { graphlib, layout, type GraphLabel } from "dagre";
+import { Graph, graphlib, layout } from "graphre";
+import { type EdgeLabel, type GraphLabel, type GraphNode } from "graphre/types";
 import { resolve } from "node:path";
 import {
   arrow,
@@ -14,6 +15,26 @@ import {
   type LabelType,
   type NodeType,
 } from "../domains/diagramDomain";
+
+type DaGraph = Graph<
+  GraphLabel & {
+    width: number;
+    height: number;
+  },
+  GraphNode & {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    label: string;
+  },
+  EdgeLabel & {
+    points: { x: number; y: number }[];
+    width: number;
+    height: number;
+    label: string;
+  }
+>;
 
 const throwError = (message: string): never => {
   throw new Error(message);
@@ -131,7 +152,7 @@ function populate(diagram: DiagramType, options: DiagramOptions) {
   return g;
 }
 
-function render(g: graphlib.Graph, options: DiagramOptions) {
+function render(g: DaGraph, options: DiagramOptions) {
   const nodes = g.nodes().map((n) => {
     const node = g.node(n) ?? throwError("no node");
     const x = node.x - node.width / 2;
@@ -324,7 +345,7 @@ test("zodmaid", () => {
   };
 
   console.log("populate");
-  const g = populate(diagram, options);
+  const g = populate(diagram, options) as DaGraph;
 
   console.log("layout");
   layout(g);
