@@ -120,7 +120,7 @@ export function collect(diagram: DiagramType, options: DiagramOptions) {
     }
   }
 
-  return g;
+  return g as DaGraph;
 }
 
 export function layout(g: DaGraph) {

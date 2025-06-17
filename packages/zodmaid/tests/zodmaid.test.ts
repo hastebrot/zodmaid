@@ -1,7 +1,7 @@
 import { test } from "bun:test";
 import { resolve } from "node:path";
 import { arrow, edge, id, node } from "../domains/diagramDomain";
-import { collect, layout, render, type DaGraph, type DiagramOptions } from "../engines/dagreEngine";
+import { collect, layout, render, type DiagramOptions } from "../engines/dagreEngine";
 import { measureSvgText, renderSvgImage } from "../engines/resvgEngine";
 
 const fontFile = (path: string) => {
@@ -127,7 +127,7 @@ test("zodmaid", async () => {
 
   {
     console.log("populate");
-    const g = collect(diagram1, options) as DaGraph;
+    const g = collect(diagram1, options);
 
     console.log("layout");
     layout(g);
@@ -140,7 +140,7 @@ test("zodmaid", async () => {
 
   {
     console.log("populate");
-    const g = collect(diagram2, options) as DaGraph;
+    const g = collect(diagram2, options);
 
     console.log("layout");
     layout(g);
