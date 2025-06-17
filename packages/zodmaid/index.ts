@@ -14,11 +14,4 @@ export {
   type LabelType,
   type NodeType,
 } from "./domains/diagramDomain";
-export {
-  layout,
-  populate,
-  render,
-  textBbox,
-  type DaGraph,
-  type DiagramOptions,
-} from "./engines/dagreEngine";
+export { collect, layout, render, type DaGraph, type DiagramOptions } from "./engines/dagreEngine";

@@ -1,8 +1,7 @@
 import { type RouteObject } from "react-router";
+import { DiagramPage } from "./diagramPage";
 
 export const routes: RouteObject[] = [
   // wrap.
-  { path: "/", Component: () => <Index /> },
+  { path: "/", Component: () => <DiagramPage /> },
 ];
-
-const Index = () => <div className="p-4">index</div>;

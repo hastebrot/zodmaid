@@ -1,13 +1,8 @@
 import { test } from "bun:test";
 import { resolve } from "node:path";
 import { arrow, edge, id, node } from "../domains/diagramDomain";
-import {
-  layout,
-  populate,
-  render,
-  type DaGraph,
-  type DiagramOptions,
-} from "../engines/dagreEngine";
+import { collect, layout, render, type DaGraph, type DiagramOptions } from "../engines/dagreEngine";
+import { measureSvgText, renderSvgImage } from "../engines/resvgEngine";
 
 const fontFile = (path: string) => {
   return resolve(import.meta.dir, path);
@@ -85,10 +80,32 @@ test("zodmaid", async () => {
 
   const nodeSpacing = 40;
   const edgeSpacing = 10;
+  const resvgOptions = {
+    background: colors["--color-sandstone-100"],
+    font: {
+      defaultFontFamily: "inter",
+      defaultFontSize: 14,
+      fontFiles: [
+        fontFile("../assets/font-inter/inter-latin-400-normal.ttf"),
+        fontFile("../assets/font-inter/inter-latin-400-italic.ttf"),
+        fontFile("../assets/font-inter/inter-latin-700-normal.ttf"),
+        fontFile("../assets/font-inter/inter-latin-700-italic.ttf"),
+        // fontFile("../node_modules/@fontsource/inter/files/inter-latin-400-normal.woff2"),
+        // fontFile("../node_modules/@fontsource/inter/files/inter-latin-700-normal.woff2"),
+      ],
+    },
+  };
   const options: DiagramOptions = {
+    svg: {
+      defaultFontFamily: resvgOptions.font?.defaultFontFamily,
+      defaultFontSize: resvgOptions.font?.defaultFontSize,
+      measureText: (text, fontWeight, fontStyle) => {
+        return measureSvgText(text, resvgOptions, fontWeight, fontStyle);
+      },
+    },
     zodmaid: {
       fill: colors["--color-sandstone-300"],
-      fillSecondary: colors["--color-sandstone-100"],
+      fillAlternate: colors["--color-sandstone-100"],
       stroke: colors["--color-sandstone-900"],
       nodePadding: 8,
       edgePadding: 2,
@@ -106,43 +123,31 @@ test("zodmaid", async () => {
       marginx: nodeSpacing,
       marginy: nodeSpacing,
     },
-    resvg: {
-      font: {
-        defaultFontFamily: "inter",
-        defaultFontSize: 14,
-        fontFiles: [
-          fontFile("../assets/font-inter/inter-latin-400-normal.ttf"),
-          fontFile("../assets/font-inter/inter-latin-400-italic.ttf"),
-          fontFile("../assets/font-inter/inter-latin-700-normal.ttf"),
-          fontFile("../assets/font-inter/inter-latin-700-italic.ttf"),
-          // fontFile("../node_modules/@fontsource/inter/files/inter-latin-400-normal.woff2"),
-          // fontFile("../node_modules/@fontsource/inter/files/inter-latin-700-normal.woff2"),
-        ],
-      },
-    },
   };
 
   {
     console.log("populate");
-    const g = populate(diagram1, options) as DaGraph;
+    const g = collect(diagram1, options) as DaGraph;
 
     console.log("layout");
     layout(g);
 
     console.log("render");
-    const image = render(g, options);
+    const svg = render(g, options);
+    const image = renderSvgImage(svg, resvgOptions);
     await Bun.write("dist/zodmaid-1.png", image.png);
   }
 
   {
     console.log("populate");
-    const g = populate(diagram2, options) as DaGraph;
+    const g = collect(diagram2, options) as DaGraph;
 
     console.log("layout");
     layout(g);
 
     console.log("render");
-    const image = render(g, options);
+    const svg = render(g, options);
+    const image = renderSvgImage(svg, resvgOptions);
     await Bun.write("dist/zodmaid-2.png", image.png);
   }
 });
