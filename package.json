@@ -1,0 +1,7 @@
+{
+  "name": "zodmaid",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}
