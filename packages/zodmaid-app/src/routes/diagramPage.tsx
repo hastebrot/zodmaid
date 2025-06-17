@@ -55,16 +55,22 @@ export const DiagramPage = () => {
     "--color-sandstone-950": "#1a1500",
   };
 
+  const fontFamily = "inter";
+  const fontSize = 14;
   const nodeSpacing = 40;
   const edgeSpacing = 10;
   const options: DiagramOptions = {
     svg: {
-      defaultFontFamily: "inter",
-      defaultFontSize: 14,
+      defaultFontFamily: fontFamily,
+      defaultFontSize: fontSize,
       measureText: (text, fontWeight, fontStyle) => {
         return {
-          width: Math.max(...text.map((it) => measureText(it, "inter", 14, fontWeight, fontStyle))),
-          height: text.length * 14,
+          width: Math.max(
+            ...text.map((text) => {
+              return measureText(text, fontFamily, fontSize, fontWeight, fontStyle);
+            }),
+          ),
+          height: text.length * fontSize,
         };
       },
     },
@@ -112,7 +118,7 @@ const measureText = (
   fontFamily: string,
   fontSize: number,
   fontWeight: string,
-  fontStyle: string
+  fontStyle: string,
 ): number => {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");

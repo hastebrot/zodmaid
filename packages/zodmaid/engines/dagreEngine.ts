@@ -40,7 +40,7 @@ export type DiagramOptions = {
     measureText: (
       text: string[],
       fontWeight: "normal" | "bold",
-      fontStyle: "normal" | "italic"
+      fontStyle: "normal" | "italic",
     ) => { width: number; height: number };
   };
   zodmaid: {
@@ -202,7 +202,10 @@ export function render(g: DaGraph, options: DiagramOptions) {
       width="${g.graph().width}"
       height="${g.graph().height}"
     >
-      <g transform="scale(1.0)">
+      <g
+        transform="scale(1.0)"
+        font-family="${options.svg.defaultFontFamily}"
+        font-size="${options.svg.defaultFontSize}">
         <rect
           width="${g.graph().width}"
           height="${g.graph().height}"

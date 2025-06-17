@@ -18,6 +18,7 @@
     "dagre": "^0.8.5",
     "graphlib": "^2.1.8",
     "graphre": "workspace:*",
+    "prettier": "^3.5.3",
     "zod": "^3.25.64"
   },
   "peerDependencies": {
