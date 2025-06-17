@@ -100,9 +100,9 @@ export const DiagramPage = () => {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (ref.current) {
-      const g = collect(diagram, options);
-      layout(g);
-      const svg = render(g, options);
+      const graph = collect(diagram, options);
+      layout(graph);
+      const svg = render(graph, options);
       ref.current.innerHTML = svg;
     }
   }, [ref]);

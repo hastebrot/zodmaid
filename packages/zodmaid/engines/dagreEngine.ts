@@ -207,13 +207,14 @@ export function render(g: DaGraph, options: DiagramOptions) {
       xmlns="http://www.w3.org/2000/svg"
       width="${g.graph().width}"
       height="${g.graph().height}"
+      viewBox="0 0 ${g.graph().width} ${g.graph().height}"
     >
       <style>
         [data-node] { cursor: pointer; }
         [data-node] rect:focus { outline-color: blue; outline-offset: 0; outline-width: 2px; }
       </style>
       <g
-        transform="scale(1.0)"
+        transform="scale(1)"
         font-family="${options.svg.defaultFontFamily}"
         font-size="${options.svg.defaultFontSize}">
         <rect
