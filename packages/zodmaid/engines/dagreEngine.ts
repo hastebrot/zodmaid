@@ -1,4 +1,3 @@
-import { Resvg, type ResvgRenderOptions } from "@resvg/resvg-js";
 import { curveBasis, line } from "d3-shape";
 import { Graph, layout as graphLayout, graphlib } from "graphre";
 import { type EdgeLabel, type GraphLabel, type GraphNode } from "graphre/types";
@@ -35,9 +34,18 @@ export type DaGraph = Graph<
 >;
 
 export type DiagramOptions = {
+  svg: {
+    defaultFontFamily?: string;
+    defaultFontSize?: number;
+    measureText: (
+      text: string[],
+      fontWeight: "normal" | "bold",
+      fontStyle: "normal" | "italic"
+    ) => { width: number; height: number };
+  };
   zodmaid: {
     fill: string;
-    fillSecondary: string;
+    fillAlternate: string;
     stroke: string;
     nodePadding: number;
     edgePadding: number;
@@ -51,40 +59,9 @@ export type DiagramOptions = {
     acyclicer?: "greedy";
     ranker?: "network-simplex" | "tight-tree" | "longest-path";
   };
-  resvg: ResvgRenderOptions;
 };
 
-export function textBbox(
-  text: string[],
-  options: ResvgRenderOptions,
-  fontWeight: "normal" | "bold" = "normal",
-  fontStyle: "normal" | "italic" = "normal"
-) {
-  const svg = `
-    <svg xmlns="http://www.w3.org/2000/svg">
-      ${text
-        .map((it) => {
-          return `<text font-weight="${fontWeight}" font-style="${fontStyle}">${it}</text>`;
-        })
-        .join("")}
-    </svg>
-  `;
-  const resvg = new Resvg(svg, {
-    font: {
-      loadSystemFonts: options.font?.fontFiles === undefined ? true : false,
-      fontFiles: options.font?.fontFiles,
-      defaultFontFamily: options.font?.defaultFontFamily,
-      defaultFontSize: options.font?.defaultFontSize,
-    },
-  });
-  const bbox = resvg.getBBox();
-  return {
-    width: bbox?.width ?? 0,
-    height: Math.max(text.length * (options.font?.defaultFontSize ?? 0)),
-  };
-}
-
-export function populate(diagram: DiagramType, options: DiagramOptions) {
+export function collect(diagram: DiagramType, options: DiagramOptions) {
   const labelOrNull = (labels: LabelType[] | undefined, index: number): string | null => {
     const label = labels && labels[index];
     return label?.text.join("\n") ?? null;
@@ -119,7 +96,7 @@ export function populate(diagram: DiagramType, options: DiagramOptions) {
     if (item.type === "node") {
       const id = nodeId(item) ?? throwError("no node id");
       const label = nodeLabel(item) ?? "";
-      const bbox = textBbox(label.split("\n"), options.resvg, "bold");
+      const bbox = options.svg.measureText(label.split("\n"), "bold", "normal");
       // console.log("node", id, label);
       g.setNode(id, {
         label,
@@ -133,7 +110,7 @@ export function populate(diagram: DiagramType, options: DiagramOptions) {
       const sourceId = edgeSourceId(item) ?? throwError("no edge source id");
       const targetId = edgeTargetId(item) ?? throwError("no edge target id");
       const label = edgeLabel(item) ?? "";
-      const bbox = textBbox(label.split("\n"), options.resvg);
+      const bbox = options.svg.measureText(label.split("\n"), "normal", "italic");
       // console.log("edge", sourceId, targetId, label);
       g.setEdge(sourceId, targetId, {
         label,
@@ -155,7 +132,7 @@ export function render(g: DaGraph, options: DiagramOptions) {
     const node = g.node(n) ?? throwError("no node");
     const x = node.x - node.width / 2;
     const y = node.y - node.height / 2;
-    const dy = options.resvg.font?.defaultFontSize ?? 0;
+    const dy = options.svg.defaultFontSize ?? 0;
     const labels = node.label?.split("\n") ?? [];
     return /* xml */ `
       <g>
@@ -206,7 +183,7 @@ export function render(g: DaGraph, options: DiagramOptions) {
         y="${y}"
         width="${edge.width}"
         height="${edge.height}"
-        fill="${options.zodmaid.fillSecondary}"
+        fill="${options.zodmaid.fillAlternate}"
         stroke="none"
       />
       <text
@@ -225,28 +202,12 @@ export function render(g: DaGraph, options: DiagramOptions) {
         <rect
           width="${g.graph().width}"
           height="${g.graph().height}"
-          fill="${options.zodmaid.fillSecondary}"
+          fill="${options.zodmaid.fillAlternate}"
         />
         ${edges.join("")}
         ${nodes.join("")}
       </g>
     </svg>
   `;
-  const resvg = new Resvg(svg, {
-    fitTo: { mode: "zoom", value: 1 },
-    background: options.zodmaid.fillSecondary,
-    font: {
-      loadSystemFonts: options.resvg.font?.fontFiles === undefined ? true : false,
-      fontFiles: options.resvg.font?.fontFiles,
-      defaultFontFamily: options.resvg.font?.defaultFontFamily,
-      defaultFontSize: options.resvg.font?.defaultFontSize,
-    },
-    shapeRendering: 2, // geometricPrecision
-    textRendering: 2, // geometricPrecision
-    imageRendering: 0, // optimizeQuality
-  });
-  return {
-    svg: resvg.toString(),
-    png: resvg.render().asPng(),
-  };
+  return svg;
 }
