@@ -40,14 +40,18 @@ type DiagramOptions = {
 };
 
 function textBbox(
-  text: string,
+  text: string[],
   options: ResvgRenderOptions,
   fontWeight: "normal" | "bold" = "normal",
   fontStyle: "normal" | "italic" = "normal"
 ) {
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg">
-      <text font-weight="${fontWeight}" font-style="${fontStyle}">${text}</text>
+      ${text
+        .map((it) => {
+          return `<text font-weight="${fontWeight}" font-style="${fontStyle}">${it}</text>`;
+        })
+        .join("")}
     </svg>
   `;
   const resvg = new Resvg(svg, {
@@ -61,14 +65,14 @@ function textBbox(
   const bbox = resvg.getBBox();
   return {
     width: bbox?.width ?? 0,
-    height: Math.max(bbox?.height ?? 0, options.font?.defaultFontSize ?? 0),
+    height: Math.max(text.length * (options.font?.defaultFontSize ?? 0)),
   };
 }
 
 function populate(diagram: DiagramType, options: DiagramOptions) {
   const labelOrNull = (labels: LabelType[] | undefined, index: number): string | null => {
     const label = labels && labels[index];
-    return label?.text[0] ?? null;
+    return label?.text.join("\n") ?? null;
   };
   const valueOrNull = (attrs: AttrType[] | undefined, key: string): string | null => {
     const attr = attrs && attrs.find((it) => it.key === key);
@@ -100,7 +104,7 @@ function populate(diagram: DiagramType, options: DiagramOptions) {
     if (item.type === "node") {
       const id = nodeId(item) ?? throwError("no node id");
       const label = nodeLabel(item) ?? "";
-      const bbox = textBbox(label, options.resvg, "bold");
+      const bbox = textBbox(label.split("\n"), options.resvg, "bold");
       // console.log("node", id, label);
       g.setNode(id, {
         label,
@@ -114,7 +118,7 @@ function populate(diagram: DiagramType, options: DiagramOptions) {
       const sourceId = edgeSourceId(item) ?? throwError("no edge source id");
       const targetId = edgeTargetId(item) ?? throwError("no edge target id");
       const label = edgeLabel(item) ?? "";
-      const bbox = textBbox(label, options.resvg);
+      const bbox = textBbox(label.split("\n"), options.resvg);
       // console.log("edge", sourceId, targetId, label);
       g.setEdge(sourceId, targetId, {
         label,
@@ -129,34 +133,42 @@ function populate(diagram: DiagramType, options: DiagramOptions) {
 
 function render(g: graphlib.Graph, options: DiagramOptions) {
   const nodes = g.nodes().map((n) => {
-    const node = g.node(n);
+    const node = g.node(n) ?? throwError("no node");
     const x = node.x - node.width / 2;
     const y = node.y - node.height / 2;
+    const dy = options.resvg.font?.defaultFontSize ?? 0;
+    const labels = node.label?.split("\n") ?? [];
     return /* xml */ `
       <g>
         <rect
           x="${x}"
           y="${y}"
+          rx="2"
+          ry="2"
           width="${node.width}"
           height="${node.height}"
           fill="${options.zodmaid.fill}"
           stroke="${options.zodmaid.stroke}"
           stroke-width="2"
         />
-        <text
-          x="${x + options.zodmaid.nodePadding}"
-          y="${y + options.zodmaid.nodePadding}"
-          fill="${options.zodmaid.stroke}"
-          font-weight="bold"
-          dominant-baseline="middle"
-          dy="0.5em">${node.label}</text>
-
+        ${labels.map((label, index) => {
+          return /* xml */ `
+            <text
+              x="${node.x}"
+              y="${y + options.zodmaid.nodePadding + dy * index}"
+              fill="${options.zodmaid.stroke}"
+              font-weight="${index === 0 ? "bold" : "normal"}"
+              text-anchor="middle"
+              dominant-baseline="middle"
+              dy="0.5em">${label}</text>
+          `;
+        })}
       </g>
     `;
   });
 
   const edges = g.edges().map((e) => {
-    const edge = g.edge(e);
+    const edge = g.edge(e) ?? throwError("no edge");
     const curve = line().curve(curveBasis);
     const path = curve(edge.points.map((p) => [p.x, p.y]));
     const label = edge.label;
@@ -191,12 +203,18 @@ function render(g: graphlib.Graph, options: DiagramOptions) {
   const svg = /* xml */ `
     <svg xmlns="http://www.w3.org/2000/svg">
       <g transform="scale(1.0)">
+        <rect
+          width="${g.graph().width}"
+          height="${g.graph().height}"
+          fill="${options.zodmaid.fillSecondary}"
+        />
         ${edges.join("")}
         ${nodes.join("")}
       </g>
     </svg>
   `;
   const resvg = new Resvg(svg, {
+    fitTo: { mode: "zoom", value: 1 },
     background: options.zodmaid.fillSecondary,
     font: {
       loadSystemFonts: options.resvg.font?.fontFiles === undefined ? true : false,
@@ -204,9 +222,9 @@ function render(g: graphlib.Graph, options: DiagramOptions) {
       defaultFontFamily: options.resvg.font?.defaultFontFamily,
       defaultFontSize: options.resvg.font?.defaultFontSize,
     },
-    shapeRendering: 2,
-    textRendering: 2,
-    imageRendering: 0,
+    shapeRendering: 2, // geometricPrecision
+    textRendering: 2, // geometricPrecision
+    imageRendering: 0, // optimizeQuality
   });
   return {
     svg: resvg.toString(),
@@ -226,24 +244,31 @@ const fontFile = (path: string) => {
 
 test("zodmaid", () => {
   const diagram = [
-    node(id("browser"), "Client Browser"),
-    node(id("api"), "HTTP API - API Gateway"),
-    node(id("service"), "GET Route"),
-    node(id("service2"), "POST Route"),
-    node(id("service3"), "Other Services/APIs"),
-    node(id("bucket"), "Storage Bucket"),
-    node(id("secrets"), "Secrets Manager"),
-    node(id("kvstore"), "Key/Value Store"),
-    node(id("rds"), "Relational Database Service"),
+    node(id("main"), ["«api»", "main"]),
+    node(id("events"), ["«topic»", "events"]),
+    node(id("services/reader.ts"), ["«service»", "services/reader.ts"]),
+    node(id("services/generator.ts"), ["«service»", "services/generator.ts"]),
+    node(id("generated-images"), ["«bucket»", "generated-images"]),
+    node(id("generate-image"), ["«job»", "generate-image"]),
+    node(id("generate-story"), ["«job»", "generate-story"]),
+    node(id("jobs/generate-image.ts"), ["«job»", "jobs/generate-image.ts"]),
+    node(id("jobs/generate-story.ts"), ["«job»", "jobs/generate-story.ts"]),
+    node(id("model_key"), ["«secret»", "model_key"]),
 
-    edge(node("browser"), arrow("->"), node("api"), "Sends HTTP Request"),
-    edge(node("api"), arrow("->"), node("service"), "Triggers Service"),
-    edge(node("api"), arrow("->"), node("service2"), "Triggers Service"),
-    edge(node("api"), arrow("->"), node("service3")),
-    edge(node("service"), arrow("->"), node("bucket"), "Read/Write"),
-    edge(node("service"), arrow("->"), node("secrets"), "Access"),
-    edge(node("service"), arrow("->"), node("kvstore"), "Read/Write"),
-    edge(node("service"), arrow("->"), node("rds"), "Execute Queries"),
+    edge(node("main"), arrow("->"), node("services/reader.ts"), "routes"),
+    edge(node("main"), arrow("->"), node("services/generator.ts"), "routes"),
+    edge(node("events"), arrow("->"), node("services/generator.ts"), "triggers"),
+
+    edge(node("services/reader.ts"), arrow("->"), node("generated-images"), "get, list"),
+    edge(node("services/reader.ts"), arrow("->"), node("generate-image"), "submit"),
+    edge(node("services/generator.ts"), arrow("->"), node("generate-story"), "submit"),
+
+    edge(node("generated-images"), arrow("->"), node("jobs/generate-image.ts"), "put"),
+    edge(node("generate-image"), arrow("->"), node("jobs/generate-image.ts"), "runs on"),
+    edge(node("generate-image"), arrow("->"), node("jobs/generate-story.ts"), "submit"),
+    edge(node("generate-story"), arrow("->"), node("jobs/generate-story.ts"), "runs on"),
+
+    edge(node("jobs/generate-story.ts"), arrow("->"), node("model_key"), "access"),
   ];
 
   // https://www.tints.dev/sandstone/EEE8D5 (300 locked, 10 saturation, perceived)
@@ -268,17 +293,19 @@ test("zodmaid", () => {
       stroke: colors["--color-sandstone-900"],
       nodePadding: 8,
       edgePadding: 2,
-      nodeSpacing: 50,
+      nodeSpacing: 40,
       edgeSpacing: 10,
     },
     dagre: {
       acyclicer: "greedy",
       ranker: "network-simplex",
       rankdir: "TB",
-      // align: "DR,
-      ranksep: 50, // zodmaid.nodeSpacing
-      nodesep: 50, // zodmaid.nodeSpacing
+      // align: "UL",
+      ranksep: 40, // zodmaid.nodeSpacing
+      nodesep: 40, // zodmaid.nodeSpacing
       edgesep: 10, // zodmaid.edgeSpacing
+      marginx: 40,
+      marginy: 40,
     },
     resvg: {
       font: {
