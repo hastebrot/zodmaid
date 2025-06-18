@@ -1,6 +1,6 @@
 # zodmaid
 
-![example http requests](./guides/images/zodmaid-nitric-http-requests.png)
+![example http requests](./guides/images/zodmaid-nitric-http-requests.svg)
 
 ```ts
 const diagram = [
@@ -25,7 +25,7 @@ const diagram = [
 ];
 ```
 
-![example local dashboard](./guides/images/zodmaid-nitric-local-dashboard.png)
+![example local dashboard](./guides/images/zodmaid-nitric-local-dashboard.svg)
 
 ```ts
 const diagram = [
