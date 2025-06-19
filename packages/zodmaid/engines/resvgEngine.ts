@@ -4,7 +4,7 @@ export function measureSvgText(
   text: string[],
   options: ResvgRenderOptions,
   fontWeight: "normal" | "bold" = "normal",
-  fontStyle: "normal" | "italic" = "normal"
+  fontStyle: "normal" | "italic" = "normal",
 ) {
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg">
@@ -30,9 +30,9 @@ export function measureSvgText(
   };
 }
 
-export function renderSvgImage(svg: string, options: ResvgRenderOptions) {
+export function renderSvgImage(svg: string, options: ResvgRenderOptions, zoomFactor = 1.0) {
   const resvg = new Resvg(svg, {
-    fitTo: { mode: "zoom", value: 1 },
+    fitTo: { mode: "zoom", value: zoomFactor },
     background: options.background,
     font: {
       loadSystemFonts: options.font?.fontFiles === undefined ? true : false,
