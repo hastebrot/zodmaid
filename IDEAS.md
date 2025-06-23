@@ -1,5 +1,100 @@
 # ideas
 
+**18 June 2025:**
+
+- https://terrastruct.com/blog/post/diagram-layout-engines-crossing-minimization/
+- https://medium.com/swlh/routing-orthogonal-diagram-connectors-in-javascript-191dc2c5ff70
+
+- https://github.com/klortho/d3-flextree
+- https://github.com/codeledge/entitree-flex
+- https://reactflow.dev/learn/layouting/layouting#layouting-nodes
+- https://github.com/tisoap/react-flow-smart-edge
+- https://github.com/Aksem/libavoid-js
+
+- https://observablehq.com/@fooloomanzoo/step-by-step-directed-graph-drawing-dagre-layout
+
+Orthogonal Edge Routing for the EditLens
+- https://vca.informatik.uni-rostock.de/~schumann/papers/2016%2B/edge-routing.pdf
+
+manhattan layout algorithm
+- https://link.springer.com/content/pdf/10.1007/BFb0021828.pdf
+- https://github.com/process-analytics/bpmn-layout-generators/issues/58
+- https://github.com/dagrejs/dagre/issues/111
+- https://github.com/bpmn-io/diagram-js/blob/v15.3.0/lib/layout/ManhattanLayout.js
+
+antv
+- https://observablehq.com/@antv
+- https://github.com/antvis/X6/tree/master/packages/x6/src/registry/router/manhattan
+- https://github.com/antvis/G6/tree/v5/packages/g6/src/utils/router
+- https://github.com/antvis/X6/tree/master/examples/x6-example-features/src/pages
+- https://github.com/antvis/X6/blob/master/sites/x6-sites/examples/showcase/practices/demo/elk.ts
+
+---
+
+https://github.com/codeledge/entitree-flex
+https://github.com/chuckzel/cytoscape-tidytree
+
+Drawing Non-layered Tidy Trees in Linear Time
+A.J. van der Ploeg
+August 2013
+
+https://github.com/kieler/elkjs
+https://arxiv.org/abs/2311.00533
+
+The Eclipse Layout Kernel
+Sören Domrös, Reinhard von Hanxleden, Miro Spönemann, Ulf Rüegg, Christoph Daniel Schulze
+November 2023
+
+https://github.com/dagrejs/dagre
+https://github.com/dagrejs/dagre/wiki#recommended-reading
+
+A Technique for Drawing Directed Graphs
+Emden R. Gansner
+Eleftherios Koutsofios
+Stephen C. North
+Kiem-Phong Vo
+March 1993
+
+2-Layer Straightline Crossing Minimization: Performance of Exact and Heuristic Algorithms
+Michael Jünger
+Petra Mutzel
+January 1997
+
+Simple and Efficient Bilayer Cross Counting
+Wilhelm Barth
+Petra Mutzel
+Michael Jünger
+January 2002
+
+Fast and Simple Horizontal Coordinate Assignment
+Ulrik Brandes and Boris K¨opf
+2002
+
+Layout of compound directed graphs
+Georg Sander
+June 1996
+
+https://www.adaptagrams.org/documentation/libavoid.html
+https://github.com/mjwybrow/adaptagrams
+
+M. Wybrow, K. Marriott, and P.J. Stuckey.
+Orthogonal connector routing.
+2010
+
+M. Wybrow, K. Marriott, and P.J. Stuckey.
+Incremental connector routing.
+2006
+
+M. Wybrow, K. Marriott and P.J. Stuckey.
+Orthogonal hyperedge routing.
+2012
+
+K. Marriott, P.J. Stuckey, and M. Wybrow.
+Seeing Around Corners: Fast Orthogonal Connector Routing.
+2014
+
+---
+
 - `/diagram` (flow, sequence, state)
 - `/layouter` (dagre, elk, cytoscape)
 - `/renderer` (svg, png, rough)
