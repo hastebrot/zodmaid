@@ -120,7 +120,7 @@ export function collect(diagram: DiagramType, options: DiagramOptions) {
     }
   }
 
-  return g;
+  return g as DaGraph;
 }
 
 export function layout(g: DaGraph) {
@@ -135,8 +135,9 @@ export function render(g: DaGraph, options: DiagramOptions) {
     const dy = options.svg.defaultFontSize ?? 0;
     const labels = node.label?.split("\n") ?? [];
     return /* xml */ `
-      <g>
+      <g data-node="${n}">
         <rect
+          tabindex="0"
           x="${x}"
           y="${y}"
           rx="2"
@@ -150,6 +151,7 @@ export function render(g: DaGraph, options: DiagramOptions) {
         ${labels.map((label, index) => {
           return /* xml */ `
             <text
+              style="pointer-events: none;"
               x="${node.x}"
               y="${y + options.zodmaid.nodePadding + dy * index}"
               fill="${options.zodmaid.stroke}"
@@ -163,7 +165,7 @@ export function render(g: DaGraph, options: DiagramOptions) {
     `;
   });
 
-  const edges = g.edges().map((e) => {
+  const edges = g.edges().map((e, index) => {
     const edge = g.edge(e) ?? throwError("no edge");
     const curve = line().curve(curveBasis);
     const path = curve(edge.points.map((p) => [p.x, p.y]));
@@ -172,27 +174,31 @@ export function render(g: DaGraph, options: DiagramOptions) {
     const x = point.x - edge.width / 2;
     const y = point.y - edge.height / 2;
     return /* xml */ `
-      <path
-        d="${path}"
-        fill="none"
-        stroke="${options.zodmaid.stroke}"
-        stroke-width="2"
-      />
-      <rect
-        x="${x}"
-        y="${y}"
-        width="${edge.width}"
-        height="${edge.height}"
-        fill="${options.zodmaid.fillAlternate}"
-        stroke="none"
-      />
-      <text
-        x="${x + options.zodmaid.edgePadding}"
-        y="${y + options.zodmaid.edgePadding}"
-        fill="${options.zodmaid.stroke}"
-        font-style="italic"
-        dominant-baseline="middle"
-        dy="0.5em">${label}</text>
+      <g data-edge="${index}">
+        <path
+          d="${path}"
+          fill="none"
+          stroke="${options.zodmaid.stroke}"
+          stroke-width="2"
+        />
+        <rect
+          x="${x}"
+          y="${y}"
+          width="${edge.width}"
+          height="${edge.height}"
+          fill="${options.zodmaid.fillAlternate}"
+          stroke="none"
+        />
+        <text
+          x="${x + options.zodmaid.edgePadding}"
+          y="${y + options.zodmaid.edgePadding}"
+          fill="${options.zodmaid.stroke}"
+          font-style="italic"
+          dominant-baseline="middle"
+          dy="0.5em">
+          ${label}
+        </text>
+      </g>
     `;
   });
 
@@ -201,6 +207,7 @@ export function render(g: DaGraph, options: DiagramOptions) {
       xmlns="http://www.w3.org/2000/svg"
       width="${g.graph().width}"
       height="${g.graph().height}"
+      viewBox="0 0 ${g.graph().width} ${g.graph().height}"
     >
       <g
         transform="scale(1.0)"
