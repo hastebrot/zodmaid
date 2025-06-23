@@ -20,7 +20,7 @@ export const routes: RouteObject[] = [
     Component: () => {
       const navigate = useNavigate();
       useEffect(() => {
-        navigate("/diagram", { replace: true });
+        navigate("/diagram-antv", { replace: true });
       }, []);
       return null;
     },

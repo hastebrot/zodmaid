@@ -16,7 +16,7 @@ export const DiagramAntvPage = () => {
       const dagreGraph = new DagreGraph<NodeData, EdgeData>({
         nodes: data.nodes.map((node) => {
           let label = node.id.toString();
-          // label = node.data.name ?? label;
+          label = node.data.name ?? label;
           return {
             ...node,
             data: {
