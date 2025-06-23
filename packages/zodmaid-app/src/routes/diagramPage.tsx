@@ -7,7 +7,6 @@ import {
   layout,
   node,
   render,
-  type DaGraph,
   type DiagramOptions,
   type DiagramType,
 } from "zodmaid";
@@ -57,6 +56,8 @@ export const DiagramPage = () => {
 
   const fontFamily = "inter";
   const fontSize = 14;
+  const nodePadding = 6;
+  const edgePadding = 2;
   const nodeSpacing = 40;
   const edgeSpacing = 10;
   const options: DiagramOptions = {
@@ -78,8 +79,8 @@ export const DiagramPage = () => {
       fill: colors["--color-sandstone-300"],
       fillAlternate: colors["--color-sandstone-100"],
       stroke: colors["--color-sandstone-900"],
-      nodePadding: 8,
-      edgePadding: 2,
+      nodePadding,
+      edgePadding,
       nodeSpacing,
       edgeSpacing,
     },
@@ -99,9 +100,9 @@ export const DiagramPage = () => {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (ref.current) {
-      const g = collect(diagram, options) as DaGraph;
-      layout(g);
-      const svg = render(g, options);
+      const graph = collect(diagram, options);
+      layout(graph);
+      const svg = render(graph, options);
       ref.current.innerHTML = svg;
     }
   }, [ref]);
