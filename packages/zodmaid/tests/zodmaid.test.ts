@@ -1,7 +1,7 @@
 import { test } from "bun:test";
 import { resolve } from "node:path";
 import { arrow, edge, id, node } from "../domains/diagramDomain";
-import { collect, layout, render, type DaGraph, type DiagramOptions } from "../engines/dagreEngine";
+import { collect, layout, render, type DiagramOptions } from "../engines/dagreEngine";
 import { measureSvgText, renderSvgImage } from "../engines/resvgEngine";
 
 const fontFile = (path: string) => {
@@ -127,27 +127,29 @@ test("zodmaid", async () => {
 
   {
     console.log("populate");
-    const g = collect(diagram1, options) as DaGraph;
+    const graph = collect(diagram1, options);
 
     console.log("layout");
-    layout(g);
+    layout(graph);
 
     console.log("render");
-    const svg = render(g, options);
-    const image = renderSvgImage(svg, resvgOptions);
-    await Bun.write("dist/zodmaid-1.png", image.png);
+    const svg = render(graph, options);
+    const image = renderSvgImage(svg, resvgOptions, 2.0);
+    await Bun.write("dist/zodmaid-nitric-http-requests@2x.png", image.png);
+    await Bun.write("dist/zodmaid-nitric-http-requests.svg", image.svg);
   }
 
   {
     console.log("populate");
-    const g = collect(diagram2, options) as DaGraph;
+    const graph = collect(diagram2, options);
 
     console.log("layout");
-    layout(g);
+    layout(graph);
 
     console.log("render");
-    const svg = render(g, options);
-    const image = renderSvgImage(svg, resvgOptions);
-    await Bun.write("dist/zodmaid-2.png", image.png);
+    const svg = render(graph, options);
+    const image = renderSvgImage(svg, resvgOptions, 2.0);
+    await Bun.write("dist/zodmaid-nitric-local-dashboard@2x.png", image.png);
+    await Bun.write("dist/zodmaid-nitric-local-dashboard.svg", image.svg);
   }
 });

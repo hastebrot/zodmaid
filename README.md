@@ -1,6 +1,9 @@
 # zodmaid
 
-![example http requests](./guides/images/zodmaid-nitric-http-requests.png)
+> [!NOTE]
+> This project is in a very early stage of development.
+
+![example http requests](./guides/images/zodmaid-nitric-http-requests.svg)
 
 ```ts
 const diagram = [
@@ -25,7 +28,7 @@ const diagram = [
 ];
 ```
 
-![example local dashboard](./guides/images/zodmaid-nitric-local-dashboard.png)
+![example local dashboard](./guides/images/zodmaid-nitric-local-dashboard.svg)
 
 ```ts
 const diagram = [
