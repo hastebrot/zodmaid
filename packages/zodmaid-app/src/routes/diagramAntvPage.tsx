@@ -15,13 +15,14 @@ export const DiagramAntvPage = () => {
       const data = graphData();
       const dagreGraph = new DagreGraph<NodeData, EdgeData>({
         nodes: data.nodes.map((node) => {
-          const label = node.data.name ?? node.id.toString();
+          let label = node.id.toString();
+          // label = node.data.name ?? label;
           return {
             ...node,
             data: {
               ...node.data,
               label: label,
-              width: 10 + measureText(label, "inter", 14, "normal", "normal"),
+              width: Math.max(20 + 14, 10 + measureText(label, "inter", 14, "normal", "normal")),
               height: 20 + 14,
             },
           };
