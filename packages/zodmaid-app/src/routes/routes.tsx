@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, type RouteObject } from "react-router";
+import { DatagridPage } from "./datagridPage";
 import { DiagramAntvPage } from "./diagramAntvPage";
 import { DiagramPage } from "./diagramPage";
 
@@ -20,11 +21,12 @@ export const routes: RouteObject[] = [
     Component: () => {
       const navigate = useNavigate();
       useEffect(() => {
-        navigate("/diagram-antv", { replace: true });
+        navigate("/datagrid", { replace: true });
       }, []);
       return null;
     },
   },
   { path: "/diagram", Component: () => <DiagramPage /> },
   { path: "/diagram-antv", Component: () => <DiagramAntvPage /> },
+  { path: "/datagrid", Component: () => <DatagridPage /> },
 ];
