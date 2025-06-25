@@ -28,12 +28,20 @@ const columns: Column<Row>[] = [
     key: "index",
     name: "Index",
     width: "max-content",
+    renderCell(props) {
+      return <div className="text-gray-500">{props.row.index}</div>;
+    },
   },
   {
     key: "businessCase",
     name: "Business Case",
     renderHeaderCell(props) {
-      return <div>{props.column.name}</div>;
+      return (
+        <div className="flex gap-1 items-center">
+          <div className="text-red-500 font-mono text-sm/none">{`{}`}</div>
+          <div>{props.column.name}</div>
+        </div>
+      );
     },
     renderCell(props) {
       return (
@@ -45,18 +53,18 @@ const columns: Column<Row>[] = [
               console.log("button");
             }}
           >
-            <div className="text-blue-500 font-mono text-sm/none">{`""`}</div>
+            <div className="text-blue-500 font-mono text-sm/none">{`str`}</div>
           </button>
           <div className="flex gap-1 items-center">
             <div className="text-green-500 font-mono text-sm/none">{`//`}</div>
             <div className="text-red-500 font-mono text-sm/none">{`<>`}</div>
             <div className="text-red-500 font-mono text-sm/none">{`{}`}</div>
             <div className="text-red-500 font-mono text-sm/none">{`[]`}</div>
-            <div className="text-blue-500 font-mono text-sm/none">{`""`}</div>
-            <div className="text-blue-500 font-mono text-sm/none">{`#`}</div>
-            <div className="text-blue-500 font-mono text-sm/none">{`01`}</div>
-            <div className="text-blue-500 font-mono text-sm/none">{`Ø`}</div>
-            <div className="text-blue-500 font-mono text-sm/none">{`$`}</div>
+            <div className="text-blue-500 font-mono text-sm/none">{`str`}</div>
+            <div className="text-blue-500 font-mono text-sm/none">{`num`}</div>
+            <div className="text-blue-500 font-mono text-sm/none">{`bool`}</div>
+            <div className="text-blue-500 font-mono text-sm/none">{`null`}</div>
+            <div className="text-blue-500 font-mono text-sm/none">{`f(x)`}</div>
             {props.row.businessCase}
           </div>
         </div>
