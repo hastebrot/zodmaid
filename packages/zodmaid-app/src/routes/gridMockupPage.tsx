@@ -200,7 +200,7 @@ const JsonType = (props: {
   return (
     <div
       className={classNames(
-        "min-w-[10px] font-mono text-xs/none",
+        "min-w-[10px] font-mono text-sm/none",
         props.variant === "composite" && [
           "text-shadow-rose-900 text-shadow-2xs text-rose-700 font-[700]",
           "tracking-[0.25em]",
