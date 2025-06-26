@@ -40,7 +40,7 @@
         "@antv/x6": "^2.18.1",
         "@fontsource/inter": "^5.2.6",
         "@fontsource/iosevka": "^5.2.5",
-        "@fontsource/roboto-condensed": "^5.2.6",
+        "@fontsource/roboto-mono": "^5.2.6",
         "@tailwindcss/vite": "^4.1.10",
         "@types/bun": "^1.2.17",
         "@types/node": "^24.0.4",
@@ -87,7 +87,7 @@
 
     "@fontsource/iosevka": ["@fontsource/iosevka@5.2.5", "", {}, "sha512-Zv/UHJodDug1LcnWv2u2+GPp3oWP3U6Xp16cJOsqqZQNsCu8sA/ttT331N0NypxBZ+7c8szlSRlYDcy9liZ8pw=="],
 
-    "@fontsource/roboto-condensed": ["@fontsource/roboto-condensed@5.2.6", "", {}, "sha512-xcvHM/urk/hdZknJNBpUzFdAA00QgKq+FdAfjO8soi9xeTlAPNz2wD2k+K7omsCfedGcOlQ6VnWJIRkF0egUjg=="],
+    "@fontsource/roboto-mono": ["@fontsource/roboto-mono@5.2.6", "", {}, "sha512-fLCa3zs9XruKE8Fdbq0UWB0wqTi5dzi09QsnW7HgTwwnSVDZ3nH+X7Qg7l0yeIZs+E472cKE3RUD21ZnaXk4Zg=="],
 
     "@isaacs/fs-minipass": ["@isaacs/fs-minipass@4.0.1", "", { "dependencies": { "minipass": "^7.0.4" } }, "sha512-wgm9Ehl2jpeqP3zw/7mo3kRHFp5MEDhqAdwy1fTGkHAwnkGOVsgpvQhL8B5n1qlb01jV3n/bI0ZfZp5lWA1k4w=="],
 

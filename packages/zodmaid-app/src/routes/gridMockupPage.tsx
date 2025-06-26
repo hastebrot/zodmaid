@@ -28,7 +28,7 @@ export const GridMockupPage = () => {
           <div className="flex gap-1 items-start min-w-[350px]">
             <div className="flex gap-1 items-center">
               <JsonValue>
-                <span className="font-[monospace]">?price * ?quantity</span>
+                <span className="font-mono">?price * ?quantity</span>
               </JsonValue>
             </div>
           </div>
@@ -119,60 +119,56 @@ export const GridMockupPage = () => {
         </Cell>
       </Row>
       <Row>
-        <Cell>
-          <div className="flex gap-1 items-start">
-            <GridExpand />
-            <div className="flex flex-col gap-1">
-              <div className="flex gap-1 items-center">
+        <Cell noPadding>
+          <div className="flex flex-row items-stretch">
+            <div className="flex flex-col h-full p-0.5">
+              <CellExpander />
+            </div>
+            <div className="flex flex-col justify-start p-1 gap-1">
+              <div className="flex flex-row items-center gap-1">
                 <JsonType variant="composite">{`[]`}</JsonType>
                 <JsonKey>items</JsonKey>
               </div>
               <div className="inline-block ml-[-1px]">
-                <div className="[&>svg>g]:fill-none scale-[calc(18/24)] origin-top-left text-zinc-700 opacity-40">
+                <div className="[&>svg>g]:fill-none flex items-center justify-start size-[18px] text-zinc-700 opacity-40">
                   {iconTable}
                 </div>
               </div>
               <div className="inline-block ml-[-1px]">
-                <div className="scale-[calc(18/24)] origin-top-left text-zinc-700 opacity-100">
+                <div className="flex items-center justify-start size-[18px] text-zinc-700 opacity-100">
                   {iconTable}
                 </div>
               </div>
             </div>
           </div>
         </Cell>
-        <Cell>
-          <div className="flex gap-1 items-start">
-            <GridExpand />
-            <div className="flex gap-1 items-center">
-              <JsonType variant="composite">{`{}`}</JsonType>
-              <JsonIndex>5</JsonIndex>
+        <Cell noPadding>
+          <div className="flex flex-row items-stretch">
+            <div className="flex flex-col h-full p-0.5">
+              <CellExpander />
+            </div>
+            <div className="flex flex-col justify-start p-1">
+              <div className="flex flex-row items-center gap-1">
+                <JsonType variant="composite">{`{}`}</JsonType>
+                <JsonIndex>5</JsonIndex>
+              </div>
             </div>
           </div>
         </Cell>
-        <Cell>
-          <div className="flex gap-1 items-start">
-            <GridExpand />
-            <div className="flex gap-1 items-center">
-              <JsonType variant="composite">{`<>`}</JsonType>
-              <JsonIndex>15</JsonIndex>
+        <Cell noPadding>
+          <div className="flex flex-row items-stretch">
+            <div className="flex flex-col h-full p-0.5">
+              <CellExpander />
+            </div>
+            <div className="flex flex-col justify-start p-1">
+              <div className="flex flex-row items-center gap-1">
+                <JsonType variant="composite">{`<>`}</JsonType>
+                <JsonIndex>15</JsonIndex>
+              </div>
             </div>
           </div>
         </Cell>
       </Row>
-    </div>
-  );
-};
-
-const GridExpand = () => {
-  return (
-    <div
-      className={classNames(
-        "h-full min-h-[50px] w-[16px] mb-[-5px] my-[-1px] bg-gray-300",
-        "border-gray-500 border-l-white border-t-white border",
-        "outline-gray-300 outline outline-offset-0",
-      )}
-    >
-      <div className="inline-block scale-60 origin-top-left">{iconCaretUp}</div>
     </div>
   );
 };
@@ -200,16 +196,30 @@ const JsonType = (props: {
   return (
     <div
       className={classNames(
-        "min-w-[10px] font-mono text-sm/none",
+        "min-w-[10px] font-mono-condensed text-sm/none",
         props.variant === "composite" && [
           "text-shadow-rose-900 text-shadow-2xs text-rose-700 font-[700]",
-          "tracking-[0.25em]",
+          "tracking-[0.15em]",
         ],
         props.variant === "primitive" && "text-sky-700 font-[700]",
         props.variant === "comment" && "text-green-700 font-[700]",
       )}
     >
       {props.children}
+    </div>
+  );
+};
+
+const CellExpander = () => {
+  return (
+    <div
+      className={classNames(
+        "pt-0.5 h-full w-[16px] bg-gray-300",
+        "border-gray-500 border-l-white border-t-white border",
+        "outline-gray-300 outline outline-offset-0",
+      )}
+    >
+      <div className="inline-flex items-center justify-start size-[14px]">{iconCaretUp}</div>
     </div>
   );
 };
@@ -222,15 +232,20 @@ const Row = (props: { children?: React.ReactNode }) => {
   );
 };
 
-const Cell = (props: { children?: React.ReactNode; variant?: "yellow" | "green" | "blue" }) => {
+const Cell = (props: {
+  children?: React.ReactNode;
+  variant?: "yellow" | "green" | "blue";
+  noPadding?: boolean;
+}) => {
   return (
     <div
       className={classNames(
-        "w-[max-content] px-1 pr-2 py-1 pb-2",
+        "flex w-[max-content] p-1.5 px-1 gap-1",
         "first:border-l border-b border-r border-gray-400",
         props.variant === "yellow" && "bg-yellow-200",
         props.variant === "green" && "bg-lime-200",
         props.variant === "blue" && "bg-sky-200",
+        props.noPadding && "!p-0",
       )}
     >
       {props.children}

@@ -29,6 +29,6 @@ export const routes: RouteObject[] = [
   },
   { path: "/diagram", Component: () => <DiagramPage /> },
   { path: "/diagram-antv", Component: () => <DiagramAntvPage /> },
-  { path: "/datagrid", Component: () => <DatagridPage /> },
+  { path: "/grid", Component: () => <DatagridPage /> },
   { path: "/grid-mockup", Component: () => <GridMockupPage /> },
 ];
