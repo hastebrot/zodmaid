@@ -1,7 +1,10 @@
 import { useEffect } from "react";
 import { useNavigate, type RouteObject } from "react-router";
-import { DiagramAntvPage } from "./diagramAntvPage";
-import { DiagramPage } from "./diagramPage";
+import { DiagramAntvPage } from "./diagram/diagramAntvPage";
+import { DiagramPage } from "./diagram/diagramPage";
+import { GridViewPage } from "./grid/gridViewPage";
+import { GridMockupPage } from "./grid/mockupPage";
+import { ReactDataGridPage } from "./grid/reactDataGridPage";
 
 // dagre, https://github.com/antvis/layout/blob/v5/packages/layout/src/dagre.ts
 // - uses @dagrejs/dagre, https://github.com/dagrejs/dagre
@@ -20,11 +23,14 @@ export const routes: RouteObject[] = [
     Component: () => {
       const navigate = useNavigate();
       useEffect(() => {
-        navigate("/diagram", { replace: true });
+        navigate("/grid-view", { replace: true });
       }, []);
       return null;
     },
   },
   { path: "/diagram", Component: () => <DiagramPage /> },
   { path: "/diagram-antv", Component: () => <DiagramAntvPage /> },
+  { path: "/grid", Component: () => <ReactDataGridPage /> },
+  { path: "/grid-mockup", Component: () => <GridMockupPage /> },
+  { path: "/grid-view", Component: () => <GridViewPage /> },
 ];
