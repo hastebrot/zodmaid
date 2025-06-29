@@ -17,6 +17,7 @@ const GridViewForOrder = () => {
   const data: DataProps<DataModel> = {
     rows: [
       { key: "orderDate", value: "2019-12-01" },
+      { key: "_items", value: [] },
       { key: "items", value: [] },
       { key: "shipTo", value: {} },
     ],

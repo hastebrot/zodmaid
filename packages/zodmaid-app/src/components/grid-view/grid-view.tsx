@@ -131,48 +131,61 @@ export const GridView = <DataModel,>(props: { value: GridViewProps<DataModel> })
             </GridCell>
           ))}
         </div>
-        {data.rows.map((row, rowIndex) => (
-          <div key={rowIndex} role="row" className="contents" data-row-index={rowIndex}>
-            {props.value.showRowLabels && (
-              <GridCell
-                key={-1}
-                column={1}
-                className={classNames(
-                  "bg-(--cell-bg-label) text-(--cell-fg-label) min-w-[28px]",
-                  "border-t-(--cell-border-label) border-r border-r-(--cell-border-base)",
-                  "flex items-start justify-center",
-                )}
-              >
-                {toRowLabel(rowIndex + (props.value.rowOffset ?? 0))}
-              </GridCell>
-            )}
-            {props.value.columns.map((column, columnIndex) => (
-              <GridCell
-                key={columnIndex}
-                column={columnIndex + 2}
-                isSelectable
-                className={classNames(
-                  column.width && "w-(--width)",
-                  column.minWidth && "min-w-(--min-width)",
-                  column.maxWidth && "max-w-(--max-width)",
-                )}
-                style={
-                  {
-                    "--width": column.width,
-                    "--min-width": column.minWidth,
-                    "--max-width": column.maxWidth,
-                  } as React.CSSProperties
-                }
-              >
-                {column.cellRenderer ? (
-                  column.cellRenderer({ columnIndex, rowIndex, row: row })
-                ) : (
-                  <div>{(row as any)[column.key]}</div>
-                )}
-              </GridCell>
-            ))}
-          </div>
-        ))}
+        {data.rows.map((row, rowIndex) => {
+          const isItemsRow = row.key && row.key === "_items";
+          const isOtherItemsRow = row.key && row.key === "items";
+          return (
+            <div key={rowIndex} role="row" className="contents" data-row-index={rowIndex}>
+              {props.value.showRowLabels && (
+                <GridCell
+                  key={-1}
+                  column={1}
+                  className={classNames(
+                    "bg-(--cell-bg-label) text-(--cell-fg-label) min-w-[28px]",
+                    "border-t-(--cell-border-label) border-r border-r-(--cell-border-base)",
+                    "flex items-start justify-center",
+                  )}
+                >
+                  {toRowLabel(rowIndex + (props.value.rowOffset ?? 0))}
+                </GridCell>
+              )}
+              {isItemsRow && (
+                <GridCell key={0} column={[2, 4]}>
+                  items items items items
+                </GridCell>
+              )}
+
+              {!isItemsRow &&
+                props.value.columns.map((column, columnIndex) => (
+                  <GridCell
+                    key={columnIndex}
+                    column={columnIndex + 2}
+                    isSelectable
+                    className={classNames(
+                      column.width && "w-(--width)",
+                      column.minWidth && "min-w-(--min-width)",
+                      column.maxWidth && "max-w-(--max-width)",
+                      isOtherItemsRow && columnIndex === 0 && "[&>div]:invisible",
+                    )}
+                    hideBorderTop={isOtherItemsRow && columnIndex === 0}
+                    style={
+                      {
+                        "--width": column.width,
+                        "--min-width": column.minWidth,
+                        "--max-width": column.maxWidth,
+                      } as React.CSSProperties
+                    }
+                  >
+                    {column.cellRenderer ? (
+                      column.cellRenderer({ columnIndex, rowIndex, row: row })
+                    ) : (
+                      <div>{(row as any)[column.key]}</div>
+                    )}
+                  </GridCell>
+                ))}
+            </div>
+          );
+        })}
       </Grid>
     </GridViewContext>
   );
@@ -196,6 +209,7 @@ export const Grid = (props: {
       aria-label={props.name}
       className={classNames(
         props.className,
+        "relative",
         "w-fit grid auto-cols-max grid-flow-col border-(--cell-border-base) border border-t-0",
       )}
       style={props.style}
@@ -211,6 +225,7 @@ export const GridCell = (props: {
   style?: React.CSSProperties;
   column: number | [number, number];
   isSelectable?: boolean;
+  hideBorderTop?: boolean;
 }) => {
   const [isFocused, setFocused] = useState(false);
   const { focusProps } = useFocus({
@@ -230,6 +245,7 @@ export const GridCell = (props: {
         props.className,
         "grid relative",
         "col-(--column) border-(--cell-border-base) not-first:border-l border-t",
+        props.hideBorderTop && "border-t-0",
         props.isSelectable && ["cursor-auto select-none"],
       )}
       style={
