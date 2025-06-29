@@ -1,7 +1,9 @@
+import { useFocus } from "@react-aria/interactions";
 import React, { createContext, useContext, useState } from "react";
 import { classNames } from "../../helpers/clsx";
 
 export type GridViewProps<DataModel> = {
+  readonly name?: string;
   readonly data: DataProps<DataModel>;
   readonly columns: ColumnProps<DataModel>[];
   readonly columnsSpec?: string;
@@ -45,6 +47,7 @@ export const useGridView = <DataModel,>(
   props: GridViewProps<DataModel>,
 ): GridViewProps<DataModel> => {
   return {
+    name: props.name,
     data: props.data,
     columns: props.columns,
     columnsSpec: props.columnsSpec,
@@ -84,6 +87,7 @@ export const GridView = <DataModel,>(props: { value: GridViewProps<DataModel> })
           props.value.fullWidth && "!w-full",
         )}
         style={{ ...gridStyle, gridTemplateColumns: props.value.columnsSpec }}
+        name={props.value.name}
       >
         {props.value.showColumnLabels && (
           <div key="row-1" role="row" className="contents" data-row-index={-1}>
@@ -184,10 +188,12 @@ export const Grid = (props: {
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  name?: string;
 }) => {
   return (
     <div
       role="grid"
+      aria-label={props.name}
       className={classNames(
         props.className,
         "w-fit grid auto-cols-max grid-flow-col border-(--cell-border-base) border border-t-0",
@@ -206,14 +212,24 @@ export const GridCell = (props: {
   column: number | [number, number];
   isSelectable?: boolean;
 }) => {
+  const [isFocused, setFocused] = useState(false);
+  const { focusProps } = useFocus({
+    onFocus() {
+      setFocused(true);
+    },
+    onBlur() {
+      setFocused(false);
+    },
+  });
   return (
     <div
+      {...focusProps}
       role="cell"
       tabIndex={props.isSelectable ? -1 : undefined}
       className={classNames(
         props.className,
-        "grid relative focus:[&>div[aria-hidden]]:block overflow-hidden",
-        "col-(--column) border-(--cell-border-base) not-first:border-l border-t p-2 py-0",
+        "grid relative",
+        "col-(--column) border-(--cell-border-base) not-first:border-l border-t",
         props.isSelectable && ["cursor-auto select-none"],
       )}
       style={
@@ -223,16 +239,23 @@ export const GridCell = (props: {
         } as React.CSSProperties
       }
     >
-      {props.isSelectable && (
+      {props.isSelectable && isFocused && (
         <div
-          aria-hidden
           className={classNames(
-            "absolute hidden inset-0 z-10 pointer-events-none",
+            "absolute inset-0 z-10 pointer-events-none",
             "outline-2 -outline-offset-1 outline-(--cell-outline-selected)",
           )}
         ></div>
       )}
-      {props.children}
+      <div
+        className={classNames(
+          // wrap.
+          "grid p-2 py-0",
+          "overflow-hidden",
+        )}
+      >
+        {props.children}
+      </div>
     </div>
   );
 };

@@ -1,8 +1,9 @@
-import { GridView, useGridView, type DataProps } from "../../components/grid/gridView";
+import { GridView, useGridView, type DataProps } from "../../components/grid-view/grid-view";
+import { classNames } from "../../helpers/clsx";
 
 export const GridViewPage = () => {
   return (
-    <div className="min-h-dvh bg-gray-100 text-gray-900 p-4 ">
+    <div className="min-h-dvh bg-gray-100 text-gray-900 p-4">
       <GridViewForOrder />
     </div>
   );
@@ -21,6 +22,7 @@ const GridViewForOrder = () => {
     ],
   };
   const gridView = useGridView({
+    name: "order",
     data,
     columns: [
       {
@@ -35,7 +37,13 @@ const GridViewForOrder = () => {
           if (props.row.key === "items") {
             return (
               <div className="grid -mx-2">
-                <div className="grid -m-px overflow-hidden">
+                <div
+                  className={classNames(
+                    // wrap.
+                    "grid -m-px",
+                    "overflow-hidden",
+                  )}
+                >
                   <GridViewForItems columnOffset={props.columnIndex} rowOffset={props.rowIndex} />
                 </div>
               </div>
@@ -44,7 +52,13 @@ const GridViewForOrder = () => {
           if (props.row.key === "shipTo") {
             return (
               <div className="grid -mx-2">
-                <div className="grid -m-px overflow-hidden">
+                <div
+                  className={classNames(
+                    // wrap.
+                    "grid -m-px",
+                    "overflow-hidden",
+                  )}
+                >
                   <GridViewForShipTo columnOffset={props.columnIndex} rowOffset={props.rowIndex} />
                 </div>
               </div>
@@ -57,11 +71,7 @@ const GridViewForOrder = () => {
     showRowLabels: true,
     showColumnLabels: true,
   });
-  return (
-    <div className="min-h-dvh bg-gray-100 text-gray-900 p-4">
-      <GridView value={gridView} />
-    </div>
-  );
+  return <GridView value={gridView} />;
 };
 
 const GridViewForItems = (props: { columnOffset?: number; rowOffset?: number }) => {
@@ -81,6 +91,7 @@ const GridViewForItems = (props: { columnOffset?: number; rowOffset?: number }) 
     ],
   };
   const gridView = useGridView({
+    name: "order.items",
     data,
     columnsSpec: "auto max-content max-content 1fr",
     columns: [
@@ -137,6 +148,7 @@ const GridViewForShipTo = (props: { columnOffset?: number; rowOffset?: number })
     ],
   };
   const gridView = useGridView({
+    name: "order.shipTo",
     data,
     columnsSpec: "auto max-content 1fr",
     columns: [
