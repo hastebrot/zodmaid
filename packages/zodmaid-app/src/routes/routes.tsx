@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { useNavigate, type RouteObject } from "react-router";
-import { DiagramAntvPage } from "./diagram/diagramAntvPage";
-import { DiagramPage } from "./diagram/diagramPage";
-import { GridViewPage } from "./grid/gridViewPage";
-import { GridMockupPage } from "./grid/mockupPage";
-import { ReactDataGridPage } from "./grid/reactDataGridPage";
+import { DiagramAntvPage } from "./diagram/diagram-antv-page";
+import { DiagramPage } from "./diagram/diagram-page";
+import { GridMockupPage } from "./grid/grid-mockup-page";
+import { GridViewPage } from "./grid/grid-view-page";
+import { ReactDataGridPage } from "./grid/react-data-grid-page";
 
 // dagre, https://github.com/antvis/layout/blob/v5/packages/layout/src/dagre.ts
 // - uses @dagrejs/dagre, https://github.com/dagrejs/dagre
