@@ -14,7 +14,10 @@ describe("grid view", () => {
     cleanup();
     const screen = render(<GridViewPage />);
     await waitFor(() => Promise.resolve());
-    expect(screen.getAllByRole("row")).toHaveLength(18);
+    screen.baseElement.querySelector("div");
+    screen.getByRole("grid", { name: "order" }).querySelector("div");
+
+    expect(screen.getAllByRole("row")).toHaveLength(19);
     expect(screen.getByRole("grid", { name: "order" })).toBeInTheDocument();
     expect(screen.getByRole("grid", { name: "order.items" })).toBeInTheDocument();
     expect(screen.getByRole("grid", { name: "order.shipTo" })).toBeInTheDocument();

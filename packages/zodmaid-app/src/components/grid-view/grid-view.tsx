@@ -156,38 +156,54 @@ export const GridView = <DataModel,>(props: { value: GridViewProps<DataModel> })
               )}
 
               {!isItemsRow &&
-                props.value.columns.map((column, columnIndex) => (
-                  <GridCell
-                    key={columnIndex}
-                    column={columnIndex + 2}
-                    isSelectable
-                    className={classNames(
-                      column.width && "w-(--width)",
-                      column.minWidth && "min-w-(--min-width)",
-                      column.maxWidth && "max-w-(--max-width)",
-                      isOtherItemsRow && columnIndex === 0 && "[&>div]:invisible",
-                    )}
-                    hideBorderTop={isOtherItemsRow && columnIndex === 0}
-                    style={
-                      {
-                        "--width": column.width,
-                        "--min-width": column.minWidth,
-                        "--max-width": column.maxWidth,
-                      } as React.CSSProperties
-                    }
-                  >
-                    {column.cellRenderer ? (
-                      column.cellRenderer({ columnIndex, rowIndex, row: row })
-                    ) : (
-                      <div>{(row as any)[column.key]}</div>
-                    )}
-                  </GridCell>
-                ))}
+                props.value.columns.map((column, columnIndex) => {
+                  const value = (row as any)[column.key];
+                  return (
+                    <GridCell
+                      key={columnIndex}
+                      column={columnIndex + 2}
+                      isSelectable
+                      className={classNames(
+                        column.width && "w-(--width)",
+                        column.minWidth && "min-w-(--min-width)",
+                        column.maxWidth && "max-w-(--max-width)",
+                        isOtherItemsRow && columnIndex === 0 && "[&>div]:invisible",
+                      )}
+                      hideBorderTop={isOtherItemsRow && columnIndex === 0}
+                      style={
+                        {
+                          "--width": column.width,
+                          "--min-width": column.minWidth,
+                          "--max-width": column.maxWidth,
+                        } as React.CSSProperties
+                      }
+                    >
+                      {column.cellRenderer ? (
+                        column.cellRenderer({ columnIndex, rowIndex, row: row })
+                      ) : (
+                        <CellContent value={value} />
+                      )}
+                    </GridCell>
+                  );
+                })}
             </div>
           );
         })}
       </Grid>
     </GridViewContext>
+  );
+};
+
+const CellContent = (props: { value: any }) => {
+  return (
+    <div>
+      <div>{props.value}</div>
+      {/* <input
+        className="appearance-none focus:outline-2 outline-(--cell-outline-selected) w-full"
+        type="text"
+        defaultValue={props.value}
+      /> */}
+    </div>
   );
 };
 
@@ -258,8 +274,8 @@ export const GridCell = (props: {
       {props.isSelectable && isFocused && (
         <div
           className={classNames(
-            "absolute inset-0 z-10 pointer-events-none",
-            "outline-2 -outline-offset-1 outline-(--cell-outline-selected)",
+            "absolute inset-[-1px] z-10 pointer-events-none",
+            "border-2 border-(--cell-outline-selected)",
           )}
         ></div>
       )}
