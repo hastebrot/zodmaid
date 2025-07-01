@@ -90,35 +90,32 @@ export const GridView = <DataModel,>(props: { value: GridViewProps<DataModel> })
         name={props.value.name}
       >
         {props.value.showColumnLabels && (
-          <div key="row-1" role="row" className="contents" data-row-index={-1}>
+          <GridRow key="labels" name="row[L]" rowIndex={0}>
             {props.value.showRowLabels && (
-              <GridCell key={-1} column={1} className="bg-(--cell-bg-label)" />
+              <GridLabelCell key="label" name="cell[L][L]" columnIndex={1} />
             )}
             {props.value.columns.map((_column, columnIndex) => (
-              <GridCell
+              <GridLabelCell
                 key={columnIndex}
-                column={columnIndex + 2}
-                className="bg-(--cell-bg-label) text-(--cell-fg-label) border-l-(--cell-border-label) border-b border-b-(--cell-border-base) flex items-start justify-center"
+                name={`cell[L][${columnIndex}]`}
+                columnIndex={columnIndex + 2}
+                position="column"
               >
                 {toColumnLabel(columnIndex + (props.value.columnOffset ?? 0))}
-              </GridCell>
+              </GridLabelCell>
             ))}
-          </div>
+          </GridRow>
         )}
-        <div key="row-2" role="row" className="contents" data-row-index={-1}>
+        <GridRow key="header" name="row[H]" rowIndex={1}>
           {props.value.showRowLabels && (
-            <GridCell
-              key={-1}
-              column={1}
-              className="bg-(--cell-bg-label) text-(--cell-fg-label) border-t-(--cell-border-label) border-r border-r-(--cell-border-base)"
-            />
+            <GridLabelCell key="label" name="cell[H][L]" columnIndex={1} position="row" />
           )}
           {props.value.columns.map((column, columnIndex) => (
-            <GridCell
+            <GridHeaderCell
               key={columnIndex}
-              column={columnIndex + 2}
+              name={`cell[H][${columnIndex}]`}
+              columnIndex={columnIndex + 2}
               isSelectable
-              className="bg-(--cell-bg-header)"
             >
               {column.headerCellRenderer ? (
                 column.headerCellRenderer({
@@ -128,55 +125,48 @@ export const GridView = <DataModel,>(props: { value: GridViewProps<DataModel> })
               ) : (
                 <div>{column.label}</div>
               )}
-            </GridCell>
+            </GridHeaderCell>
           ))}
-        </div>
+        </GridRow>
         {data.rows.map((row, rowIndex) => {
           const isItemsRow = row.key && row.key === "_items";
           const isOtherItemsRow = row.key && row.key === "items";
           return (
-            <div key={rowIndex} role="row" className="contents" data-row-index={rowIndex}>
+            <GridRow key={rowIndex} name={`row[${rowIndex}]`} rowIndex={rowIndex + 2}>
               {props.value.showRowLabels && (
-                <GridCell
-                  key={-1}
-                  column={1}
-                  className={classNames(
-                    "bg-(--cell-bg-label) text-(--cell-fg-label) min-w-[28px]",
-                    "border-t-(--cell-border-label) border-r border-r-(--cell-border-base)",
-                    "flex items-start justify-center",
-                  )}
+                <GridLabelCell
+                  key="label"
+                  name={`cell[${rowIndex}][L]`}
+                  columnIndex={1}
+                  position="row"
                 >
                   {toRowLabel(rowIndex + (props.value.rowOffset ?? 0))}
-                </GridCell>
+                </GridLabelCell>
               )}
               {isItemsRow && (
-                <GridCell key={0} column={[2, 4]}>
+                <GridCell key={0} columnIndex={2} columnEndIndex={4} isSelectable>
                   items items items items
                 </GridCell>
               )}
-
               {!isItemsRow &&
                 props.value.columns.map((column, columnIndex) => {
                   const value = (row as any)[column.key];
                   return (
                     <GridCell
                       key={columnIndex}
-                      column={columnIndex + 2}
-                      isSelectable
                       className={classNames(
-                        column.width && "w-(--width)",
-                        column.minWidth && "min-w-(--min-width)",
-                        column.maxWidth && "max-w-(--max-width)",
-                        isOtherItemsRow && columnIndex === 0 && "[&>div]:invisible",
+                        isOtherItemsRow && columnIndex === 0 && "[&>div]:invisible border-t-0",
                       )}
-                      hideBorderTop={isOtherItemsRow && columnIndex === 0}
                       style={
                         {
-                          "--width": column.width,
-                          "--min-width": column.minWidth,
-                          "--max-width": column.maxWidth,
+                          width: column.width,
+                          minWidth: column.minWidth,
+                          maxWidth: column.maxWidth,
                         } as React.CSSProperties
                       }
+                      name={`cell[${rowIndex}][${columnIndex}]`}
+                      columnIndex={columnIndex + 2}
+                      isSelectable
                     >
                       {column.cellRenderer ? (
                         column.cellRenderer({ columnIndex, rowIndex, row: row })
@@ -186,7 +176,7 @@ export const GridView = <DataModel,>(props: { value: GridViewProps<DataModel> })
                     </GridCell>
                   );
                 })}
-            </div>
+            </GridRow>
           );
         })}
       </Grid>
@@ -222,12 +212,12 @@ export const Grid = (props: {
   return (
     <div
       role="grid"
-      aria-label={props.name}
       className={classNames(
         props.className,
-        "relative",
-        "w-fit grid auto-cols-max grid-flow-col border-(--cell-border-base) border border-t-0",
+        "relative w-fit grid auto-cols-max grid-flow-col",
+        "border-(--cell-border-base) border border-t-0",
       )}
+      aria-label={props.name}
       style={props.style}
     >
       {props.children}
@@ -235,13 +225,84 @@ export const Grid = (props: {
   );
 };
 
+export type GridRowProps = {
+  children?: React.ReactNode;
+  name?: string;
+  rowIndex?: number;
+};
+
+export const GridRow = (props: GridRowProps) => {
+  return (
+    <div
+      role="row"
+      className="contents"
+      aria-label={props.name}
+      aria-rowindex={props.rowIndex ? props.rowIndex + 1 : undefined}
+    >
+      {props.children}
+    </div>
+  );
+};
+
+const GridLabelCell = (props: {
+  children?: React.ReactNode;
+  name?: string;
+  columnIndex?: number;
+  columnEndIndex?: number;
+  isSelectable?: boolean;
+  position?: "column" | "row";
+}) => {
+  return (
+    <GridCell
+      className={classNames(
+        "bg-(--cell-bg-label) text-(--cell-fg-label)",
+        "text-[14px]/[28px] min-w-[28px]",
+        "flex items-start justify-center",
+        props.position === "column" && [
+          "border-l-(--cell-border-label)",
+          "border-b border-b-(--cell-border-base)",
+        ],
+        props.position === "row" && [
+          "border-t-(--cell-border-label)",
+          "border-r border-r-(--cell-border-base)",
+        ],
+      )}
+      columnIndex={props.columnIndex}
+      columnEndIndex={props.columnEndIndex}
+      isSelectable={props.isSelectable}
+    >
+      {props.children}
+    </GridCell>
+  );
+};
+
+const GridHeaderCell = (props: {
+  children?: React.ReactNode;
+  name?: string;
+  columnIndex?: number;
+  columnEndIndex?: number;
+  isSelectable?: boolean;
+}) => {
+  return (
+    <GridCell
+      className={classNames("bg-(--cell-bg-header)")}
+      columnIndex={props.columnIndex}
+      columnEndIndex={props.columnEndIndex}
+      isSelectable={props.isSelectable}
+    >
+      {props.children}
+    </GridCell>
+  );
+};
+
 export const GridCell = (props: {
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
-  column: number | [number, number];
+  name?: string;
+  columnIndex?: number;
+  columnEndIndex?: number;
   isSelectable?: boolean;
-  hideBorderTop?: boolean;
 }) => {
   const [isFocused, setFocused] = useState(false);
   const { focusProps } = useFocus({
@@ -252,6 +313,15 @@ export const GridCell = (props: {
       setFocused(false);
     },
   });
+  const toGridColumn = (columnIndex?: number, columnEndIndex?: number): string | undefined => {
+    if (columnIndex === undefined) {
+      return undefined;
+    }
+    if (columnEndIndex === undefined) {
+      return `${columnIndex}`;
+    }
+    return `${columnIndex} / ${columnEndIndex}`;
+  };
   return (
     <div
       {...focusProps}
@@ -260,16 +330,17 @@ export const GridCell = (props: {
       className={classNames(
         props.className,
         "grid relative",
-        "col-(--column) border-(--cell-border-base) not-first:border-l border-t",
-        props.hideBorderTop && "border-t-0",
         props.isSelectable && ["cursor-auto select-none"],
+        "border-(--cell-border-base) not-first:border-l border-t",
       )}
       style={
         {
-          "--column": props.column.toString().split(",").join("/"),
+          gridColumn: toGridColumn(props.columnIndex, props.columnEndIndex),
           ...props.style,
         } as React.CSSProperties
       }
+      aria-label={props.name}
+      aria-colindex={props.columnIndex}
     >
       {props.isSelectable && isFocused && (
         <div
