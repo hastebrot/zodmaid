@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate, type RouteObject } from "react-router";
 import { DiagramAntvPage } from "./diagram/diagram-antv-page";
 import { DiagramPage } from "./diagram/diagram-page";
+import { InputPage } from "./grid/grid-input";
 import { GridMockupPage } from "./grid/grid-mockup-page";
 import { GridViewPage } from "./grid/grid-view-page";
 import { ReactDataGridPage } from "./grid/react-data-grid-page";
@@ -35,4 +36,5 @@ export const routes: RouteObject[] = [
   { path: "/grid-mockup", Component: () => <GridMockupPage /> },
   { path: "/grid-react-grid", Component: () => <ReactDataGridPage /> },
   { path: "/grid-react-mobx", Component: () => <ReactMobxStatePage /> },
+  { path: "/grid-input", Component: () => <InputPage /> },
 ];

@@ -1,5 +1,5 @@
 import { useFocus } from "@react-aria/interactions";
-import React, { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { classNames } from "../../helpers/clsx";
 
 export type GridViewProps<DataModel> = {
@@ -133,49 +133,54 @@ export const GridView = <DataModel,>(props: { value: GridViewProps<DataModel> })
           const isOtherItemsRow = row.key && row.key === "items";
           return (
             <GridRow key={rowIndex} name={`row[${rowIndex}]`} rowIndex={rowIndex + 2}>
-              {props.value.showRowLabels && (
-                <GridLabelCell
-                  key="label"
-                  name={`cell[${rowIndex}][L]`}
-                  columnIndex={1}
-                  position="row"
-                >
-                  {toRowLabel(rowIndex + (props.value.rowOffset ?? 0))}
-                </GridLabelCell>
-              )}
-              {isItemsRow && (
-                <GridCell key={0} columnIndex={2} columnEndIndex={4} isSelectable>
-                  items items items items
-                </GridCell>
-              )}
-              {!isItemsRow &&
-                props.value.columns.map((column, columnIndex) => {
-                  const value = (row as any)[column.key];
-                  return (
-                    <GridCell
-                      key={columnIndex}
-                      className={classNames(
-                        isOtherItemsRow && columnIndex === 0 && "[&>div]:invisible border-t-0",
-                      )}
-                      style={
-                        {
-                          width: column.width,
-                          minWidth: column.minWidth,
-                          maxWidth: column.maxWidth,
-                        } as React.CSSProperties
-                      }
-                      name={`cell[${rowIndex}][${columnIndex}]`}
-                      columnIndex={columnIndex + 2}
-                      isSelectable
-                    >
-                      {column.cellRenderer ? (
-                        column.cellRenderer({ columnIndex, rowIndex, row: row })
-                      ) : (
-                        <CellContent value={value} />
-                      )}
-                    </GridCell>
-                  );
-                })}
+              <div
+                className="grid grid-cols-subgrid col-[1/5]"
+                // style={{ gridTemplateColumns: props.value.columnsSpec }}
+              >
+                {props.value.showRowLabels && (
+                  <GridLabelCell
+                    key="label"
+                    name={`cell[${rowIndex}][L]`}
+                    columnIndex={1}
+                    position="row"
+                  >
+                    {toRowLabel(rowIndex + (props.value.rowOffset ?? 0))}
+                  </GridLabelCell>
+                )}
+                {isItemsRow && (
+                  <GridCell key={0} columnIndex={2} columnEndIndex={4} isSelectable>
+                    items items items items
+                  </GridCell>
+                )}
+                {!isItemsRow &&
+                  props.value.columns.map((column, columnIndex) => {
+                    const value = (row as any)[column.key];
+                    return (
+                      <GridCell
+                        key={columnIndex}
+                        className={classNames(
+                          isOtherItemsRow && columnIndex === 0 && "[&>div]:invisible border-t-0",
+                        )}
+                        style={
+                          {
+                            width: column.width,
+                            minWidth: column.minWidth,
+                            maxWidth: column.maxWidth,
+                          } as React.CSSProperties
+                        }
+                        name={`cell[${rowIndex}][${columnIndex}]`}
+                        columnIndex={columnIndex + 2}
+                        isSelectable
+                      >
+                        {column.cellRenderer ? (
+                          column.cellRenderer({ columnIndex, rowIndex, row: row })
+                        ) : (
+                          <CellContent value={value} />
+                        )}
+                      </GridCell>
+                    );
+                  })}
+              </div>
             </GridRow>
           );
         })}
