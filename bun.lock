@@ -54,6 +54,7 @@
         "tailwindcss": "^4.1.10",
         "typescript": "^5.8.3",
         "vite": "npm:rolldown-vite@^6.3.21",
+        "zod": "^3.25.67",
         "zodmaid": "workspace:*",
       },
     },

@@ -1,4 +1,10 @@
+import { z } from "zod/v4";
 import { classNames } from "../helpers/clsx";
+import { MusicLibrary, musicLibraryData } from "../schemas/musicLibrary";
+
+const jsonSchema = z.toJSONSchema(MusicLibrary) as z.core.JSONSchema.ObjectSchema;
+console.log(jsonSchema);
+console.log(musicLibraryData);
 
 export const GridMockupPage = () => {
   return (
@@ -275,9 +281,9 @@ const iconTable = (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     className="icon icon-tabler icons-tabler-outline icon-tabler-table"
   >
     <g className="fill-yellow-300" stroke="none">
