@@ -1,7 +1,7 @@
 import { useFocus } from "@react-aria/interactions";
 import { observable } from "mobx";
 import { observer } from "mobx-react-lite";
-import { useState } from "react";
+import { Children, useState } from "react";
 import { type BaseCellProps, BaseCell } from "../../../test/grid-view/components/base-cell";
 import { type BaseGridProps, BaseGrid } from "../../../test/grid-view/components/base-grid";
 import { type BaseRowProps, BaseRow } from "../../../test/grid-view/components/base-row";
@@ -35,11 +35,15 @@ export const StyledGridViewPage = () => {
     );
   });
   const Row = observer((props: BaseRowProps) => {
-    return (
-      <BaseRow {...props} className="grid grid-cols-subgrid col-span-full">
-        {props.children}
-      </BaseRow>
-    );
+    const children = Children.toArray(props.children);
+    // if (props.data.rowIndex >= 2) {
+    //   return (
+    //     <BaseRow {...props} className="grid grid-cols-subgrid col-span-full grid-rows-2">
+    //       {children}
+    //     </BaseRow>
+    //   );
+    // }
+    return <BaseRow {...props}>{children}</BaseRow>;
   });
   const Cell = observer((props: BaseCellProps) => {
     function toColumnLabel(index: number) {
@@ -74,9 +78,14 @@ export const StyledGridViewPage = () => {
         setCellFocused(false);
       },
     });
+    // const cellStyles = {
+    //   gridColumn: props.data.columnIndex === 0 ? "1 / -1" : props.data.columnIndex + 1,
+    //   gridRow: props.data.columnIndex === 0 ? "1 / -1" : 2,
+    // };
     return (
       <BaseCell
         {...props}
+        // style={props.data.rowIndex >= 2 ? cellStyles : {}}
         className={classNames(
           "relative grid cursor-pointer select-none",
           "border-(--cell-border-base) border-t not-first:border-l",
@@ -96,7 +105,7 @@ export const StyledGridViewPage = () => {
         {isCellFocused && (
           <div
             className={classNames(
-              "absolute inset-0 z-10",
+              "absolute inset-0 z-10 pointer-events-none",
               "outline-2 outline-offset-[-1px] outline-(--cell-outline-selected)",
             )}
           ></div>
