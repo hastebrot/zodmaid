@@ -10,7 +10,7 @@ import { BaseCell, type BaseCellProps } from "./components/base-cell";
 import { BaseGrid, type BaseGridProps } from "./components/base-grid";
 import { BaseRow, type BaseRowProps } from "./components/base-row";
 import type { GridContextProps } from "./components/grid-context";
-import { SimpleGridView } from "./components/simple-grid-view";
+import { UnstyledGridView } from "./components/unstyled-grid-view";
 
 beforeAll(() => {
   registerGlobals();
@@ -60,7 +60,7 @@ describe("grid view", () => {
       return (
         <div>
           <input type="text" value={value} onChange={action(onChange)} />
-          <SimpleGridView context={context} />
+          <UnstyledGridView context={context} />
         </div>
       );
     });

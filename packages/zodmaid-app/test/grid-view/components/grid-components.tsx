@@ -5,7 +5,7 @@ import { BaseRow, type BaseRowProps } from "./base-row";
 
 export type GridComponents<DataModel> = {
   Grid: (props: BaseGridProps) => JSX.Element;
-  Row: (props: BaseRowProps) => JSX.Element;
+  Row: (props: BaseRowProps<DataModel>) => JSX.Element;
   Cell: (props: BaseCellProps<DataModel>) => JSX.Element;
 };
 

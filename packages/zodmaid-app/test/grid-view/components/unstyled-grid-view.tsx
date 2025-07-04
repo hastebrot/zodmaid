@@ -1,11 +1,11 @@
 import type { GridContextProps } from "./grid-context";
 import { GridView } from "./grid-view";
 
-export type SimpleGridViewProps = {
+export type UnstyledGridViewProps = {
   context: GridContextProps;
 };
 
-export const SimpleGridView = (props: SimpleGridViewProps) => {
+export const UnstyledGridView = (props: UnstyledGridViewProps) => {
   const context = props.context;
   const rowCount = context.rows.length;
   const columnCount = context.columns.length;

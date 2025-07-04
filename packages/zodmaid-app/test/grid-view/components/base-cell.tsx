@@ -19,7 +19,7 @@ export const BaseCell = (props: BaseCellProps) => {
   return (
     <div
       className={classNames(props.className)}
-      style={{ gridColumn: props.data.columnIndex, ...props.style }}
+      style={{ gridColumn: props.data.columnIndex + 1, ...props.style }}
       role="gridcell"
       aria-label={props.label}
       aria-rowindex={props.data.rowIndex + 1}
