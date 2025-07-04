@@ -1,5 +1,7 @@
+import { useFocus } from "@react-aria/interactions";
 import { observable } from "mobx";
 import { observer } from "mobx-react-lite";
+import { useState } from "react";
 import { type BaseCellProps, BaseCell } from "../../../test/grid-view/components/base-cell";
 import { type BaseGridProps, BaseGrid } from "../../../test/grid-view/components/base-grid";
 import { type BaseRowProps, BaseRow } from "../../../test/grid-view/components/base-row";
@@ -63,27 +65,22 @@ export const StyledGridViewPage = () => {
       const isJsonObject = typeof value === "object";
       return isJsonArray || isJsonObject ? JSON.stringify(value) : value;
     };
+    const [isCellFocused, setCellFocused] = useState(false);
+    const { focusProps } = useFocus({
+      onFocus() {
+        setCellFocused(true);
+      },
+      onBlur() {
+        setCellFocused(false);
+      },
+    });
     return (
       <BaseCell
         {...props}
         className={classNames(
-          "px-2 text-[14px]/[28px] min-w-[28px]",
+          "relative grid cursor-pointer select-none",
           "border-(--cell-border-base) border-t not-first:border-l",
-          "cursor-default",
-          props.data.type === "cell" && [
-            // wrap.
-            "flex items-start justify-start",
-            "text-(--cell-fg-base) bg-(--cell-bg-base)",
-          ],
-          props.data.type === "header-cell" && [
-            // wrap.
-            "flex items-start justify-start",
-            "text-(--cell-fg-base) bg-(--cell-bg-header) font-[700]",
-          ],
           props.data.type === "label-cell" && [
-            // wrap.
-            "flex items-start justify-center",
-            "text-(--cell-fg-label) bg-(--cell-bg-label)",
             props.data.column !== null && [
               "border-l-(--cell-border-label)",
               "border-b border-b-(--cell-border-base)",
@@ -96,7 +93,35 @@ export const StyledGridViewPage = () => {
           ],
         )}
       >
-        <span className="truncate max-w-[300px]">{renderCell()}</span>
+        {isCellFocused && (
+          <div
+            className={classNames(
+              "absolute inset-0 z-10",
+              "outline-2 outline-offset-[-1px] outline-(--cell-outline-selected)",
+            )}
+          ></div>
+        )}
+        <div
+          {...focusProps}
+          tabIndex={-1}
+          className={classNames(
+            "px-2 text-[14px]/[28px] min-w-[28px]",
+            props.data.type === "cell" && [
+              "flex items-start justify-start",
+              "font-[400] text-(--cell-fg-base) bg-(--cell-bg-base)",
+            ],
+            props.data.type === "header-cell" && [
+              "flex items-start justify-start",
+              "font-[700] text-(--cell-fg-base) bg-(--cell-bg-header)",
+            ],
+            props.data.type === "label-cell" && [
+              "flex items-start justify-center",
+              "font-[400] text-(--cell-fg-label) bg-(--cell-bg-label)",
+            ],
+          )}
+        >
+          <span className="truncate max-w-[300px]">{renderCell()}</span>
+        </div>
       </BaseCell>
     );
   });
