@@ -1,0 +1,31 @@
+import { classNames } from "../../../src/helpers/clsx";
+import { type GridColumn } from "./grid-column";
+
+export type BaseCellProps<DataModel = unknown> = {
+  children?: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+  label?: string;
+  data: {
+    type: string;
+    rowIndex: number;
+    columnIndex: number;
+    row: DataModel;
+    column: GridColumn<DataModel>;
+  };
+};
+
+export const BaseCell = (props: BaseCellProps) => {
+  return (
+    <div
+      className={classNames(props.className)}
+      style={{ gridColumn: props.data.columnIndex, ...props.style }}
+      role="gridcell"
+      aria-label={props.label}
+      aria-rowindex={props.data.rowIndex + 1}
+      aria-colindex={props.data.columnIndex + 1}
+    >
+      {props.children}
+    </div>
+  );
+};

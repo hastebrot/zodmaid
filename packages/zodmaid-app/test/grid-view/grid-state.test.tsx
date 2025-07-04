@@ -2,11 +2,15 @@ import { render } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { action, observable } from "mobx";
 import { observer } from "mobx-react-lite";
-import { createContext, useContext } from "react";
 import { beforeAll, describe, expect, test } from "vitest";
 import { MusicLibrary, musicLibraryData } from "../../src/schemas/musicLibrary";
 import { registerGlobals } from "../register-globals";
 import { registerMatchers } from "../register-matchers";
+import { BaseCell, type BaseCellProps } from "./components/base-cell";
+import { BaseGrid, type BaseGridProps } from "./components/base-grid";
+import { BaseRow, type BaseRowProps } from "./components/base-row";
+import type { GridContextProps } from "./components/grid-context";
+import { SimpleGridView } from "./components/simple-grid-view";
 
 beforeAll(() => {
   registerGlobals();
@@ -15,66 +19,6 @@ beforeAll(() => {
 
 describe("grid view", () => {
   test("should grid", async () => {
-    type ColumnSpec<DataModel> = {
-      name: keyof DataModel;
-      widthSpec: string;
-    };
-    type GridContextProps<DataModel = unknown> = {
-      name?: string;
-      rows: DataModel[];
-      columns: ColumnSpec<DataModel>[];
-    };
-    const GridContext = createContext<GridContextProps | null>(null);
-    const useGridContext = () => {
-      const value = useContext(GridContext);
-      if (value === null) {
-        throw new Error("GridContext value is empty");
-      }
-      return value;
-    };
-    const GridView = <DataModel,>(props: {
-      // wrap.
-      children?: React.ReactNode;
-      value: GridContextProps<DataModel>;
-    }) => {
-      return (
-        <GridContext.Provider value={props.value as GridContextProps}>
-          {props.children}
-        </GridContext.Provider>
-      );
-    };
-    const Grid = (props: { children?: React.ReactNode; type?: string }) => {
-      const contextProps = useGridContext();
-      const columnSpecs = contextProps.columns.map((it) => it.widthSpec).join(" ");
-      return (
-        <div
-          className="grid"
-          aria-label={contextProps.name}
-          style={{ gridTemplateColumns: columnSpecs }}
-        >
-          {props.children}
-        </div>
-      );
-    };
-    const Row = (props: {
-      children?: React.ReactNode;
-      type?: string;
-      data: {
-        rowIndex: number;
-      };
-    }) => {
-      return <div className="contents">{props.children}</div>;
-    };
-    const Cell = (props: {
-      type?: string;
-      data: {
-        rowIndex: number;
-        columnIndex: number;
-        renderCell: () => React.ReactNode;
-      };
-    }) => {
-      return <div style={{ gridColumn: props.data.columnIndex }}>{props.data.renderCell()}</div>;
-    };
     const data = observable(MusicLibrary.parse(musicLibraryData));
     const TextFixture = observer(() => {
       const { value, onChange } = useInputValue(
@@ -82,35 +26,42 @@ describe("grid view", () => {
         (data) => String(data.Title),
         (data, value) => (data.Title = String(value)),
       );
-      const gridView: GridContextProps<(typeof data)["Artists"][0]["Albums"][0]> = {
-        name: "grid",
+      type DataModel = (typeof data)["Artists"][0]["Albums"][0];
+      const context: GridContextProps = {
+        label: "grid",
         rows: data.Artists[0].Albums,
         columns: [
-          { name: "Name", widthSpec: "max-content" },
-          { name: "ReleaseDate", widthSpec: "max-content" },
+          { label: "Name", width: "max-content" },
+          { label: "ReleaseDate", width: "max-content" },
+          { label: "Label", width: "max-content" },
+          { label: "Genre", width: "max-content" },
+          { label: "Tracks", width: "1fr" },
         ],
+        components: {
+          Grid: (props: BaseGridProps) => <BaseGrid {...props} />,
+          Row: (props: BaseRowProps) => <BaseRow {...props} />,
+          Cell: (props: BaseCellProps) => {
+            const renderCell = () => {
+              const item = props.data.row as DataModel;
+              const key = props.data.column.label as keyof DataModel;
+              const value = item[key];
+              const isJsonArray = Array.isArray(value);
+              const isJsonObject = typeof value === "object";
+              return isJsonArray || isJsonObject ? JSON.stringify(value) : value;
+            };
+            return (
+              <BaseCell {...props} className="px-2">
+                {renderCell()}
+              </BaseCell>
+            );
+          },
+        },
       };
       return (
-        <GridView value={gridView}>
+        <div>
           <input type="text" value={value} onChange={action(onChange)} />
-          <Grid type="grid">
-            {gridView.rows.map((row, rowIndex) => (
-              <Row key={rowIndex} type="row" data={{ rowIndex }}>
-                {gridView.columns.map((column, columnIndex) => (
-                  <Cell
-                    key={columnIndex}
-                    type="cell"
-                    data={{
-                      rowIndex,
-                      columnIndex,
-                      renderCell: () => <>{row[column.name]}</>,
-                    }}
-                  />
-                ))}
-              </Row>
-            ))}
-          </Grid>
-        </GridView>
+          <SimpleGridView context={context} />
+        </div>
       );
     });
     const screen = render(<TextFixture />, { baseElement: global.document.body });
