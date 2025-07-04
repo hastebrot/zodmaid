@@ -10,8 +10,8 @@ export type BaseCellProps<DataModel = unknown> = {
     type: string;
     rowIndex: number;
     columnIndex: number;
-    row: DataModel;
-    column: GridColumn<DataModel>;
+    row: DataModel | null;
+    column: GridColumn<DataModel> | null;
   };
 };
 

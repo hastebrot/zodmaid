@@ -1,4 +1,5 @@
 import { classNames } from "../../../src/helpers/clsx";
+import type { GridColumn } from "./grid-column";
 import { useGridContext } from "./use-grid-context";
 
 export type BaseGridProps = {
@@ -15,11 +16,13 @@ export type BaseGridProps = {
 
 export const BaseGrid = (props: BaseGridProps) => {
   const contextProps = useGridContext();
-  const gridTemplateColumns = contextProps.columns.map((column) => column.width).join(" ");
+  const gridTemplateColumns = contextProps.toGridTemplateColumns
+    ? contextProps.toGridTemplateColumns(contextProps.columns)
+    : toGridTemplateColumns(contextProps.columns);
 
   return (
     <div
-      className={classNames("grid", props.className)}
+      className={classNames("grid grid-flow-col auto-cols-max", props.className)}
       style={{ gridTemplateColumns, ...props.style }}
       role="grid"
       aria-label={props.label ?? contextProps.label}
@@ -30,3 +33,7 @@ export const BaseGrid = (props: BaseGridProps) => {
     </div>
   );
 };
+
+export function toGridTemplateColumns(columns: GridColumn[]): string {
+  return columns.map((column) => column.width).join(" ");
+}

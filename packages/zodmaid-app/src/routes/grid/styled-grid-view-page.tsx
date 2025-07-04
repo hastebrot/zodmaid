@@ -4,7 +4,7 @@ import { type BaseCellProps, BaseCell } from "../../../test/grid-view/components
 import { type BaseGridProps, BaseGrid } from "../../../test/grid-view/components/base-grid";
 import { type BaseRowProps, BaseRow } from "../../../test/grid-view/components/base-row";
 import { type GridContextProps } from "../../../test/grid-view/components/grid-context";
-import { UnstyledGridViewWithHeaders } from "../../../test/grid-view/components/unstyled-grid-view-headers";
+import { UnstyledGridView } from "../../../test/grid-view/components/unstyled-grid-view";
 import { classNames } from "../../helpers/clsx";
 import { MusicLibrary, musicLibraryData } from "../../schemas/musicLibrary";
 
@@ -40,12 +40,24 @@ export const StyledGridViewPage = () => {
     );
   });
   const Cell = observer((props: BaseCellProps) => {
+    function toColumnLabel(index: number) {
+      return index < 0 ? "" : String.fromCharCode("A".charCodeAt(0) + index);
+    }
+    function toRowLabel(index: number) {
+      return index < 0 ? "" : String(index + 1);
+    }
     const renderCell = () => {
       if (props.data.type === "header-cell") {
-        return props.data.column.label;
+        return props.data.column?.label;
+      }
+      if (props.data.type === "label-cell") {
+        if (props.data.column !== null) {
+          return toColumnLabel(props.data.columnIndex - 1);
+        }
+        return toRowLabel(props.data.rowIndex - 1);
       }
       const item = props.data.row as DataModel;
-      const key = props.data.column.label as keyof DataModel;
+      const key = props.data.column?.label as keyof DataModel;
       const value = item[key];
       const isJsonArray = Array.isArray(value);
       const isJsonObject = typeof value === "object";
@@ -55,10 +67,33 @@ export const StyledGridViewPage = () => {
       <BaseCell
         {...props}
         className={classNames(
-          "px-2 flex items-start justify-start",
-          "text-[14px]/[28px] min-w-[28px]",
+          "px-2 text-[14px]/[28px] min-w-[28px]",
           "border-(--cell-border-base) border-t not-first:border-l",
-          props.data.type === "header-cell" && "bg-(--cell-bg-header) font-[700]",
+          "cursor-default",
+          props.data.type === "cell" && [
+            // wrap.
+            "flex items-start justify-start",
+            "text-(--cell-fg-base) bg-(--cell-bg-base)",
+          ],
+          props.data.type === "header-cell" && [
+            // wrap.
+            "flex items-start justify-start",
+            "text-(--cell-fg-base) bg-(--cell-bg-header) font-[700]",
+          ],
+          props.data.type === "label-cell" && [
+            // wrap.
+            "flex items-start justify-center",
+            "text-(--cell-fg-label) bg-(--cell-bg-label)",
+            props.data.column !== null && [
+              "border-l-(--cell-border-label)",
+              "border-b border-b-(--cell-border-base)",
+            ],
+            props.data.column === null &&
+              props.data.rowIndex > 0 && [
+                "border-t-(--cell-border-label)",
+                "border-r border-r-(--cell-border-base)",
+              ],
+          ],
         )}
       >
         <span className="truncate max-w-[300px]">{renderCell()}</span>
@@ -81,7 +116,7 @@ export const StyledGridViewPage = () => {
       ],
       components: { Grid, Row, Cell },
     };
-    return <UnstyledGridViewWithHeaders context={context} />;
+    return <UnstyledGridView.WithHeaderAndLabels context={context} />;
   });
 
   return (

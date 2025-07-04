@@ -7,6 +7,7 @@ export type GridContextProps<DataModel = unknown> = {
   rows: DataModel[];
   columns: GridColumn<DataModel>[];
   components: GridComponents<DataModel>;
+  toGridTemplateColumns?: (columns: GridColumn<DataModel>[]) => string;
 };
 
 export const GridContext = createContext<GridContextProps | null>(null);
