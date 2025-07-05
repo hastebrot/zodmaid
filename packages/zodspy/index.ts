@@ -1,5 +1,3 @@
-// import "main.css";
-
 export { BaseCell, type BaseCellProps } from "./components/base-cell";
 export { BaseGrid, type BaseGridProps } from "./components/base-grid";
 export { BaseRow, type BaseRowProps } from "./components/base-row";

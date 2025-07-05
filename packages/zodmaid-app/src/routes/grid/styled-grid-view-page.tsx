@@ -34,6 +34,7 @@ export const StyledGridViewPage = () => {
         className={classNames(
           // wrap.
           "w-fit font-sans",
+          "grid grid-flow-col auto-cols-max",
           "border-(--cell-border-base) border-l border-r border-b",
         )}
         style={{ ...gridStyles }}
@@ -49,7 +50,11 @@ export const StyledGridViewPage = () => {
     //     </BaseRow>
     //   );
     // }
-    return <BaseRow {...props}>{children}</BaseRow>;
+    return (
+      <BaseRow {...props} className="contents">
+        {children}
+      </BaseRow>
+    );
   });
   const Cell = observer((props: BaseCellProps) => {
     function toColumnLabel(index: number) {
@@ -75,23 +80,23 @@ export const StyledGridViewPage = () => {
       const isJsonObject = typeof value === "object";
       return isJsonArray || isJsonObject ? JSON.stringify(value) : value;
     };
-    const [isCellFocused, setCellFocused] = useState(false);
+    const [isSelected, setSelected] = useState(false);
     const { focusProps } = useFocus({
       onFocus() {
-        setCellFocused(true);
+        setSelected(true);
       },
       onBlur() {
-        setCellFocused(false);
+        setSelected(false);
       },
     });
-    // const cellStyles = {
-    //   gridColumn: props.data.columnIndex === 0 ? "1 / -1" : props.data.columnIndex + 1,
-    //   gridRow: props.data.columnIndex === 0 ? "1 / -1" : 2,
-    // };
+    const cellStyles = {
+      // gridColumn: props.data.columnIndex === 0 ? "1 / -1" : props.data.columnIndex + 1,
+      // gridRow: props.data.columnIndex === 0 ? "1 / -1" : 2,
+    };
     return (
       <BaseCell
         {...props}
-        // style={props.data.rowIndex >= 2 ? cellStyles : {}}
+        style={props.data.rowIndex >= 2 ? cellStyles : {}}
         className={classNames(
           "relative grid cursor-pointer select-none",
           "border-(--cell-border-base) border-t not-first:border-l",
@@ -108,7 +113,7 @@ export const StyledGridViewPage = () => {
           ],
         )}
       >
-        {isCellFocused && (
+        {isSelected && (
           <div
             className={classNames(
               "absolute inset-0 z-10 pointer-events-none",
@@ -135,6 +140,7 @@ export const StyledGridViewPage = () => {
             ],
           )}
         >
+          {/* <div className="w-[20px] h-full bg-[magenta]"></div> */}
           <span className="truncate max-w-[300px]">{renderCell()}</span>
         </div>
       </BaseCell>

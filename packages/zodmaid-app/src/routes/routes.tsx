@@ -7,6 +7,7 @@ import { GridMockupPage } from "./grid/grid-mockup-page";
 import { GridViewPage } from "./grid/grid-view-page";
 import { ReactDataGridPage } from "./grid/react-data-grid-page";
 import { ReactMobxStatePage } from "./grid/react-mobx-state-page";
+import { StaticGridViewPage } from "./grid/static-grid-view-page";
 import { StyledGridViewPage } from "./grid/styled-grid-view-page";
 
 // dagre, https://github.com/antvis/layout/blob/v5/packages/layout/src/dagre.ts
@@ -34,6 +35,7 @@ export const routes: RouteObject[] = [
   { path: "/diagram", Component: () => <DiagramPage /> },
   { path: "/diagram-antv", Component: () => <DiagramAntvPage /> },
   { path: "/styled-grid-view", Component: () => <StyledGridViewPage /> },
+  { path: "/static-grid-view", Component: () => <StaticGridViewPage /> },
   { path: "/grid-view", Component: () => <GridViewPage /> },
   { path: "/grid-mockup", Component: () => <GridMockupPage /> },
   { path: "/grid-react-grid", Component: () => <ReactDataGridPage /> },

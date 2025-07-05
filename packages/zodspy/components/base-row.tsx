@@ -12,7 +12,7 @@ export type BaseRowProps<DataModel = unknown> = {
   };
 };
 
-export const BaseRow = (props: BaseRowProps) => {
+export const BaseRow = <DataModel,>(props: BaseRowProps<DataModel>) => {
   return (
     <div
       className={classNames("contents", props.className)}

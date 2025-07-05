@@ -15,7 +15,7 @@ export type BaseCellProps<DataModel = unknown> = {
   };
 };
 
-export const BaseCell = (props: BaseCellProps) => {
+export const BaseCell = <DataModel,>(props: BaseCellProps<DataModel>) => {
   return (
     <div
       className={classNames(props.className)}
