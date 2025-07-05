@@ -6,7 +6,7 @@ export type BaseCellProps<DataModel = unknown> = {
   className?: string;
   style?: React.CSSProperties;
   label?: string;
-  data: {
+  readonly data: {
     type: string;
     rowIndex: number;
     columnIndex: number;

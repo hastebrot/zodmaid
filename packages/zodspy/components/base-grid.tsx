@@ -7,7 +7,7 @@ export type BaseGridProps = {
   className?: string;
   style?: React.CSSProperties;
   label?: string;
-  data: {
+  readonly data: {
     type: string;
     rowCount: number;
     columnCount: number;

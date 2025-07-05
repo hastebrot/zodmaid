@@ -5,7 +5,7 @@ export type BaseRowProps<DataModel = unknown> = {
   className?: string;
   style?: React.CSSProperties;
   label?: string;
-  data: {
+  readonly data: {
     type: string;
     rowIndex: number;
     row: DataModel;
