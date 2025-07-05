@@ -1,4 +1,4 @@
-import { classNames } from "../../../src/helpers/clsx";
+import { classNames } from "../helpers/clsx";
 import { type GridColumn } from "./grid-column";
 
 export type BaseCellProps<DataModel = unknown> = {

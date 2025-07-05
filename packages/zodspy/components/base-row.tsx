@@ -1,4 +1,4 @@
-import { classNames } from "../../../src/helpers/clsx";
+import { classNames } from "../helpers/clsx";
 
 export type BaseRowProps<DataModel = unknown> = {
   children?: React.ReactNode;

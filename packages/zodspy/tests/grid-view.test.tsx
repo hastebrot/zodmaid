@@ -3,14 +3,14 @@ import { userEvent } from "@testing-library/user-event";
 import { action, observable } from "mobx";
 import { observer } from "mobx-react-lite";
 import { beforeAll, describe, expect, test } from "vitest";
-import { MusicLibrary, musicLibraryData } from "../../src/schemas/musicLibrary";
-import { registerGlobals } from "../register-globals";
-import { registerMatchers } from "../register-matchers";
-import { BaseCell, type BaseCellProps } from "./components/base-cell";
-import { BaseGrid, type BaseGridProps } from "./components/base-grid";
-import { BaseRow, type BaseRowProps } from "./components/base-row";
-import type { GridContextProps } from "./components/grid-context";
-import { UnstyledGridView } from "./components/unstyled-grid-view";
+import { BaseCell, type BaseCellProps } from "../components/base-cell";
+import { BaseGrid, type BaseGridProps } from "../components/base-grid";
+import { BaseRow, type BaseRowProps } from "../components/base-row";
+import { UnstyledGridView, type UnstyledGridViewProps } from "../components/unstyled-grid-view";
+import { musicLibrary } from "../examples/music-library";
+import { MusicLibrarySchema } from "../examples/music-library-schema";
+import { registerGlobals } from "./register-globals";
+import { registerMatchers } from "./register-matchers";
 
 beforeAll(() => {
   registerGlobals();
@@ -19,7 +19,7 @@ beforeAll(() => {
 
 describe("grid view", () => {
   test("should grid", async () => {
-    const data = observable(MusicLibrary.parse(musicLibraryData));
+    const data = observable(MusicLibrarySchema.parse(musicLibrary));
     const TextFixture = observer(() => {
       const { value, onChange } = useInputValue(
         data,
@@ -27,9 +27,9 @@ describe("grid view", () => {
         (data, value) => (data.Title = String(value)),
       );
       type DataModel = (typeof data)["Artists"][0]["Albums"][0];
-      const context: GridContextProps = {
+      const context: UnstyledGridViewProps["context"] = {
         label: "grid",
-        rows: data.Artists[0].Albums,
+        rows: data.Artists[0]!.Albums,
         columns: [
           { label: "Name", width: "max-content" },
           { label: "ReleaseDate", width: "max-content" },
@@ -43,7 +43,7 @@ describe("grid view", () => {
           Cell: (props: BaseCellProps) => {
             const renderCell = () => {
               const item = props.data.row as DataModel;
-              const key = props.data.column.label as keyof DataModel;
+              const key = props.data.column?.label as keyof DataModel;
               const value = item[key];
               const isJsonArray = Array.isArray(value);
               const isJsonObject = typeof value === "object";

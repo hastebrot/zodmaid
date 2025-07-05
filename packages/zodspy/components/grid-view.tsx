@@ -1,10 +1,12 @@
 import { gridComponents } from "./grid-components";
 import { type GridContextProps, GridContext } from "./grid-context";
 
-export const GridView = <DataModel,>(props: {
+export type GridViewProps<DataModel> = {
   children?: React.ReactNode;
   context: GridContextProps<DataModel>;
-}) => {
+};
+
+export const GridView = <DataModel,>(props: GridViewProps<DataModel>) => {
   const context = {
     ...props.context,
     components: {

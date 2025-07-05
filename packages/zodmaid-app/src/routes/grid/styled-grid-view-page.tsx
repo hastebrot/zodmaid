@@ -2,13 +2,19 @@ import { useFocus } from "@react-aria/interactions";
 import { observable } from "mobx";
 import { observer } from "mobx-react-lite";
 import { Children, useState } from "react";
-import { type BaseCellProps, BaseCell } from "../../../test/grid-view/components/base-cell";
-import { type BaseGridProps, BaseGrid } from "../../../test/grid-view/components/base-grid";
-import { type BaseRowProps, BaseRow } from "../../../test/grid-view/components/base-row";
-import { type GridContextProps } from "../../../test/grid-view/components/grid-context";
-import { UnstyledGridView } from "../../../test/grid-view/components/unstyled-grid-view";
+import {
+  BaseCell,
+  BaseGrid,
+  BaseRow,
+  UnstyledGridView,
+  type BaseCellProps,
+  type BaseGridProps,
+  type BaseRowProps,
+  type GridContextProps,
+} from "zodspy";
+import { musicLibrary } from "zodspy/examples/music-library";
+import { MusicLibrarySchema } from "zodspy/examples/music-library-schema";
 import { classNames } from "../../helpers/clsx";
-import { MusicLibrary, musicLibraryData } from "../../schemas/musicLibrary";
 
 export const StyledGridViewPage = () => {
   const gridStyles = {
@@ -135,7 +141,7 @@ export const StyledGridViewPage = () => {
     );
   });
 
-  const data = observable(MusicLibrary.parse(musicLibraryData));
+  const data = observable(MusicLibrarySchema.parse(musicLibrary));
   type DataModel = (typeof data)["Artists"][0]["Albums"][0];
   const TextFixture = observer(() => {
     const context: GridContextProps = {
