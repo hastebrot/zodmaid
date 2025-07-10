@@ -1,22 +1,78 @@
 import { Fragment } from "react";
-import { defineGridContext, type GridContextProps } from "zodspy";
-import { JsonCell } from "zodspy/components/json-cell";
-import { JsonGrid } from "zodspy/components/json-grid";
-import { JsonGridView } from "zodspy/components/json-grid-view";
-import { JsonRow } from "zodspy/components/json-row";
-import { JsonCellExpandButton } from "zodspy/components/json/json-cell-expand-button";
-import { JsonCellLayout } from "zodspy/components/json/json-cell-layout";
-import { JsonCellRenderer } from "zodspy/components/json/json-cell-renderer";
-import { JsonCellTableButton } from "zodspy/components/json/json-cell-table-button";
 import {
+  defineGridContext,
   determineJsonType,
+  JsonCell,
+  JsonCellExpandButton,
+  JsonCellLayout,
+  JsonCellRenderer,
+  JsonCellTableButton,
   JsonCellTypeButton,
-} from "zodspy/components/json/json-cell-type-button";
+  JsonGrid,
+  JsonGridCellLayout,
+  JsonGridView,
+  JsonRow,
+  type GridContextProps,
+} from "zodspy";
 
 export const GridViewStaticPage = () => {
   return (
     <div className="min-h-dvh bg-gray-100 text-gray-900 p-4">
-      <GridViewForOrder />
+      <GridViewForRoot />
+    </div>
+  );
+};
+
+const GridViewForRoot = () => {
+  type DataModel = {
+    type: string;
+    label: string;
+    value: unknown;
+  };
+  const context = defineGridContext<DataModel>({
+    label: "order.root",
+    rows: [
+      // wrap.
+      { type: "object", label: "", value: {} },
+    ],
+    columns: [
+      {
+        label: "label",
+        width: "minmax(50px, max-content)",
+        cellRenderer(props) {
+          return (
+            <JsonCellLayout
+              prefixSlot={<JsonCellExpandButton isExpanded={props.data.rowIndex === 4} />}
+              primarySlot={<JsonCellTypeButton type="object" />}
+            />
+          );
+        },
+      },
+      {
+        label: "value",
+        width: "1fr",
+        cellRenderer() {
+          return <JsonGridCellLayout gridSlot={<GridViewForOrder />} />;
+        },
+      },
+    ],
+    elements: {
+      Grid: JsonGrid,
+      Row: JsonRow,
+      Cell(props) {
+        if (props.data.column?.label === "label") {
+          return <JsonCell {...props} gridRowOffset={0} gridColumnLimit={-1} />;
+        }
+        if (props.data.column?.label === "value") {
+          return <JsonCell {...props} gridRowOffset={1} />;
+        }
+        return <JsonCell {...props} />;
+      },
+    },
+  });
+  return (
+    <div className="w-fit">
+      <JsonGridView context={context as GridContextProps} />
     </div>
   );
 };
@@ -53,22 +109,26 @@ const GridViewForOrder = () => {
         cellRenderer(props) {
           if (props.data.row?.key === "items") {
             return (
-              <div className="grid -m-px">
-                <GridViewForItems
-                  columnOffset={props.data.columnIndex}
-                  rowOffset={props.data.rowIndex}
-                />
-              </div>
+              <JsonGridCellLayout
+                gridSlot={
+                  <GridViewForItems
+                    columnOffset={props.data.columnIndex}
+                    rowOffset={props.data.rowIndex}
+                  />
+                }
+              />
             );
           }
           if (props.data.row?.key === "shipTo") {
             return (
-              <div className="grid -m-px">
-                <GridViewForShipTo
-                  columnOffset={props.data.columnIndex}
-                  rowOffset={props.data.rowIndex}
-                />
-              </div>
+              <JsonGridCellLayout
+                gridSlot={
+                  <GridViewForShipTo
+                    columnOffset={props.data.columnIndex}
+                    rowOffset={props.data.rowIndex}
+                  />
+                }
+              />
             );
           }
           return renderCell(props.data.row, props.data.column?.label);
@@ -91,11 +151,7 @@ const GridViewForOrder = () => {
       },
     },
   });
-  return (
-    <div className="w-fit">
-      <JsonGridView context={context as GridContextProps} />
-    </div>
-  );
+  return <JsonGridView context={context as GridContextProps} />;
 };
 
 const GridViewForItems = (_props: { columnOffset?: number; rowOffset?: number }) => {
@@ -242,12 +298,7 @@ const GridViewForShipTo = (_props: { columnOffset?: number; rowOffset?: number }
         if (row.type === "comment") {
           if (props.data.columnIndex === 0) {
             return (
-              <JsonCell
-                {...props}
-                style={{
-                  gridColumn: "1 / -1",
-                }}
-              >
+              <JsonCell {...props} gridColumnLimit={-1}>
                 <JsonCellLayout primarySlot={renderCommentCell(row, "value")} />
               </JsonCell>
             );
@@ -256,27 +307,14 @@ const GridViewForShipTo = (_props: { columnOffset?: number; rowOffset?: number }
         }
         if (column.label === "key" && props.data.rowIndex === 4) {
           return (
-            <JsonCell
-              {...props}
-              style={{
-                gridColumn: "1 / -1",
-                gridRow: 1,
-              }}
-            >
+            <JsonCell {...props} gridRowOffset={0} gridColumnLimit={-1}>
               <JsonCellRenderer />
             </JsonCell>
           );
         }
         if (column.label === "value" && props.data.rowIndex === 4) {
           return (
-            <JsonCell
-              {...props}
-              style={{
-                marginTop: "28px",
-                gridColumn: props.data.columnIndex + 1,
-                gridRow: 1,
-              }}
-            >
+            <JsonCell {...props} gridRowOffset={1}>
               <div className="flex flex-col">
                 <JsonCellRenderer />
                 <JsonCellRenderer />
