@@ -11,6 +11,7 @@ export const JsonCellExpandButton = (props: { isExpanded?: boolean }) => {
         "flex h-full w-[16px] bg-gray-300 cursor-pointer",
         "border-gray-500 border-l-white border-t-white border",
         "outline-gray-300 outline outline-offset-0",
+        "hover:outline-gray-700",
       )}
       onClick={(event) => {
         event.stopPropagation();
