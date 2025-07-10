@@ -9,7 +9,7 @@ export const JsonCell = <DataModel,>(props: BaseCellProps<DataModel>) => {
       <BaseCell {...props} className={classNames("relative grid cursor-auto select-none")}>
         <JsonCellGroup
           className={classNames(
-            "text-[14px]/[28px] min-w-[28px] box-border",
+            "text-[14px]/[24px] min-w-[24px] box-border",
             "border-(--cell-border-base) border-t",
             props.data.columnIndex !== 0 && "border-l",
           )}

@@ -219,6 +219,15 @@ const GridViewForShipTo = (_props: { columnOffset?: number; rowOffset?: number }
           );
         },
       },
+      {
+        label: "value",
+        width: "1fr",
+        cellRenderer(props) {
+          return (
+            <JsonCellLayout primarySlot={renderCell(props.data.row, props.data.column?.label)} />
+          );
+        },
+      },
     ],
     elements: {
       Grid(props) {
@@ -268,7 +277,11 @@ const GridViewForShipTo = (_props: { columnOffset?: number; rowOffset?: number }
                 gridRow: 1,
               }}
             >
-              <JsonCellRenderer />
+              <div className="flex flex-col">
+                <JsonCellRenderer />
+                <JsonCellRenderer />
+                <JsonCellRenderer />
+              </div>
             </JsonCell>
           );
         }

@@ -12,7 +12,7 @@ export const JsonCellTableButton = (props: JsonCellTableButtonProps) => {
     <button
       type="button"
       className={classNames(
-        "m-[2px] w-fit h-fit",
+        "mx-[2px] w-fit h-fit",
         "outline-(--color-gray-500) outline-offset-0",
         "hover:bg-(--color-gray-300) hover:outline",
         "cursor-pointer",

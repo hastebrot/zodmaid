@@ -32,7 +32,7 @@ export const JsonCellTypeButton = (props: JsonCellTypeButtonProps) => {
       <div
         className={classNames(
           "m-[-2px] flex items-center justify-center",
-          "text-[14px]/[28px] min-w-[24px]",
+          "text-[14px]/[26px] min-w-[26px]",
           "font-[700] font-mono-condensed tracking-[-0.025em]",
           "text-(--color-blue-700)",
           props.type === "comment" && "!text-(--color-green-700)",
