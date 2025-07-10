@@ -1,0 +1,34 @@
+{
+  "name": "zodspy",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "bun build index.ts --target bun --outdir dist/out/",
+    "test": "bun test"
+  },
+  "devDependencies": {
+    "@fontsource/inter": "^5.2.6",
+    "@fontsource/iosevka": "^5.2.5",
+    "@fontsource/roboto-mono": "^5.2.6",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/bun": "^1.2.18",
+    "@types/node": "^24.0.10",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "clsx": "^2.1.1",
+    "globals": "^16.3.0",
+    "happy-dom": "^18.0.1",
+    "mobx": "^6.13.7",
+    "mobx-react-lite": "^4.1.0",
+    "react": "^19.1.0",
+    "tailwindcss": "^4.1.11",
+    "vitest": "^3.2.4",
+    "zod": "^3.25.76"
+  },
+  "peerDependencies": {
+    "typescript": "^5.8.3"
+  }
+}
