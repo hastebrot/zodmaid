@@ -1,6 +1,6 @@
 import { classNames } from "../../helpers/clsx";
 
-export const GridMockupPage = () => {
+export const MockupGridPage = () => {
   return (
     <div className="min-h-dvh bg-gray-100 text-gray-900 p-4">
       <Row>

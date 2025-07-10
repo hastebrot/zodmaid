@@ -2,8 +2,11 @@ import { useEffect } from "react";
 import { useNavigate, type RouteObject } from "react-router";
 import { DiagramAntvPage } from "./diagram/diagram-antv-page";
 import { DiagramPage } from "./diagram/diagram-page";
-import { GridMockupPage } from "./grid/grid-mockup-page";
-import { GridViewPage } from "./grid/grid-view-page";
+import { GridViewStaticPage } from "./grid/grid-view-static-page";
+import { GridViewStyledPage } from "./grid/grid-view-styled-page";
+import { InputFieldSizingPage } from "./grid/input-field-sizing-page";
+import { MobxObserverPage } from "./grid/mobx-observer-page";
+import { MockupGridPage } from "./grid/mockup-grid-page";
 import { ReactDataGridPage } from "./grid/react-data-grid-page";
 
 // dagre, https://github.com/antvis/layout/blob/v5/packages/layout/src/dagre.ts
@@ -17,20 +20,34 @@ import { ReactDataGridPage } from "./grid/react-data-grid-page";
 // - uses dagre_rust, https://crates.io/crates/dagre_rust
 
 export const routes: RouteObject[] = [
-  // wrap.
   {
     path: "/",
     Component: () => {
       const navigate = useNavigate();
       useEffect(() => {
-        navigate("/grid-view", { replace: true });
+        navigate("/grid/static", { replace: true });
       }, []);
       return null;
     },
   },
-  { path: "/diagram", Component: () => <DiagramPage /> },
-  { path: "/diagram-antv", Component: () => <DiagramAntvPage /> },
-  { path: "/grid", Component: () => <ReactDataGridPage /> },
-  { path: "/grid-mockup", Component: () => <GridMockupPage /> },
-  { path: "/grid-view", Component: () => <GridViewPage /> },
+  {
+    path: "/diagram",
+    children: [
+      // wrap.
+      { path: "", Component: () => <DiagramPage /> },
+      { path: "antv", Component: () => <DiagramAntvPage /> },
+    ],
+  },
+  {
+    path: "/grid",
+    children: [
+      // wrap.
+      { path: "static", Component: () => <GridViewStaticPage /> },
+      { path: "styled", Component: () => <GridViewStyledPage /> },
+      { path: "mockup", Component: () => <MockupGridPage /> },
+      { path: "react-data-grid", Component: () => <ReactDataGridPage /> },
+      { path: "mobx", Component: () => <MobxObserverPage /> },
+      { path: "field-sizing", Component: () => <InputFieldSizingPage /> },
+    ],
+  },
 ];
