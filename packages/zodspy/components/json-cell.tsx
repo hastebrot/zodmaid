@@ -18,7 +18,7 @@ export const JsonCell = <DataModel,>({ ...props }: JsonCellProps<DataModel>) => 
     gridColumnEnd: props.gridColumnLimit,
     // grid row offset:
     gridRow: 1,
-    marginTop: props.gridRowOffset !== undefined ? `${props.gridRowOffset * 26}px` : undefined,
+    marginTop: props.gridRowOffset !== undefined ? `${props.gridRowOffset * 24}px` : undefined,
   };
 
   return (
@@ -30,7 +30,7 @@ export const JsonCell = <DataModel,>({ ...props }: JsonCellProps<DataModel>) => 
       >
         <JsonCellGroup
           className={classNames(
-            "text-[14px]/[26px] min-w-[26px] box-border",
+            "text-[14px]/[24px] min-w-[24px] box-border",
             "border-(--cell-border-base) border-t",
             props.data.columnIndex !== 0 && "border-l",
           )}

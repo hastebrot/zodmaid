@@ -1,17 +1,14 @@
-import { throwError } from "../../helpers/error";
 import { determineJsonType } from "./json-cell-type-button";
 
-type JsonObject = { [key: string]: Json };
-type JsonArray = Json[];
-type Json = JsonObject | JsonArray | string | number | boolean | null;
+export type JsonObject = { [key: string]: JsonValue };
+export type JsonArray = JsonValue[];
+export type JsonValue = JsonObject | JsonArray | string | number | boolean | null;
 
-export type GridRow = { key: string; type: string; value: Json };
+export type GridRow = { key: string; type: string; value: JsonValue };
 
-export function transformToGridRows(json: JsonObject): GridRow[] {
-  const keys = Object.keys(json);
+export function transformToGridRows(json: JsonObject | JsonArray): GridRow[] {
   const rows: GridRow[] = [];
-  for (const key of keys) {
-    const value = json[key] ?? throwError("key not found");
+  for (const [key, value] of Object.entries(json)) {
     const type = determineJsonType(value);
     rows.push({ key, type, value });
   }
