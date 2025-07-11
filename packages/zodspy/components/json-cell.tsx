@@ -25,7 +25,7 @@ export const JsonCell = <DataModel,>({ ...props }: JsonCellProps<DataModel>) => 
     <JsonCellContext value={{ cellProps: props as BaseCellProps }}>
       <BaseCell
         {...props}
-        className={classNames("relative grid cursor-auto select-none")}
+        className={classNames("relative grid cursor-auto select-none text-nowrap")}
         style={props.style}
       >
         <JsonCellGroup
