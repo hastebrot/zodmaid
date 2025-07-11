@@ -16,6 +16,7 @@ import {
   type JsonArray,
   type JsonObject,
 } from "zodspy";
+import { transformToTableRows } from "zodspy/components/json/json-grid-transformer";
 import { musicLibrary } from "zodspy/examples/music-library";
 import { purchaseOrder } from "zodspy/examples/purchase-order";
 
@@ -24,7 +25,7 @@ export const GridViewDynamicPage = () => {
     purchaseOrder,
     musicLibrary,
   };
-  const [exampleName, setExampleName] = useState<keyof typeof examples>("musicLibrary");
+  const [exampleName, setExampleName] = useState<keyof typeof examples>("purchaseOrder");
 
   return (
     <div className="min-h-dvh bg-gray-100 text-gray-900 p-4">
@@ -128,10 +129,18 @@ const GridViewForObject = (gridProps: { value: JsonObject }) => {
         width: "1fr",
         cellRenderer(props) {
           const type = props.data.row?.type;
+          const key = String(props.data.row?.key);
           if (type === "object") {
             return (
               <JsonGridCellLayout
                 gridSlot={<GridViewForObject value={props.data.row?.value as JsonObject} />}
+              />
+            );
+          }
+          if (type === "array" && (key === "Tracks" || key === "items")) {
+            return (
+              <JsonGridCellLayout
+                gridSlot={<GridViewForArrayTable value={props.data.row?.value as JsonArray} />}
               />
             );
           }
@@ -240,6 +249,134 @@ const GridViewForArray = (gridProps: { value: JsonArray }) => {
     },
   });
   return <JsonGridView context={context as GridContextProps} />;
+};
+
+const GridViewForArrayTable = (gridProps: { value: JsonArray }) => {
+  const rows = transformToTableRows(gridProps.value);
+  type DataModel = GridRow[];
+  const context = defineGridContext<DataModel>({
+    label: "order",
+    rows,
+    columns: [
+      {
+        label: rows[0]?.[0]?.key,
+        width: "minmax(55px, max-content)",
+        cellRenderer(props) {
+          const row = props.data.row?.[0];
+          const type = row?.type;
+          const value = row?.value;
+          const index = Number(value) + 1;
+          const label = String(props.data.column?.label);
+          if (props.data.type === "header-cell") {
+            return (
+              <div className="bg-(--cell-bg-header) px-2 font-[700]">
+                {label}
+                <>&nbsp;</>
+              </div>
+            );
+          }
+          if (type === "object" || type === "array") {
+            return (
+              <JsonCellLayout
+                prefixSlot={<JsonCellExpandButton isExpanded />}
+                primarySlot={
+                  <div className="flex items-center">
+                    <JsonCellTypeButton type={type} />
+                    <div className="pr-1.5 font-[700] text-gray-500">{index}</div>
+                  </div>
+                }
+              />
+            );
+          }
+          return (
+            <div className="flex items-center">
+              <div className="px-1.5 font-[700] text-gray-500">{index}</div>
+            </div>
+          );
+        },
+      },
+      {
+        label: rows[0]?.[1]?.key,
+        width: "max-content",
+        cellRenderer(props) {
+          const row = props.data.row?.[1];
+          const type = row?.type;
+          const value = row?.value;
+          const label = String(props.data.column?.label);
+          if (props.data.type === "header-cell") {
+            return <div className="bg-(--cell-bg-header) px-2 font-[700]">{label}</div>;
+          }
+          if (type === "object") {
+            return (
+              <JsonGridCellLayout gridSlot={<GridViewForObject value={value as JsonObject} />} />
+            );
+          }
+          if (type === "array") {
+            return (
+              <JsonGridCellLayout gridSlot={<GridViewForArray value={value as JsonArray} />} />
+            );
+          }
+          return renderCell(row, "value");
+        },
+      },
+      {
+        label: rows[0]?.[2]?.key,
+        width: "max-content",
+        cellRenderer(props) {
+          const row = props.data.row?.[2];
+          const type = row?.type;
+          const value = row?.value;
+          const label = String(props.data.column?.label);
+          if (props.data.type === "header-cell") {
+            return <div className="bg-(--cell-bg-header) px-2 font-[700]">{label}</div>;
+          }
+          if (type === "object") {
+            return (
+              <JsonGridCellLayout gridSlot={<GridViewForObject value={value as JsonObject} />} />
+            );
+          }
+          if (type === "array") {
+            return (
+              <JsonGridCellLayout gridSlot={<GridViewForArray value={value as JsonArray} />} />
+            );
+          }
+          return renderCell(row, "value");
+        },
+      },
+      {
+        label: rows[0]?.[3]?.key,
+        width: "1fr",
+        cellRenderer(props) {
+          const row = props.data.row?.[3];
+          const type = row?.type;
+          const value = row?.value;
+          const label = String(props.data.column?.label);
+          if (props.data.type === "header-cell") {
+            return <div className="bg-(--cell-bg-header) px-2 font-[700]">{label}</div>;
+          }
+          if (type === "object") {
+            return (
+              <JsonGridCellLayout gridSlot={<GridViewForObject value={value as JsonObject} />} />
+            );
+          }
+          if (type === "array") {
+            return (
+              <JsonGridCellLayout gridSlot={<GridViewForArray value={value as JsonArray} />} />
+            );
+          }
+          return renderCell(row, "value");
+        },
+      },
+    ],
+    elements: {
+      Grid: JsonGrid,
+      Row: JsonRow,
+      Cell(props) {
+        return <JsonCell {...props} />;
+      },
+    },
+  });
+  return <JsonGridView context={context as GridContextProps} showHeader />;
 };
 
 function renderCell<DataModel>(item?: DataModel, key?: string) {

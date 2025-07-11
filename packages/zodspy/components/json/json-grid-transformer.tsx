@@ -14,3 +14,16 @@ export function transformToGridRows(json: JsonObject | JsonArray): GridRow[] {
   }
   return rows;
 }
+
+export function transformToTableRows(json: JsonArray): GridRow[][] {
+  const rowsOfRows: GridRow[][] = [];
+  for (const [index, item] of Object.entries(json)) {
+    const rows = [
+      { key: "", type: "string", value: index },
+      ...transformToGridRows(item as JsonObject),
+    ];
+    rowsOfRows.push(rows);
+  }
+
+  return rowsOfRows;
+}
