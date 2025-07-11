@@ -24,9 +24,13 @@ export const GridViewDynamicPage = () => {
 
   return (
     <div className="min-h-dvh bg-gray-100 text-gray-900 p-4">
-      <div className="flex items-center gap-1.5 pb-1.5 text-blue-800 underline text-sm cursor-pointer">
-        <button onClick={() => setExampleName("purchaseOrder")}>purchaseOrder</button>
-        <button onClick={() => setExampleName("musicLibrary")}>musicLibrary</button>
+      <div className="flex items-center gap-1.5 pb-1.5 text-blue-800 underline text-sm">
+        <button className="cursor-pointer" onClick={() => setExampleName("purchaseOrder")}>
+          purchaseOrder
+        </button>
+        <button className="cursor-pointer" onClick={() => setExampleName("musicLibrary")}>
+          musicLibrary
+        </button>
       </div>
       <GridViewForRoot value={exampleName === "purchaseOrder" ? purchaseOrder : musicLibrary} />
     </div>
