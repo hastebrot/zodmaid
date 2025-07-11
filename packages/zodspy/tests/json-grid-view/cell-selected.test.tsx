@@ -70,24 +70,24 @@ describe("json grid view", () => {
 
       // then:
       const grid = queryHelper.grid(screen.container);
-      expect(grid.getCellExt(0, 0, "group")).toHaveAttribute("role", "group");
-      expect(grid.getCellExt(0, 0, "group")).not.toHaveAttribute("aria-selected");
-      expect(grid.getCellExt(0, 0, "group")).toHaveAttribute("data-selected", "false");
-      expect(grid.getCellExt(0, 0, "group")).toHaveAttribute("data-editable", "false");
+      expect(grid.getCellChild(0, 0, "group")).toHaveAttribute("role", "group");
+      expect(grid.getCellChild(0, 0, "group")).not.toHaveAttribute("aria-selected");
+      expect(grid.getCellChild(0, 0, "group")).toHaveAttribute("data-selected", "false");
+      expect(grid.getCellChild(0, 0, "group")).toHaveAttribute("data-editable", "false");
 
-      await user.click(grid.getCellExt(0, 0, "group"));
-      expect(grid.getCellExt(0, 0, "group")).toHaveAttribute("aria-selected", "true");
-      expect(grid.getCellExt(0, 0, "group")).toHaveAttribute("data-selected", "true");
+      await user.click(grid.getCellChild(0, 0, "group"));
+      expect(grid.getCellChild(0, 0, "group")).toHaveAttribute("aria-selected", "true");
+      expect(grid.getCellChild(0, 0, "group")).toHaveAttribute("data-selected", "true");
 
-      await user.dblClick(grid.getCellExt(0, 0, "group"));
-      expect(grid.getCellExt(0, 0, "group")).toHaveAttribute("aria-selected", "true");
-      expect(grid.getCellExt(0, 0, "group")).toHaveAttribute("data-selected", "true");
-      expect(grid.getCellExt(0, 0, "group")).toHaveAttribute("data-editable", "true");
+      await user.dblClick(grid.getCellChild(0, 0, "group"));
+      expect(grid.getCellChild(0, 0, "group")).toHaveAttribute("aria-selected", "true");
+      expect(grid.getCellChild(0, 0, "group")).toHaveAttribute("data-selected", "true");
+      expect(grid.getCellChild(0, 0, "group")).toHaveAttribute("data-editable", "true");
 
-      await user.click(grid.getCellExt(1, 0, "group"));
-      expect(grid.getCellExt(0, 0, "group")).not.toHaveAttribute("aria-selected");
-      expect(grid.getCellExt(0, 0, "group")).toHaveAttribute("data-selected", "false");
-      expect(grid.getCellExt(0, 0, "group")).toHaveAttribute("data-editable", "false");
+      await user.click(grid.getCellChild(1, 0, "group"));
+      expect(grid.getCellChild(0, 0, "group")).not.toHaveAttribute("aria-selected");
+      expect(grid.getCellChild(0, 0, "group")).toHaveAttribute("data-selected", "false");
+      expect(grid.getCellChild(0, 0, "group")).toHaveAttribute("data-editable", "false");
     });
   });
 });
