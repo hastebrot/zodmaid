@@ -266,7 +266,7 @@ const GridViewForArrayTable = (gridProps: { value: JsonArray }) => {
           const type = row?.type;
           const value = row?.value;
           const index = Number(value) + 1;
-          const label = String(props.data.column?.label);
+          const label = String(props.data.column?.label ?? "");
           if (props.data.type === "header-cell") {
             return (
               <div className="bg-(--cell-bg-header) px-2 font-[700]">
@@ -302,7 +302,7 @@ const GridViewForArrayTable = (gridProps: { value: JsonArray }) => {
           const row = props.data.row?.[1];
           const type = row?.type;
           const value = row?.value;
-          const label = String(props.data.column?.label);
+          const label = String(props.data.column?.label ?? "");
           if (props.data.type === "header-cell") {
             return <div className="bg-(--cell-bg-header) px-2 font-[700]">{label}</div>;
           }
@@ -326,7 +326,7 @@ const GridViewForArrayTable = (gridProps: { value: JsonArray }) => {
           const row = props.data.row?.[2];
           const type = row?.type;
           const value = row?.value;
-          const label = String(props.data.column?.label);
+          const label = String(props.data.column?.label ?? "");
           if (props.data.type === "header-cell") {
             return <div className="bg-(--cell-bg-header) px-2 font-[700]">{label}</div>;
           }
@@ -350,7 +350,7 @@ const GridViewForArrayTable = (gridProps: { value: JsonArray }) => {
           const row = props.data.row?.[3];
           const type = row?.type;
           const value = row?.value;
-          const label = String(props.data.column?.label);
+          const label = String(props.data.column?.label ?? "");
           if (props.data.type === "header-cell") {
             return <div className="bg-(--cell-bg-header) px-2 font-[700]">{label}</div>;
           }
