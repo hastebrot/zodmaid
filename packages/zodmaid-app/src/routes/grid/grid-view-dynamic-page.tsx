@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import {
   defineGridContext,
   determineJsonType,
@@ -54,11 +54,11 @@ const GridViewForRoot = (gridProps: { value: JsonObject }) => {
     columns: [
       {
         label: "key",
-        width: "minmax(60px, max-content)",
-        cellRenderer(props) {
+        width: "minmax(55px, max-content)",
+        cellRenderer() {
           return (
             <JsonCellLayout
-              prefixSlot={<JsonCellExpandButton isExpanded={props.data.rowIndex === 4} />}
+              prefixSlot={<JsonCellExpandButton isExpanded />}
               primarySlot={<JsonCellTypeButton type="object" />}
             />
           );
@@ -99,29 +99,27 @@ const GridViewForObject = (gridProps: { value: JsonObject }) => {
     columns: [
       {
         label: "key",
-        width: "minmax(60px, max-content)",
+        width: "minmax(55px, max-content)",
         cellRenderer(props) {
           const type = props.data.row?.type;
-          const isObjectOrArray = type === "object" || type === "array";
+          const key = String(props.data.row?.key);
+          if (type === "object" || type === "array") {
+            return (
+              <JsonCellLayout
+                prefixSlot={<JsonCellExpandButton isExpanded />}
+                primarySlot={
+                  <div className="flex items-center">
+                    <JsonCellTypeButton type={type} />
+                    <div className="pr-1.5 font-[700]">{key}</div>
+                  </div>
+                }
+              />
+            );
+          }
           return (
-            <Fragment>
-              {isObjectOrArray && (
-                <JsonCellLayout
-                  prefixSlot={<JsonCellExpandButton isExpanded={props.data.rowIndex === 4} />}
-                  primarySlot={
-                    <div className="flex items-center">
-                      <JsonCellTypeButton type={type} />
-                      <div className="pr-1.5">{props.data.row?.key}</div>
-                    </div>
-                  }
-                />
-              )}
-              {!isObjectOrArray && (
-                <div className="flex items-center">
-                  <div className="px-1.5">{props.data.row?.key}</div>
-                </div>
-              )}
-            </Fragment>
+            <div className="flex items-center">
+              <div className="px-1.5 font-[700]">{key}</div>
+            </div>
           );
         },
       },
@@ -153,8 +151,7 @@ const GridViewForObject = (gridProps: { value: JsonObject }) => {
       Row: JsonRow,
       Cell(props) {
         const type = props.data.row?.type;
-        const isObjectOrArray = type === "object" || type === "array";
-        if (isObjectOrArray) {
+        if (type === "object" || type === "array") {
           if (props.data.column?.label === "key") {
             return <JsonCell {...props} gridRowOffset={0} gridColumnLimit={-1} />;
           }
@@ -177,29 +174,27 @@ const GridViewForArray = (gridProps: { value: JsonArray }) => {
     columns: [
       {
         label: "key",
-        width: "minmax(60px, max-content)",
+        width: "minmax(55px, max-content)",
         cellRenderer(props) {
           const type = props.data.row?.type;
-          const isObjectOrArray = type === "object" || type === "array";
+          const index = Number(props.data.row?.key) + 1;
+          if (type === "object" || type === "array") {
+            return (
+              <JsonCellLayout
+                prefixSlot={<JsonCellExpandButton isExpanded />}
+                primarySlot={
+                  <div className="flex items-center">
+                    <JsonCellTypeButton type={type} />
+                    <div className="pr-1.5 font-[700] text-gray-500">{index}</div>
+                  </div>
+                }
+              />
+            );
+          }
           return (
-            <Fragment>
-              {isObjectOrArray && (
-                <JsonCellLayout
-                  prefixSlot={<JsonCellExpandButton isExpanded={props.data.rowIndex === 4} />}
-                  primarySlot={
-                    <div className="flex items-center">
-                      <JsonCellTypeButton type={type} />
-                      <div className="pr-1.5">{props.data.row?.key}</div>
-                    </div>
-                  }
-                />
-              )}
-              {!isObjectOrArray && (
-                <div className="flex items-center">
-                  <div className="px-1.5">{props.data.row?.key}</div>
-                </div>
-              )}
-            </Fragment>
+            <div className="flex items-center">
+              <div className="px-1.5 font-[700] text-gray-500">{index}</div>
+            </div>
           );
         },
       },
