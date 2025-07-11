@@ -29,3 +29,10 @@ export {
   JsonCellTypeButton,
 } from "zodspy/components/json/json-cell-type-button";
 export { JsonGridCellLayout } from "zodspy/components/json/json-grid-cell-layout";
+export {
+  transformToGridRows,
+  type GridRow,
+  type JsonArray,
+  type JsonObject,
+  type JsonValue,
+} from "zodspy/components/json/json-grid-transformer";

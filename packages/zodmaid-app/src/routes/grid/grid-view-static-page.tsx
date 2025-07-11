@@ -51,8 +51,10 @@ const GridViewForRoot = () => {
       {
         label: "value",
         width: "1fr",
-        cellRenderer() {
-          return <JsonGridCellLayout gridSlot={<GridViewForOrder />} />;
+        cellRenderer(props) {
+          if (props.data.row?.label === "") {
+            return <JsonGridCellLayout gridSlot={<GridViewForOrder />} />;
+          }
         },
       },
     ],
