@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import {
   defineGridContext,
   determineJsonType,
@@ -16,12 +16,19 @@ import {
   type JsonArray,
   type JsonObject,
 } from "zodspy";
+import { musicLibrary } from "zodspy/examples/music-library";
 import { purchaseOrder } from "zodspy/examples/purchase-order";
 
 export const GridViewDynamicPage = () => {
+  const [exampleName, setExampleName] = useState("purchaseOrder");
+
   return (
     <div className="min-h-dvh bg-gray-100 text-gray-900 p-4">
-      <GridViewForRoot value={purchaseOrder} />
+      <div className="flex items-center gap-1.5 pb-1.5 text-blue-800 underline text-sm cursor-pointer">
+        <button onClick={() => setExampleName("purchaseOrder")}>purchaseOrder</button>
+        <button onClick={() => setExampleName("musicLibrary")}>musicLibrary</button>
+      </div>
+      <GridViewForRoot value={exampleName === "purchaseOrder" ? purchaseOrder : musicLibrary} />
     </div>
   );
 };
