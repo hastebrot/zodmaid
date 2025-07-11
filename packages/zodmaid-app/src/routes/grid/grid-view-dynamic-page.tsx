@@ -20,7 +20,11 @@ import { musicLibrary } from "zodspy/examples/music-library";
 import { purchaseOrder } from "zodspy/examples/purchase-order";
 
 export const GridViewDynamicPage = () => {
-  const [exampleName, setExampleName] = useState("purchaseOrder");
+  const examples = {
+    purchaseOrder,
+    musicLibrary,
+  };
+  const [exampleName, setExampleName] = useState<keyof typeof examples>("musicLibrary");
 
   return (
     <div className="min-h-dvh bg-gray-100 text-gray-900 p-4">
@@ -32,7 +36,9 @@ export const GridViewDynamicPage = () => {
           musicLibrary
         </button>
       </div>
-      <GridViewForRoot value={exampleName === "purchaseOrder" ? purchaseOrder : musicLibrary} />
+      <div className="w-fit h-fit">
+        <GridViewForRoot key={exampleName} value={examples[exampleName]} />
+      </div>
     </div>
   );
 };
@@ -60,7 +66,7 @@ const GridViewForRoot = (gridProps: { value: JsonObject }) => {
       },
       {
         label: "value",
-        width: "1fr",
+        width: "max-content",
         cellRenderer(props) {
           if (props.data.row?.key === "") {
             return <JsonGridCellLayout gridSlot={<GridViewForObject value={gridProps.value} />} />;
@@ -82,11 +88,7 @@ const GridViewForRoot = (gridProps: { value: JsonObject }) => {
       },
     },
   });
-  return (
-    <div className="w-fit">
-      <JsonGridView context={context as GridContextProps} />
-    </div>
-  );
+  return <JsonGridView context={context as GridContextProps} />;
 };
 
 const GridViewForObject = (gridProps: { value: JsonObject }) => {
