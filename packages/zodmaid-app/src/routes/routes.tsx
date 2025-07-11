@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate, type RouteObject } from "react-router";
 import { DiagramAntvPage } from "./diagram/diagram-antv-page";
 import { DiagramPage } from "./diagram/diagram-page";
+import { GridViewDynamicPage } from "./grid/grid-view-dynamic-page";
 import { GridViewStaticPage } from "./grid/grid-view-static-page";
 import { GridViewStyledPage } from "./grid/grid-view-styled-page";
 import { InputFieldSizingPage } from "./grid/input-field-sizing-page";
@@ -25,7 +26,7 @@ export const routes: RouteObject[] = [
     Component: () => {
       const navigate = useNavigate();
       useEffect(() => {
-        navigate("/grid/static", { replace: true });
+        navigate("/grid/dynamic", { replace: true });
       }, []);
       return null;
     },
@@ -42,6 +43,7 @@ export const routes: RouteObject[] = [
     path: "/grid",
     children: [
       // wrap.
+      { path: "dynamic", Component: () => <GridViewDynamicPage /> },
       { path: "static", Component: () => <GridViewStaticPage /> },
       { path: "styled", Component: () => <GridViewStyledPage /> },
       { path: "mockup", Component: () => <MockupGridPage /> },

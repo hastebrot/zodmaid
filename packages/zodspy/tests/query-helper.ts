@@ -21,7 +21,7 @@ export const queryHelper = {
         });
       },
 
-      getCellExt(
+      getCellChild(
         rowIndex: number,
         columnIndex: number,
         role: ByRoleMatcher,
