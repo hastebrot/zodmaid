@@ -19,7 +19,7 @@
     "graphlib": "^2.1.8",
     "graphre": "workspace:*",
     "prettier": "^3.6.2",
-    "zod": "^3.25.76"
+    "zod": "^4.0.5"
   },
   "peerDependencies": {
     "typescript": "^5.8.3"
