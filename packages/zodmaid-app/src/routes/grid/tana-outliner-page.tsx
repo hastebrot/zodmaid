@@ -5,7 +5,7 @@ export const TanaOutlinerPage = () => {
   return (
     <div className="min-h-dvh overflow-auto p-8 bg-zinc-900 text-zinc-300">
       <TanaTheme>
-        <div className="flex flex-col gap-1.5 font-sans text-(size:--text-font-size)/(--text-line-height)">
+        <div className="flex flex-col gap-2.5 font-sans text-(size:--text-font-size)/(--text-line-height)">
           <div className="flex items-center gap-2.5">
             <OutlineBullet variant="point" />
             <OutlineBullet variant="point" hasOutline />
@@ -124,22 +124,108 @@ export const TanaOutlinerPage = () => {
             </OutlineField>
             <div className="flex items-center gap-2">
               <OutlineBullet variant="point" />
-              <span>Person</span>
+              <span>Text</span>
             </div>
             <OutlineList>
               <div className="flex items-center gap-2">
                 <OutlineBullet variant="point" />
-                <span>Person</span>
+                <span>Text</span>
               </div>
             </OutlineList>
             <div className="flex items-center gap-2">
               <OutlineBullet variant="point" hasOutline />
-              <span>Person</span>
+              <span>Text</span>
             </div>
             <div className="flex items-center gap-2">
               <OutlineBullet variant="point" hasOutline />
-              <span>Person</span>
+              <span>Text</span>
             </div>
+          </OutlineList>
+          <div className="flex items-center gap-2">
+            <OutlineBullet variant="point" />
+            <span>Table</span>
+          </div>
+          <OutlineList>
+            <OutlineField>
+              <div className="flex items-center gap-2">
+                <OutlineBullet variant="field">
+                  <OutlineBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
+                </OutlineBullet>
+                <span>column</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <OutlineBullet variant="field">
+                  <OutlineBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
+                </OutlineBullet>
+                <span>column</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <OutlineBullet variant="field">
+                  <OutlineBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
+                </OutlineBullet>
+                <span>column</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <OutlineBullet variant="field">
+                  <OutlineBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
+                </OutlineBullet>
+                <span>column</span>
+              </div>
+            </OutlineField>
+            <OutlineField>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2">
+                  <OutlineBullet variant="point" />
+                  <span>Text</span>
+                </div>
+                <OutlineList>
+                  <div className="flex items-center gap-2">
+                    <OutlineBullet variant="point" />
+                    <span>Text</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <OutlineBullet variant="point" />
+                    <span>Text</span>
+                  </div>
+                </OutlineList>
+              </div>
+              <div className="flex items-center gap-2">
+                <OutlineBullet variant="point" />
+              </div>
+              <div className="flex items-center gap-2">
+                <OutlineBullet variant="point" />
+              </div>
+              <div className="flex items-center gap-2">
+                <OutlineBullet variant="point" />
+              </div>
+            </OutlineField>
+            <OutlineField>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2">
+                  <OutlineBullet variant="point" />
+                  <span>Text</span>
+                </div>
+                <OutlineList>
+                  <div className="flex items-center gap-2">
+                    <OutlineBullet variant="point" />
+                    <span>Text</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <OutlineBullet variant="point" />
+                    <span>Text</span>
+                  </div>
+                </OutlineList>
+              </div>
+              <div className="flex items-center gap-2">
+                <OutlineBullet variant="point" />
+              </div>
+              <div className="flex items-center gap-2">
+                <OutlineBullet variant="point" />
+              </div>
+              <div className="flex items-center gap-2">
+                <OutlineBullet variant="point" />
+              </div>
+            </OutlineField>
           </OutlineList>
         </div>
       </TanaTheme>
@@ -149,7 +235,7 @@ export const TanaOutlinerPage = () => {
 
 const TanaTheme = (props: { children?: React.ReactNode }) => {
   const style = {
-    "--bullet-size": "16px",
+    "--bullet-size": "17px",
     "--bullet-field-size": "12px",
     "--bullet-icon-size": "12px",
     "--bullet-point-size": "7px",
@@ -171,7 +257,7 @@ const OutlineList = (props: { children?: React.ReactNode }) => {
   return (
     <div className="relative flex flex-col gap-1.5 pl-[calc(var(--bullet-size)*2)]">
       <div className="absolute left-0 top-0 bottom-0 w-(--bullet-size) h-full flex justify-center ">
-        <button className="w-[1px] h-full bg-(--color-gray-600) rounded-[4px]"></button>
+        <button className="w-[1px] h-full bg-(--color-gray-700) rounded-[4px]"></button>
       </div>
       {props.children}
     </div>
@@ -180,7 +266,7 @@ const OutlineList = (props: { children?: React.ReactNode }) => {
 
 const OutlineField = (props: { children?: React.ReactNode }) => {
   return (
-    <div className="grid grid-cols-[minmax(150px,max-content)_1fr] grid-flow-col items-center gap-4 py-0.5 border-b border-zinc-700">
+    <div className="grid grid-cols-[repeat(10,minmax(140px,max-content))] grid-flow-col items-start gap-4 pt-1 pb-1.5 border-b border-zinc-700">
       {props.children}
     </div>
   );
@@ -218,7 +304,7 @@ const OutlineBullet = (props: OutlineBulletProps) => {
     return (
       <div
         className={classNames(
-          "h-(--bullet-size) flex items-center justify-center gap-1 pl-0.5 pr-1 text-zinc-400 outline-2 outline-transparent rounded-[3px]",
+          "h-(--bullet-size) flex items-center justify-center gap-0.5 pl-0.5 pr-1 text-zinc-400 outline-2 outline-transparent rounded-[3px]",
           props.hasOutline && "bg-zinc-700 !outline-zinc-700 !text-zinc-300",
         )}
       >
