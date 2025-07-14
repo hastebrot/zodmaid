@@ -77,7 +77,7 @@ export const TanaOutlinerPage = () => {
             <span>Person</span>
           </div>
           <div className="flex items-center gap-2">
-            <OutlineBullet variant="point" color="orange" hasOutline />
+            <OutlineBullet variant="point" color="orange" />
             <span>Person</span>
             <OutlineBullet variant="action" textSlot="person" hasOutline color="orange">
               <OutlineBulletIcon iconSlot={iconHash} />
@@ -102,8 +102,11 @@ export const TanaOutlinerPage = () => {
                 <span>Works in</span>
               </div>
               <div className="flex items-center gap-2">
-                <OutlineBullet variant="point" />
+                <OutlineBullet variant="point" color="magenta" hasOutline />
                 <span>Company</span>
+                <OutlineBullet variant="action" textSlot="company" hasOutline color="magenta">
+                  <OutlineBulletIcon iconSlot={iconHash} />
+                </OutlineBullet>
               </div>
             </OutlineField>
             <OutlineField>
@@ -114,7 +117,7 @@ export const TanaOutlinerPage = () => {
                 <span>Role</span>
               </div>
               <div className="flex items-center gap-2">
-                <OutlineBullet variant="point" />
+                <OutlineBullet variant="point" color="gray" />
               </div>
             </OutlineField>
             <OutlineField>
@@ -125,7 +128,7 @@ export const TanaOutlinerPage = () => {
                 <span>Email</span>
               </div>
               <div className="flex items-center gap-2">
-                <OutlineBullet variant="point" />
+                <OutlineBullet variant="point" color="gray" />
               </div>
             </OutlineField>
             <div className="flex items-center gap-2">
@@ -146,6 +149,30 @@ export const TanaOutlinerPage = () => {
               <OutlineBullet variant="point" hasOutline />
               <span>Text</span>
             </div>
+          </OutlineList>
+          <div className="flex items-center gap-2">
+            <OutlineBullet variant="point" color="magenta" />
+            <span>Company</span>
+            <OutlineBullet variant="action" textSlot="company" hasOutline color="magenta">
+              <OutlineBulletIcon iconSlot={iconHash} />
+            </OutlineBullet>
+          </div>
+          <OutlineList>
+            <OutlineField>
+              <div className="flex items-center gap-2">
+                <OutlineBullet variant="field" color="magenta">
+                  <OutlineBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
+                </OutlineBullet>
+                <span>People</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <OutlineBullet variant="point" color="orange" hasOutline />
+                <span>Person</span>
+                <OutlineBullet variant="action" textSlot="person" hasOutline color="orange">
+                  <OutlineBulletIcon iconSlot={iconHash} />
+                </OutlineBullet>
+              </div>
+            </OutlineField>
           </OutlineList>
           <div className="flex items-center gap-2">
             <OutlineBullet variant="point" />
@@ -196,13 +223,13 @@ export const TanaOutlinerPage = () => {
                 </OutlineList>
               </div>
               <div className="flex items-center gap-2">
-                <OutlineBullet variant="point" />
+                <OutlineBullet variant="point" color="gray" />
               </div>
               <div className="flex items-center gap-2">
-                <OutlineBullet variant="point" />
+                <OutlineBullet variant="point" color="gray" />
               </div>
               <div className="flex items-center gap-2">
-                <OutlineBullet variant="point" />
+                <OutlineBullet variant="point" color="gray" />
               </div>
             </OutlineField>
             <OutlineField>
@@ -223,13 +250,13 @@ export const TanaOutlinerPage = () => {
                 </OutlineList>
               </div>
               <div className="flex items-center gap-2">
-                <OutlineBullet variant="point" />
+                <OutlineBullet variant="point" color="gray" />
               </div>
               <div className="flex items-center gap-2">
-                <OutlineBullet variant="point" />
+                <OutlineBullet variant="point" color="gray" />
               </div>
               <div className="flex items-center gap-2">
-                <OutlineBullet variant="point" />
+                <OutlineBullet variant="point" color="gray" />
               </div>
             </OutlineField>
           </OutlineList>
@@ -281,16 +308,28 @@ type OutlineBulletProps = {
 
 const OutlineBullet = (props: OutlineBulletProps) => {
   let style = {} as CSSProperties;
-  if (props.color === "gray" || props.color === undefined) {
+  if (props.color === undefined) {
     style = {
       "--color-300": "var(--color-zinc-300)",
       "--color-700": "var(--color-zinc-600)",
     } as CSSProperties;
   }
+  if (props.color === "gray") {
+    style = {
+      "--color-300": "var(--color-zinc-600)",
+      "--color-700": "var(--color-zinc-950)",
+    } as CSSProperties;
+  }
   if (props.color === "orange") {
     style = {
-      "--color-300": "var(--color-orange-400)",
+      "--color-300": "var(--color-orange-500)",
       "--color-700": "var(--color-orange-950)",
+    } as CSSProperties;
+  }
+  if (props.color === "magenta") {
+    style = {
+      "--color-300": "var(--color-fuchsia-500)",
+      "--color-700": "var(--color-fuchsia-950)",
     } as CSSProperties;
   }
 
