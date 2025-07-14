@@ -118,6 +118,7 @@ export const TanaOutlinerPage = () => {
               </div>
               <div className="flex items-center gap-2">
                 <OutlineBullet variant="point" color="gray" />
+                <span>&nbsp;</span>
               </div>
             </OutlineField>
             <OutlineField>
@@ -129,6 +130,7 @@ export const TanaOutlinerPage = () => {
               </div>
               <div className="flex items-center gap-2">
                 <OutlineBullet variant="point" color="gray" />
+                <span>&nbsp;</span>
               </div>
             </OutlineField>
             <div className="flex items-center gap-2">
@@ -151,6 +153,7 @@ export const TanaOutlinerPage = () => {
             </div>
             <div className="flex items-center gap-2">
               <OutlineBullet variant="point" color="gray" />
+              <span>&nbsp;</span>
             </div>
           </OutlineList>
           <div className="flex items-center gap-2 mt-1.5">
@@ -178,6 +181,7 @@ export const TanaOutlinerPage = () => {
             </OutlineField>
             <div className="flex items-center gap-2">
               <OutlineBullet variant="point" color="gray" />
+              <span>&nbsp;</span>
             </div>
           </OutlineList>
           <div className="flex items-center gap-2 mt-1.5">
@@ -190,25 +194,25 @@ export const TanaOutlinerPage = () => {
                 <OutlineBullet variant="field">
                   <OutlineBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
                 </OutlineBullet>
-                <span>column</span>
+                <span>Column</span>
               </div>
               <div className="flex items-center gap-2">
                 <OutlineBullet variant="field">
                   <OutlineBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
                 </OutlineBullet>
-                <span>column</span>
+                <span>Column</span>
               </div>
               <div className="flex items-center gap-2">
                 <OutlineBullet variant="field">
                   <OutlineBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
                 </OutlineBullet>
-                <span>column</span>
+                <span>Column</span>
               </div>
               <div className="flex items-center gap-2">
                 <OutlineBullet variant="field">
                   <OutlineBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
                 </OutlineBullet>
-                <span>column</span>
+                <span>Column</span>
               </div>
             </OutlineField>
             <OutlineField>
@@ -230,12 +234,15 @@ export const TanaOutlinerPage = () => {
               </div>
               <div className="flex items-center gap-2">
                 <OutlineBullet variant="point" color="gray" />
+                <span>&nbsp;</span>
               </div>
               <div className="flex items-center gap-2">
                 <OutlineBullet variant="point" color="gray" />
+                <span>&nbsp;</span>
               </div>
               <div className="flex items-center gap-2">
                 <OutlineBullet variant="point" color="gray" />
+                <span>&nbsp;</span>
               </div>
             </OutlineField>
             <OutlineField>
@@ -257,16 +264,20 @@ export const TanaOutlinerPage = () => {
               </div>
               <div className="flex items-center gap-2">
                 <OutlineBullet variant="point" color="gray" />
+                <span>&nbsp;</span>
               </div>
               <div className="flex items-center gap-2">
                 <OutlineBullet variant="point" color="gray" />
+                <span>&nbsp;</span>
               </div>
               <div className="flex items-center gap-2">
                 <OutlineBullet variant="point" color="gray" />
+                <span>&nbsp;</span>
               </div>
             </OutlineField>
             <div className="flex items-center gap-2">
               <OutlineBullet variant="point" color="gray" />
+              <span>&nbsp;</span>
             </div>
           </OutlineList>
         </div>
