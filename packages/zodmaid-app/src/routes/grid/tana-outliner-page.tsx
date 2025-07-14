@@ -15,6 +15,9 @@ export const TanaOutlinerPage = () => {
           </div>
           <div className="flex items-center gap-2.5">
             <OutlineBullet variant="button">
+              <OutlineBulletIcon iconSlot={iconArrowForward} />
+            </OutlineBullet>
+            <OutlineBullet variant="button">
               <OutlineBulletIcon iconSlot={iconPlus} />
             </OutlineBullet>
             <OutlineBullet variant="button">
@@ -36,7 +39,10 @@ export const TanaOutlinerPage = () => {
               <OutlineBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
             </OutlineBullet>
             <OutlineBullet variant="field">
-              <OutlineBulletIcon iconSlot={iconNumber12} style={{ scale: 1.4 }} />
+              <OutlineBulletIcon iconSlot={iconAlphabetLatin} style={{ scale: 1.3 }} />
+            </OutlineBullet>
+            <OutlineBullet variant="field">
+              <OutlineBulletIcon iconSlot={iconNumber12} style={{ scale: 1.45 }} />
             </OutlineBullet>
             <OutlineBullet variant="field">
               <OutlineBulletIcon iconSlot={iconHash} />
@@ -59,8 +65,82 @@ export const TanaOutlinerPage = () => {
             <OutlineBullet variant="field">
               <OutlineBulletIcon iconSlot={iconClockHour4} />
             </OutlineBullet>
+            <OutlineBullet variant="field">
+              <OutlineBulletIcon iconSlot={iconCurrencyDollar} />
+            </OutlineBullet>
             <span>Person</span>
           </div>
+          <div className="flex items-center gap-2">
+            <OutlineBullet variant="point" />
+            <span>Person</span>
+            <OutlineBullet variant="action" textSlot="person" hasOutline>
+              <OutlineBulletIcon iconSlot={iconHash} />
+            </OutlineBullet>
+          </div>
+          <OutlineList>
+            <OutlineField>
+              <div className="flex items-center gap-1">
+                <OutlineBullet variant="action" textSlot="Phone">
+                  <OutlineBulletIcon iconSlot={iconPlus} />
+                </OutlineBullet>
+                <OutlineBullet variant="action" textSlot="Department">
+                  <OutlineBulletIcon iconSlot={iconPlus} />
+                </OutlineBullet>
+              </div>
+            </OutlineField>
+            <OutlineField>
+              <div className="flex items-center gap-2">
+                <OutlineBullet variant="field">
+                  <OutlineBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
+                </OutlineBullet>
+                <span>Works in</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <OutlineBullet variant="point" />
+                <span>Company</span>
+              </div>
+            </OutlineField>
+            <OutlineField>
+              <div className="flex items-center gap-2">
+                <OutlineBullet variant="field">
+                  <OutlineBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
+                </OutlineBullet>
+                <span>Role</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <OutlineBullet variant="point" />
+              </div>
+            </OutlineField>
+            <OutlineField>
+              <div className="flex items-center gap-2">
+                <OutlineBullet variant="field">
+                  <OutlineBulletIcon iconSlot={iconAt} />
+                </OutlineBullet>
+                <span>Email</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <OutlineBullet variant="point" />
+              </div>
+            </OutlineField>
+            <div className="flex items-center gap-2">
+              <OutlineBullet variant="point" />
+              <span>Person</span>
+            </div>
+            <OutlineList>
+              <div className="flex items-center gap-2">
+                <OutlineBullet variant="point" />
+                <span>Person</span>
+              </div>
+            </OutlineList>
+            <div className="flex items-center gap-2">
+              <OutlineBullet variant="point" hasOutline />
+              <span>Person</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <OutlineBullet variant="point" hasOutline />
+              <span>Person</span>
+            </div>
+          </OutlineList>
         </div>
       </TanaTheme>
     </div>
@@ -85,6 +165,25 @@ type OutlineBulletProps = {
   textSlot?: React.ReactNode;
   hasOutline?: boolean;
   hasOutlineBorder?: boolean;
+};
+
+const OutlineList = (props: { children?: React.ReactNode }) => {
+  return (
+    <div className="relative flex flex-col gap-1.5 pl-[calc(var(--bullet-size)*2)]">
+      <div className="absolute left-0 top-0 bottom-0 w-(--bullet-size) h-full flex justify-center ">
+        <button className="w-[1px] h-full bg-(--color-gray-600) rounded-[4px]"></button>
+      </div>
+      {props.children}
+    </div>
+  );
+};
+
+const OutlineField = (props: { children?: React.ReactNode }) => {
+  return (
+    <div className="grid grid-cols-[minmax(150px,max-content)_1fr] grid-flow-col items-center gap-4 py-0.5 border-b border-zinc-700">
+      {props.children}
+    </div>
+  );
 };
 
 const OutlineBullet = (props: OutlineBulletProps) => {
@@ -119,12 +218,12 @@ const OutlineBullet = (props: OutlineBulletProps) => {
     return (
       <div
         className={classNames(
-          "h-(--bullet-size) flex items-center justify-center gap-1 pl-0.5 pr-1 outline-2 outline-transparent rounded-[3px]",
-          props.hasOutline && "bg-zinc-700 !outline-zinc-700",
+          "h-(--bullet-size) flex items-center justify-center gap-1 pl-0.5 pr-1 text-zinc-400 outline-2 outline-transparent rounded-[3px]",
+          props.hasOutline && "bg-zinc-700 !outline-zinc-700 !text-zinc-300",
         )}
       >
         <div role="button" className="flex items-center justify-center">
-          <div className="flex items-center justify-center size-(--bullet-field-size) text-zinc-400 rounded-full overflow-clip">
+          <div className="flex items-center justify-center size-(--bullet-field-size) text-zinc-300 rounded-full overflow-clip">
             {props.children}
           </div>
         </div>
@@ -277,6 +376,26 @@ export const iconNumber12 = (
   </svg>
 );
 
+export const iconAlphabetLatin = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={24}
+    height={24}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="icon icon-tabler icons-tabler-outline icon-tabler-alphabet-latin"
+  >
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M6 10h2a2 2 0 0 1 2 2v5h-3a2 2 0 1 1 0 -4h3" />
+    <path d="M14 7v10" />
+    <path d="M14 10m0 2a2 2 0 0 1 2 -2h1a2 2 0 0 1 2 2v3a2 2 0 0 1 -2 2h-1a2 2 0 0 1 -2 -2z" />
+  </svg>
+);
+
 export const iconLink = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -388,5 +507,42 @@ export const iconSearch = (
     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
     <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
     <path d="M21 21l-6 -6" />
+  </svg>
+);
+
+export const iconCurrencyDollar = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={24}
+    height={24}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="icon icon-tabler icons-tabler-outline icon-tabler-currency-dollar"
+  >
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2" />
+    <path d="M12 3v3m0 12v3" />
+  </svg>
+);
+
+const iconArrowForward = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={24}
+    height={24}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="icon icon-tabler icons-tabler-outline icon-tabler-arrow-forward"
+  >
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M15 11l4 4l-4 4m4 -4h-11a4 4 0 0 1 0 -8h1" />
   </svg>
 );
