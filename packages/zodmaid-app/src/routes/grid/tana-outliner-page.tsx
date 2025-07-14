@@ -39,10 +39,16 @@ export const TanaOutlinerPage = () => {
               <OutlineBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
             </OutlineBullet>
             <OutlineBullet variant="field">
-              <OutlineBulletIcon iconSlot={iconAlphabetLatin} style={{ scale: 1.3 }} />
+              <OutlineBulletIcon
+                iconSlot={iconAlphabetLatin}
+                style={{ scale: 1.3, translate: "0 -0.25px" }}
+              />
             </OutlineBullet>
             <OutlineBullet variant="field">
-              <OutlineBulletIcon iconSlot={iconNumber12} style={{ scale: 1.45 }} />
+              <OutlineBulletIcon
+                iconSlot={iconNumber12}
+                style={{ scale: 1.45, translate: "0 0.25px" }}
+              />
             </OutlineBullet>
             <OutlineBullet variant="field">
               <OutlineBulletIcon iconSlot={iconHash} />
@@ -71,9 +77,9 @@ export const TanaOutlinerPage = () => {
             <span>Person</span>
           </div>
           <div className="flex items-center gap-2">
-            <OutlineBullet variant="point" />
+            <OutlineBullet variant="point" color="orange" hasOutline />
             <span>Person</span>
-            <OutlineBullet variant="action" textSlot="person" hasOutline>
+            <OutlineBullet variant="action" textSlot="person" hasOutline color="orange">
               <OutlineBulletIcon iconSlot={iconHash} />
             </OutlineBullet>
           </div>
@@ -90,7 +96,7 @@ export const TanaOutlinerPage = () => {
             </OutlineField>
             <OutlineField>
               <div className="flex items-center gap-2">
-                <OutlineBullet variant="field">
+                <OutlineBullet variant="field" color="orange">
                   <OutlineBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
                 </OutlineBullet>
                 <span>Works in</span>
@@ -102,7 +108,7 @@ export const TanaOutlinerPage = () => {
             </OutlineField>
             <OutlineField>
               <div className="flex items-center gap-2">
-                <OutlineBullet variant="field">
+                <OutlineBullet variant="field" color="orange">
                   <OutlineBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
                 </OutlineBullet>
                 <span>Role</span>
@@ -113,7 +119,7 @@ export const TanaOutlinerPage = () => {
             </OutlineField>
             <OutlineField>
               <div className="flex items-center gap-2">
-                <OutlineBullet variant="field">
+                <OutlineBullet variant="field" color="orange">
                   <OutlineBulletIcon iconSlot={iconAt} />
                 </OutlineBullet>
                 <span>Email</span>
@@ -245,14 +251,6 @@ const TanaTheme = (props: { children?: React.ReactNode }) => {
   return <div style={style}>{props.children}</div>;
 };
 
-type OutlineBulletProps = {
-  children?: React.ReactNode;
-  variant: "point" | "button" | "action" | "field";
-  textSlot?: React.ReactNode;
-  hasOutline?: boolean;
-  hasOutlineBorder?: boolean;
-};
-
 const OutlineList = (props: { children?: React.ReactNode }) => {
   return (
     <div className="relative flex flex-col gap-1.5 pl-[calc(var(--bullet-size)*2)]">
@@ -272,28 +270,62 @@ const OutlineField = (props: { children?: React.ReactNode }) => {
   );
 };
 
+type OutlineBulletProps = {
+  children?: React.ReactNode;
+  variant: "point" | "button" | "action" | "field";
+  color?: "gray" | "orange" | "magenta" | "blue" | "green";
+  textSlot?: React.ReactNode;
+  hasOutline?: boolean;
+  hasOutlineBorder?: boolean;
+};
+
 const OutlineBullet = (props: OutlineBulletProps) => {
+  let style = {} as CSSProperties;
+  if (props.color === "gray" || props.color === undefined) {
+    style = {
+      "--color-300": "var(--color-zinc-300)",
+      "--color-700": "var(--color-zinc-600)",
+    } as CSSProperties;
+  }
+  if (props.color === "orange") {
+    style = {
+      "--color-300": "var(--color-orange-400)",
+      "--color-700": "var(--color-orange-950)",
+    } as CSSProperties;
+  }
+
   if (props.variant === "point") {
     return (
-      <div className="size-(--bullet-size) flex items-center justify-center">
+      <div style={style} className="size-(--bullet-size) flex items-center justify-center">
         <div role="button" className="relative flex items-center justify-center">
-          <div className="absolute z-10 inset-0 self-center justify-self-center size-(--bullet-point-size) bg-zinc-300 rounded-full"></div>
+          <div className="absolute z-10 inset-0 self-center justify-self-center size-(--bullet-point-size) bg-(--color-300) rounded-full"></div>
           <div
             className={classNames(
               "size-(--bullet-size) rounded-full bg-transparent outline outline-transparent outline-dashed",
-              props.hasOutline && "!bg-zinc-600",
-              props.hasOutlineBorder && "!outline-zinc-300",
+              props.hasOutline && "!bg-(--color-700)",
+              props.hasOutlineBorder && "!outline-(--color-300)",
             )}
           ></div>
         </div>
       </div>
     );
   }
+  if (props.variant === "field") {
+    return (
+      <div style={style} className="size-(--bullet-size) flex items-center justify-center">
+        <div role="button" className="flex items-center justify-center">
+          <div className="flex items-center justify-center size-(--bullet-field-size) text-(--color-300) outline outline-(--color-300) rounded-[3px] overflow-clip">
+            {props.children}
+          </div>
+        </div>
+      </div>
+    );
+  }
   if (props.variant === "button") {
     return (
-      <div className="size-(--bullet-size) flex items-center justify-center">
+      <div style={style} className="size-(--bullet-size) flex items-center justify-center">
         <div role="button" className="flex items-center justify-center">
-          <div className="flex items-center justify-center size-(--bullet-field-size) text-zinc-400 outline outline-zinc-400 rounded-full overflow-clip">
+          <div className="flex items-center justify-center size-(--bullet-field-size) text-(--color-300) outline outline-(--color-300) rounded-full overflow-clip">
             {props.children}
           </div>
         </div>
@@ -303,28 +335,18 @@ const OutlineBullet = (props: OutlineBulletProps) => {
   if (props.variant === "action") {
     return (
       <div
+        style={style}
         className={classNames(
-          "h-(--bullet-size) flex items-center justify-center gap-0.5 pl-0.5 pr-1 text-zinc-400 outline-2 outline-transparent rounded-[3px]",
-          props.hasOutline && "bg-zinc-700 !outline-zinc-700 !text-zinc-300",
+          "h-(--bullet-size) flex items-center justify-center gap-0.5 pl-0.5 pr-1 text-(--color-300) outline-2 outline-transparent rounded-[3px]",
+          props.hasOutline && "bg-(--color-700) !outline-(--color-700) !text-(--color-300)",
         )}
       >
         <div role="button" className="flex items-center justify-center">
-          <div className="flex items-center justify-center size-(--bullet-field-size) text-zinc-300 rounded-full overflow-clip">
+          <div className="flex items-center justify-center size-(--bullet-field-size) text-(--color-300) rounded-full overflow-clip">
             {props.children}
           </div>
         </div>
         <div className="flex items-center justify-center">{props.textSlot}</div>
-      </div>
-    );
-  }
-  if (props.variant === "field") {
-    return (
-      <div className="size-(--bullet-size) flex items-center justify-center">
-        <div role="button" className="flex items-center justify-center">
-          <div className="flex items-center justify-center size-(--bullet-field-size) outline outline-zinc-300 rounded-[3px] overflow-clip">
-            {props.children}
-          </div>
-        </div>
       </div>
     );
   }
