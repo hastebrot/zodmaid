@@ -15,7 +15,7 @@ export const TanaOutlinerPage = () => {
           </div>
           <div className="flex items-center gap-2.5">
             <OutlineBullet variant="button">
-              <OutlineBulletIcon iconSlot={iconArrowForward} />
+              <OutlineBulletIcon iconSlot={iconArrowForwardUp} />
             </OutlineBullet>
             <OutlineBullet variant="button">
               <OutlineBulletIcon iconSlot={iconPlus} />
@@ -344,14 +344,14 @@ const OutlineBullet = (props: OutlineBulletProps) => {
   }
   if (props.color === "orange") {
     style = {
-      "--color-300": "var(--color-orange-500)",
-      "--color-500": "var(--color-orange-950)",
-      "--color-700": "var(--color-orange-950)",
+      "--color-300": "var(--color-amber-600)",
+      "--color-500": "var(--color-amber-950)",
+      "--color-700": "var(--color-amber-950)",
     } as CSSProperties;
   }
   if (props.color === "magenta") {
     style = {
-      "--color-300": "var(--color-fuchsia-500)",
+      "--color-300": "var(--color-fuchsia-600)",
       "--color-500": "var(--color-fuchsia-950)",
       "--color-700": "var(--color-fuchsia-950)",
     } as CSSProperties;
@@ -700,7 +700,7 @@ export const iconCurrencyDollar = (
   </svg>
 );
 
-const iconArrowForward = (
+const iconArrowForwardUp = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={24}
@@ -711,9 +711,10 @@ const iconArrowForward = (
     strokeWidth={2}
     strokeLinecap="round"
     strokeLinejoin="round"
-    className="icon icon-tabler icons-tabler-outline icon-tabler-arrow-forward"
+    className="icon icon-tabler icons-tabler-outline icon-tabler-arrow-forward-up"
   >
     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-    <path d="M15 11l4 4l-4 4m4 -4h-11a4 4 0 0 1 0 -8h1" />
+    <path d="M15 14l4 -4l-4 -4" />
+    <path d="M19 10h-11a4 4 0 1 0 0 8h1" />
   </svg>
 );
