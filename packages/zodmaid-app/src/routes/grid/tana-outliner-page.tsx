@@ -301,7 +301,7 @@ const TanaTheme = (props: { children?: React.ReactNode }) => {
 const OutlineList = (props: { children?: React.ReactNode }) => {
   return (
     <div className="relative flex flex-col gap-1.5 pl-[calc(var(--bullet-size)*2)]">
-      <div className="absolute left-0 top-0 bottom-0 w-(--bullet-size) h-full flex justify-center ">
+      <div className="absolute left-0 top-0 bottom-0 w-(--bullet-size) h-full flex justify-center">
         <button className="w-[1px] h-full bg-(--color-gray-700) rounded-[4px]"></button>
       </div>
       {props.children}
@@ -311,7 +311,12 @@ const OutlineList = (props: { children?: React.ReactNode }) => {
 
 const OutlineField = (props: { children?: React.ReactNode }) => {
   return (
-    <div className="grid grid-cols-[repeat(10,minmax(140px,max-content))] grid-flow-col items-start gap-4 pt-1 pb-1.5 border-b border-zinc-700">
+    <div
+      className={classNames(
+        "grid grid-cols-[repeat(10,minmax(140px,max-content))] grid-flow-col items-start",
+        "gap-4 pt-1 pb-1.5 border-b border-zinc-700",
+      )}
+    >
       {props.children}
     </div>
   );
