@@ -9,6 +9,7 @@ import { InputFieldSizingPage } from "./grid/input-field-sizing-page";
 import { MobxObserverPage } from "./grid/mobx-observer-page";
 import { MockupGridPage } from "./grid/mockup-grid-page";
 import { ReactDataGridPage } from "./grid/react-data-grid-page";
+import { TanaOutlinerPage } from "./grid/tana-outliner-page";
 
 // dagre, https://github.com/antvis/layout/blob/v5/packages/layout/src/dagre.ts
 // - uses @dagrejs/dagre, https://github.com/dagrejs/dagre
@@ -50,6 +51,7 @@ export const routes: RouteObject[] = [
       { path: "react-data-grid", Component: () => <ReactDataGridPage /> },
       { path: "mobx", Component: () => <MobxObserverPage /> },
       { path: "field-sizing", Component: () => <InputFieldSizingPage /> },
+      { path: "tana", Component: () => <TanaOutlinerPage /> },
     ],
   },
 ];
