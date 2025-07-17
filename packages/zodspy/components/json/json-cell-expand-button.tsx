@@ -8,10 +8,11 @@ export const JsonCellExpandButton = (props: { isExpanded?: boolean }) => {
     <button
       type="button"
       className={classNames(
-        "flex h-full w-[16px] bg-gray-300 cursor-pointer",
-        "border-gray-500 border-l-white border-t-white border",
-        "outline-gray-300 outline outline-offset-0",
-        "hover:outline-gray-700",
+        "flex h-full w-[16px] bg-(--button-bg-base) cursor-pointer",
+        "border-(--button-border-base) border",
+        "border-l-(--button-border-contrast) border-t-(--button-border-contrast)",
+        "outline-(--button-outline-base) outline outline-offset-0",
+        "hover:outline-(--button-outline-hover)",
       )}
       onClick={(event) => {
         event.stopPropagation();

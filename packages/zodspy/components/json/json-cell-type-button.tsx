@@ -15,8 +15,8 @@ export const JsonCellTypeButton = (props: JsonCellTypeButtonProps) => {
       type="button"
       className={classNames(
         "m-[2px] w-fit h-fit",
-        "outline-(--color-gray-500) outline-offset-0",
-        "hover:bg-(--color-gray-300) hover:outline",
+        "outline-(--cell-border-base) outline-offset-0",
+        "hover:bg-(--button-bg-base) hover:outline",
         "cursor-pointer",
       )}
       onClick={(event) => {
@@ -34,7 +34,7 @@ export const JsonCellTypeButton = (props: JsonCellTypeButtonProps) => {
           "m-[-2px] flex items-center justify-center",
           "text-[14px]/[24px] min-w-[24px]",
           "font-[700] font-mono-condensed tracking-[-0.025em]",
-          "text-(--color-blue-700)",
+          "text-(--cell-fg-accent)",
           props.type === "comment" && "!text-(--color-green-700)",
         )}
       >
