@@ -8,7 +8,7 @@ export type JsonGridProps = BaseGridProps & {
 };
 
 export const JsonGrid = (props: JsonGridProps) => {
-  const gridStyles = toGridStyles(props.theme ?? "light");
+  const gridStyles = toGridStyles(props.theme ?? "dark");
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -44,17 +44,40 @@ const toGridStyles = (theme: "light" | "dark") => {
     const gridStyles = {
       "--cell-fg-base": "var(--color-gray-900)",
       "--cell-fg-label": "var(--color-indigo-800)",
+      "--cell-fg-accent": "var(--color-blue-800)",
+      "--cell-fg-muted": "var(--color-gray-500)",
       "--cell-bg-base": "var(--color-gray-100)",
       "--cell-bg-header": "var(--color-gray-300)",
       "--cell-bg-label": "var(--color-indigo-100)",
       "--cell-border-base": "var(--color-gray-400)",
       "--cell-border-label": "var(--color-blue-300)",
       "--cell-outline-selected": "var(--color-blue-700)",
+      "--button-bg-base": "var(--color-gray-300)",
+      "--button-border-base": "var(--color-gray-500)",
+      "--button-border-contrast": "var(--color-white)",
+      "--button-outline-base": "var(--color-gray-300)",
+      "--button-outline-hover": "var(--color-gray-700)",
     } as React.CSSProperties;
     return gridStyles;
   }
   if (theme === "dark") {
-    const gridStyles = {} as React.CSSProperties;
+    const gridStyles = {
+      "--cell-fg-base": "var(--color-zinc-300)",
+      "--cell-fg-label": "var(--color-blue-500)",
+      "--cell-fg-accent": "var(--color-blue-500)",
+      "--cell-fg-muted": "var(--color-zinc-500)",
+      "--cell-bg-base": "var(--color-zinc-900)",
+      "--cell-bg-header": "var(--color-zinc-800)",
+      "--cell-bg-label": "var(--color-indigo-100)",
+      "--cell-border-base": "var(--color-zinc-700)",
+      "--cell-border-label": "var(--color-blue-300)",
+      "--cell-outline-selected": "var(--color-blue-700)",
+      "--button-bg-base": "var(--color-zinc-800)",
+      "--button-border-base": "var(--color-zinc-900)",
+      "--button-border-contrast": "var(--color-zinc-700)",
+      "--button-outline-base": "var(--color-zinc-800)",
+      "--button-outline-hover": "var(--color-zinc-600)",
+    } as React.CSSProperties;
     return gridStyles;
   }
   throwError("toGridStyles: theme not defined");

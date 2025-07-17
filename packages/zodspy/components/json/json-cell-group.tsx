@@ -54,7 +54,7 @@ export const JsonCellGroup = (props: JsonCellGroupProps) => {
         <div
           className={classNames(
             "absolute inset-0 z-10 pointer-events-none",
-            "outline-2 outline-offset-[-1px] outline-(--cell-outline-selected)",
+            "outline-[3px] outline-offset-[-1px] outline-(--cell-outline-selected)/60",
           )}
         ></div>
       )}

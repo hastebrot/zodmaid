@@ -13,24 +13,50 @@ import {
   transformToGridRows,
   type GridColumn,
   type GridContextProps,
-  type GridRow,
   type JsonArray,
+  type JsonDataModel,
   type JsonObject,
 } from "zodspy";
 import { transformToTableRows } from "zodspy/components/json/json-grid-transformer";
 import { musicLibrary } from "zodspy/examples/music-library";
 import { purchaseOrder } from "zodspy/examples/purchase-order";
+import { classNames } from "../../helpers/clsx";
 
 export const GridViewDynamicPage = () => {
   const examples = {
     purchaseOrder,
     musicLibrary,
   };
-  const [exampleName, setExampleName] = useState<keyof typeof examples>("purchaseOrder");
+  const [exampleName, setExampleName] = useState<keyof typeof examples>("musicLibrary");
+  const [colorMode, setColorMode] = useState<"light" | "dark">("dark");
 
   return (
-    <div className="min-h-dvh overflow-auto bg-gray-100 text-gray-900 p-4">
-      <div className="flex items-center gap-1.5 pb-1.5 text-blue-800 underline text-sm">
+    <div
+      className={classNames(
+        "h-dvh p-4 bg-(--bg-base) text-(--fg-base)",
+        "[scrollbar-color:var(--border-base)_var(--bg-base)]",
+        "overflow-auto overscroll-contain",
+        colorMode === "light" && [
+          "[--bg-base:var(--color-gray-100)]",
+          "[--border-base:var(--color-gray-400)]",
+          "[--fg-base:var(--color-gray-900)]",
+          "[--fg-accent:var(--color-blue-800)]",
+        ],
+        colorMode === "dark" && [
+          "[--bg-base:var(--color-zinc-900)]",
+          "[--border-base:var(--color-zinc-700)]",
+          "[--fg-base:var(--color-zinc-300)]",
+          "[--fg-accent:var(--color-blue-500)]",
+        ],
+      )}
+    >
+      <div className="flex items-center gap-1.5 pb-3 text-(--fg-accent) underline text-sm">
+        <button className="cursor-pointer" onClick={() => setColorMode("light")}>
+          light
+        </button>
+        <button className="cursor-pointer" onClick={() => setColorMode("dark")}>
+          dark
+        </button>
         <button className="cursor-pointer" onClick={() => setExampleName("purchaseOrder")}>
           purchaseOrder
         </button>
@@ -39,14 +65,14 @@ export const GridViewDynamicPage = () => {
         </button>
       </div>
       <div className="w-fit h-fit">
-        <GridViewForRoot key={exampleName} value={examples[exampleName]} />
+        <GridViewForRoot key={exampleName} value={examples[exampleName]} theme={colorMode} />
       </div>
     </div>
   );
 };
 
-const GridViewForRoot = (gridProps: { value: JsonObject }) => {
-  type DataModel = GridRow;
+const GridViewForRoot = (gridProps: { value: JsonObject; theme?: "light" | "dark" }) => {
+  type DataModel = JsonDataModel;
   const context = defineGridContext<DataModel>({
     label: "root",
     rows: [
@@ -71,13 +97,19 @@ const GridViewForRoot = (gridProps: { value: JsonObject }) => {
         width: "max-content",
         cellRenderer(props) {
           if (props.data.row?.key === "") {
-            return <JsonGridCellLayout gridSlot={<GridViewForObject value={gridProps.value} />} />;
+            return (
+              <JsonGridCellLayout
+                gridSlot={<GridViewForObject value={gridProps.value} theme={gridProps.theme} />}
+              />
+            );
           }
         },
       },
     ],
     elements: {
-      Grid: JsonGrid,
+      Grid(props) {
+        return <JsonGrid {...props} theme={gridProps.theme} />;
+      },
       Row: JsonRow,
       Cell(props) {
         if (props.data.column?.label === "key") {
@@ -93,8 +125,8 @@ const GridViewForRoot = (gridProps: { value: JsonObject }) => {
   return <JsonGridView context={context as GridContextProps} />;
 };
 
-const GridViewForObject = (gridProps: { value: JsonObject }) => {
-  type DataModel = GridRow;
+const GridViewForObject = (gridProps: { value: JsonObject; theme?: "light" | "dark" }) => {
+  type DataModel = JsonDataModel;
   const context = defineGridContext<DataModel>({
     label: "object",
     rows: transformToGridRows(gridProps.value),
@@ -130,25 +162,30 @@ const GridViewForObject = (gridProps: { value: JsonObject }) => {
         width: "1fr",
         cellRenderer(props) {
           const type = props.data.row?.type;
-          const key = String(props.data.row?.key);
+          const value = props.data.row?.value;
           if (type === "object") {
             return (
               <JsonGridCellLayout
-                gridSlot={<GridViewForObject value={props.data.row?.value as JsonObject} />}
-              />
-            );
-          }
-          if (type === "array" && (key === "Tracks" || key === "items")) {
-            return (
-              <JsonGridCellLayout
-                gridSlot={<GridViewForArrayTable value={props.data.row?.value as JsonArray} />}
+                gridSlot={<GridViewForObject value={value as JsonObject} theme={gridProps.theme} />}
               />
             );
           }
           if (type === "array") {
+            const hasArrayObjects = (value as JsonArray).every(
+              (it) => determineJsonType(it) === "object",
+            );
+            if (hasArrayObjects) {
+              return (
+                <JsonGridCellLayout
+                  gridSlot={
+                    <GridViewForArrayTable value={value as JsonArray} theme={gridProps.theme} />
+                  }
+                />
+              );
+            }
             return (
               <JsonGridCellLayout
-                gridSlot={<GridViewForArray value={props.data.row?.value as JsonArray} />}
+                gridSlot={<GridViewForArray value={value as JsonArray} theme={gridProps.theme} />}
               />
             );
           }
@@ -157,7 +194,9 @@ const GridViewForObject = (gridProps: { value: JsonObject }) => {
       },
     ],
     elements: {
-      Grid: JsonGrid,
+      Grid(props) {
+        return <JsonGrid {...props} theme={gridProps.theme} />;
+      },
       Row: JsonRow,
       Cell(props) {
         const type = props.data.row?.type;
@@ -176,8 +215,8 @@ const GridViewForObject = (gridProps: { value: JsonObject }) => {
   return <JsonGridView context={context as GridContextProps} />;
 };
 
-const GridViewForArray = (gridProps: { value: JsonArray }) => {
-  type DataModel = GridRow;
+const GridViewForArray = (gridProps: { value: JsonArray; theme?: "light" | "dark" }) => {
+  type DataModel = JsonDataModel;
   const context = defineGridContext<DataModel>({
     label: "array",
     rows: transformToGridRows(gridProps.value),
@@ -195,7 +234,7 @@ const GridViewForArray = (gridProps: { value: JsonArray }) => {
                 primarySlot={
                   <div className="flex items-center">
                     <JsonCellTypeButton type={type} />
-                    <div className="pr-1.5 font-[700] text-gray-500">{index}</div>
+                    <div className="pr-1.5 font-[700] text-(--cell-fg-muted)">{index}</div>
                   </div>
                 }
               />
@@ -203,7 +242,7 @@ const GridViewForArray = (gridProps: { value: JsonArray }) => {
           }
           return (
             <div className="flex items-center">
-              <div className="px-1.5 font-[700] text-gray-500">{index}</div>
+              <div className="px-1.5 font-[700] text-(--cell-fg-muted)">{index}</div>
             </div>
           );
         },
@@ -216,14 +255,24 @@ const GridViewForArray = (gridProps: { value: JsonArray }) => {
           if (type === "object") {
             return (
               <JsonGridCellLayout
-                gridSlot={<GridViewForObject value={props.data.row?.value as JsonObject} />}
+                gridSlot={
+                  <GridViewForObject
+                    value={props.data.row?.value as JsonObject}
+                    theme={gridProps.theme}
+                  />
+                }
               />
             );
           }
           if (type === "array") {
             return (
               <JsonGridCellLayout
-                gridSlot={<GridViewForArray value={props.data.row?.value as JsonArray} />}
+                gridSlot={
+                  <GridViewForArray
+                    value={props.data.row?.value as JsonArray}
+                    theme={gridProps.theme}
+                  />
+                }
               />
             );
           }
@@ -232,7 +281,9 @@ const GridViewForArray = (gridProps: { value: JsonArray }) => {
       },
     ],
     elements: {
-      Grid: JsonGrid,
+      Grid(props) {
+        return <JsonGrid {...props} theme={gridProps.theme} />;
+      },
       Row: JsonRow,
       Cell(props) {
         const type = props.data.row?.type;
@@ -252,8 +303,8 @@ const GridViewForArray = (gridProps: { value: JsonArray }) => {
   return <JsonGridView context={context as GridContextProps} />;
 };
 
-const GridViewForArrayTable = (gridProps: { value: JsonArray }) => {
-  type DataModel = GridRow[];
+const GridViewForArrayTable = (gridProps: { value: JsonArray; theme?: "light" | "dark" }) => {
+  type DataModel = JsonDataModel[];
   const rows = transformToTableRows(gridProps.value);
   const columns: GridColumn<DataModel>[] = rows[0].map((column, columnIndex) => {
     const lastColumnIndex = rows[0].length - 1;
@@ -265,13 +316,15 @@ const GridViewForArrayTable = (gridProps: { value: JsonArray }) => {
           const row = props.data.row?.[columnIndex];
           const value = row?.value;
           const index = Number(value) + 1;
+          const type = "object";
           if (props.data.type === "header-cell") {
             const label = <>&nbsp;</>;
             return <div className="bg-(--cell-bg-header) px-2 font-[700]">{label}</div>;
           }
           return (
-            <div className="flex items-center">
-              <div className="px-1.5 font-[700] text-gray-500">{index}</div>
+            <div className={classNames("flex items-center px-1.5", type === "object" && "!pl-0")}>
+              {type === "object" && <JsonCellTypeButton type={type} />}
+              <div className="font-[700] text-(--cell-fg-muted)">{index}</div>
             </div>
           );
         },
@@ -286,15 +339,34 @@ const GridViewForArrayTable = (gridProps: { value: JsonArray }) => {
         const value = row?.value;
         if (props.data.type === "header-cell") {
           const label = String(props.data.column?.label ?? "");
-          return <div className="bg-(--cell-bg-header) px-2 font-[700]">{label}</div>;
+          const type = rows[0][columnIndex].type;
+          return (
+            <div
+              className={classNames(
+                "flex items-center px-1.5 bg-(--cell-bg-header)",
+                type === "object" && "!pl-0",
+                type === "array" && "!pl-0",
+              )}
+            >
+              {type === "object" && <JsonCellTypeButton type={type} />}
+              {type === "array" && <JsonCellTypeButton type={type} />}
+              <div className="font-[700]">{label}</div>
+            </div>
+          );
         }
         if (type === "object") {
           return (
-            <JsonGridCellLayout gridSlot={<GridViewForObject value={value as JsonObject} />} />
+            <JsonGridCellLayout
+              gridSlot={<GridViewForObject value={value as JsonObject} theme={gridProps.theme} />}
+            />
           );
         }
         if (type === "array") {
-          return <JsonGridCellLayout gridSlot={<GridViewForArray value={value as JsonArray} />} />;
+          return (
+            <JsonGridCellLayout
+              gridSlot={<GridViewForArray value={value as JsonArray} theme={gridProps.theme} />}
+            />
+          );
         }
         return renderCell(row, "value");
       },
@@ -305,7 +377,9 @@ const GridViewForArrayTable = (gridProps: { value: JsonArray }) => {
     rows,
     columns,
     elements: {
-      Grid: JsonGrid,
+      Grid(props) {
+        return <JsonGrid {...props} theme={gridProps.theme} />;
+      },
       Row: JsonRow,
       Cell(props) {
         return <JsonCell {...props} />;

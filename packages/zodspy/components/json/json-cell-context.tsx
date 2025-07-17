@@ -10,5 +10,5 @@ export const JsonCellContext = createContext<JsonCellContextProps | null>(null);
 
 export const useJsonCellContext = () => {
   const value = useContext(JsonCellContext);
-  return value ?? throwError("JsonCellContext: value is empty");
+  return value ?? throwError("useJsonCellContext: value is empty");
 };
