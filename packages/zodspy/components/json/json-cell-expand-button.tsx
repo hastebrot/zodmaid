@@ -1,8 +1,18 @@
-import { useState } from "react";
 import { classNames } from "../../helpers/clsx";
+import { useControllableState } from "../../hooks/use-controllable-state";
 
-export const JsonCellExpandButton = (props: { isExpanded?: boolean }) => {
-  const [isExpanded, setExpanded] = useState(props.isExpanded);
+export type JsonCellExpandButtonProps = {
+  defaultExpanded?: boolean;
+  isExpanded?: boolean;
+  setExpanded?: (isExpanded: boolean) => void;
+};
+
+export const JsonCellExpandButton = (props: JsonCellExpandButtonProps) => {
+  const [isExpanded, setExpanded] = useControllableState({
+    defaultValue: props.defaultExpanded ?? true,
+    value: props.isExpanded,
+    onChange: props.setExpanded,
+  });
 
   return (
     <button

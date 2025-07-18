@@ -1,3 +1,5 @@
+import { action, observable } from "mobx";
+import { Observer, observer } from "mobx-react-lite";
 import { useState } from "react";
 import {
   defineGridContext,
@@ -11,16 +13,17 @@ import {
   JsonGridView,
   JsonRow,
   transformToGridRows,
+  transformToTableRows,
   type GridColumn,
   type GridContextProps,
   type JsonArray,
   type JsonDataModel,
   type JsonObject,
 } from "zodspy";
-import { transformToTableRows } from "zodspy/components/json/json-grid-transformer";
 import { musicLibrary } from "zodspy/examples/music-library";
 import { purchaseOrder } from "zodspy/examples/purchase-order";
 import { classNames } from "../../helpers/clsx";
+import { throwError } from "../../helpers/error";
 
 export const GridViewDynamicPage = () => {
   const examples = {
@@ -71,24 +74,36 @@ export const GridViewDynamicPage = () => {
   );
 };
 
-const GridViewForRoot = (gridProps: { value: JsonObject; theme?: "light" | "dark" }) => {
+const GridViewForRoot = observer((gridProps: { value: JsonObject; theme?: "light" | "dark" }) => {
   type DataModel = JsonDataModel;
+  const [rows] = useState(() =>
+    observable([{ type: "object", key: "", value: gridProps.value, isFolded: true }]),
+  );
   const context = defineGridContext<DataModel>({
     label: "root",
-    rows: [
-      // wrap.
-      { type: "object", key: "", value: {} },
-    ],
+    rows,
     columns: [
       {
         label: "key",
         width: "minmax(55px, max-content)",
-        cellRenderer() {
+        cellRenderer(props) {
+          const row = props.data.row ?? throwError("row is undefined");
           return (
-            <JsonCellLayout
-              prefixSlot={<JsonCellExpandButton isExpanded />}
-              primarySlot={<JsonCellTypeButton type="object" />}
-            />
+            <Observer>
+              {() => (
+                <JsonCellLayout
+                  prefixSlot={
+                    <JsonCellExpandButton
+                      isExpanded={!row.isFolded}
+                      setExpanded={action((isExpanded) => {
+                        row.isFolded = !isExpanded;
+                      })}
+                    />
+                  }
+                  primarySlot={<JsonCellTypeButton type="object" />}
+                />
+              )}
+            </Observer>
           );
         },
       },
@@ -96,13 +111,27 @@ const GridViewForRoot = (gridProps: { value: JsonObject; theme?: "light" | "dark
         label: "value",
         width: "max-content",
         cellRenderer(props) {
-          if (props.data.row?.key === "") {
-            return (
-              <JsonGridCellLayout
-                gridSlot={<GridViewForObject value={gridProps.value} theme={gridProps.theme} />}
-              />
-            );
-          }
+          const row = props.data.row ?? throwError("row is undefined");
+          const value = row.value;
+          return (
+            <Observer>
+              {() => {
+                if (row.isFolded) {
+                  return <FoldedValue value={value} />;
+                }
+                if (props.data.row?.key === "") {
+                  return (
+                    <JsonGridCellLayout
+                      gridSlot={
+                        <GridViewForObject value={gridProps.value} theme={gridProps.theme} />
+                      }
+                    />
+                  );
+                }
+                return null;
+              }}
+            </Observer>
+          );
         },
       },
     ],
@@ -123,37 +152,52 @@ const GridViewForRoot = (gridProps: { value: JsonObject; theme?: "light" | "dark
     },
   });
   return <JsonGridView context={context as GridContextProps} />;
-};
+});
 
-const GridViewForObject = (gridProps: { value: JsonObject; theme?: "light" | "dark" }) => {
+const GridViewForObject = observer((gridProps: { value: JsonObject; theme?: "light" | "dark" }) => {
   type DataModel = JsonDataModel;
+  const [rows] = useState(() => observable(transformToGridRows(gridProps.value)));
   const context = defineGridContext<DataModel>({
     label: "object",
-    rows: transformToGridRows(gridProps.value),
+    rows,
     columns: [
       {
         label: "key",
         width: "minmax(55px, max-content)",
         cellRenderer(props) {
-          const type = props.data.row?.type;
-          const key = String(props.data.row?.key);
-          if (type === "object" || type === "array") {
-            return (
-              <JsonCellLayout
-                prefixSlot={<JsonCellExpandButton isExpanded />}
-                primarySlot={
-                  <div className="flex items-center">
-                    <JsonCellTypeButton type={type} />
-                    <div className="pr-1.5 font-[700]">{key}</div>
-                  </div>
-                }
-              />
-            );
-          }
+          const row = props.data.row ?? throwError("row is undefined");
           return (
-            <div className="flex items-center">
-              <div className="px-1.5 font-[700]">{key}</div>
-            </div>
+            <Observer>
+              {() => {
+                const type = row.type;
+                const key = String(row.key);
+                if (type === "object" || type === "array") {
+                  return (
+                    <JsonCellLayout
+                      prefixSlot={
+                        <JsonCellExpandButton
+                          isExpanded={!row.isFolded}
+                          setExpanded={action((isExpanded) => {
+                            row.isFolded = !isExpanded;
+                          })}
+                        />
+                      }
+                      primarySlot={
+                        <div className="flex items-center">
+                          <JsonCellTypeButton type={type} />
+                          <div className="pr-1.5 font-[700]">{key}</div>
+                        </div>
+                      }
+                    />
+                  );
+                }
+                return (
+                  <div className="flex items-center">
+                    <div className="px-1.5 font-[700]">{key}</div>
+                  </div>
+                );
+              }}
+            </Observer>
           );
         },
       },
@@ -161,35 +205,55 @@ const GridViewForObject = (gridProps: { value: JsonObject; theme?: "light" | "da
         label: "value",
         width: "1fr",
         cellRenderer(props) {
-          const type = props.data.row?.type;
-          const value = props.data.row?.value;
-          if (type === "object") {
-            return (
-              <JsonGridCellLayout
-                gridSlot={<GridViewForObject value={value as JsonObject} theme={gridProps.theme} />}
-              />
-            );
-          }
-          if (type === "array") {
-            const hasArrayObjects = (value as JsonArray).every(
-              (it) => determineJsonType(it) === "object",
-            );
-            if (hasArrayObjects) {
-              return (
-                <JsonGridCellLayout
-                  gridSlot={
-                    <GridViewForArrayTable value={value as JsonArray} theme={gridProps.theme} />
+          const row = props.data.row ?? throwError("row is undefined");
+          return (
+            <Observer>
+              {() => {
+                const type = row.type;
+                const value = row.value;
+                if (type === "object") {
+                  if (row.isFolded) {
+                    return <FoldedValue value={value} />;
                   }
-                />
-              );
-            }
-            return (
-              <JsonGridCellLayout
-                gridSlot={<GridViewForArray value={value as JsonArray} theme={gridProps.theme} />}
-              />
-            );
-          }
-          return renderCell(props.data.row, props.data.column?.label);
+                  return (
+                    <JsonGridCellLayout
+                      gridSlot={
+                        <GridViewForObject value={value as JsonObject} theme={gridProps.theme} />
+                      }
+                    />
+                  );
+                }
+                if (type === "array") {
+                  if (row.isFolded) {
+                    return <FoldedValue value={value} />;
+                  }
+                  const hasArrayObjects = (value as JsonArray).every(
+                    (it) => determineJsonType(it) === "object",
+                  );
+                  if (hasArrayObjects) {
+                    return (
+                      <JsonGridCellLayout
+                        gridSlot={
+                          <GridViewForArrayTable
+                            value={value as JsonArray}
+                            theme={gridProps.theme}
+                          />
+                        }
+                      />
+                    );
+                  }
+                  return (
+                    <JsonGridCellLayout
+                      gridSlot={
+                        <GridViewForArray value={value as JsonArray} theme={gridProps.theme} />
+                      }
+                    />
+                  );
+                }
+                return renderCell(props.data.row, props.data.column?.label);
+              }}
+            </Observer>
+          );
         },
       },
     ],
@@ -213,37 +277,52 @@ const GridViewForObject = (gridProps: { value: JsonObject; theme?: "light" | "da
     },
   });
   return <JsonGridView context={context as GridContextProps} />;
-};
+});
 
-const GridViewForArray = (gridProps: { value: JsonArray; theme?: "light" | "dark" }) => {
+const GridViewForArray = observer((gridProps: { value: JsonArray; theme?: "light" | "dark" }) => {
   type DataModel = JsonDataModel;
+  const [rows] = useState(() => observable(transformToGridRows(gridProps.value)));
   const context = defineGridContext<DataModel>({
     label: "array",
-    rows: transformToGridRows(gridProps.value),
+    rows,
     columns: [
       {
         label: "key",
         width: "minmax(55px, max-content)",
         cellRenderer(props) {
-          const type = props.data.row?.type;
-          const index = Number(props.data.row?.key) + 1;
-          if (type === "object" || type === "array") {
-            return (
-              <JsonCellLayout
-                prefixSlot={<JsonCellExpandButton isExpanded />}
-                primarySlot={
-                  <div className="flex items-center">
-                    <JsonCellTypeButton type={type} />
-                    <div className="pr-1.5 font-[700] text-(--cell-fg-muted)">{index}</div>
-                  </div>
-                }
-              />
-            );
-          }
+          const row = props.data.row ?? throwError("row is undefined");
           return (
-            <div className="flex items-center">
-              <div className="px-1.5 font-[700] text-(--cell-fg-muted)">{index}</div>
-            </div>
+            <Observer>
+              {() => {
+                const type = row.type;
+                const index = Number(row.key) + 1;
+                if (type === "object" || type === "array") {
+                  return (
+                    <JsonCellLayout
+                      prefixSlot={
+                        <JsonCellExpandButton
+                          isExpanded={!row.isFolded}
+                          setExpanded={action((isExpanded) => {
+                            row.isFolded = !isExpanded;
+                          })}
+                        />
+                      }
+                      primarySlot={
+                        <div className="flex items-center">
+                          <JsonCellTypeButton type={type} />
+                          <div className="pr-1.5 font-[700] text-(--cell-fg-muted)">{index}</div>
+                        </div>
+                      }
+                    />
+                  );
+                }
+                return (
+                  <div className="flex items-center">
+                    <div className="px-1.5 font-[700] text-(--cell-fg-muted)">{index}</div>
+                  </div>
+                );
+              }}
+            </Observer>
           );
         },
       },
@@ -251,32 +330,43 @@ const GridViewForArray = (gridProps: { value: JsonArray; theme?: "light" | "dark
         label: "value",
         width: "1fr",
         cellRenderer(props) {
-          const type = props.data.row?.type;
-          if (type === "object") {
-            return (
-              <JsonGridCellLayout
-                gridSlot={
-                  <GridViewForObject
-                    value={props.data.row?.value as JsonObject}
-                    theme={gridProps.theme}
-                  />
+          const row = props.data.row ?? throwError("row is undefined");
+          return (
+            <Observer>
+              {() => {
+                const type = row.type;
+                const value = row.value;
+                if (type === "object") {
+                  if (row.isFolded) {
+                    return <FoldedValue value={value} />;
+                  }
+                  return (
+                    <JsonGridCellLayout
+                      gridSlot={
+                        <GridViewForObject
+                          value={row.value as JsonObject}
+                          theme={gridProps.theme}
+                        />
+                      }
+                    />
+                  );
                 }
-              />
-            );
-          }
-          if (type === "array") {
-            return (
-              <JsonGridCellLayout
-                gridSlot={
-                  <GridViewForArray
-                    value={props.data.row?.value as JsonArray}
-                    theme={gridProps.theme}
-                  />
+                if (type === "array") {
+                  if (row.isFolded) {
+                    return <FoldedValue value={value} />;
+                  }
+                  return (
+                    <JsonGridCellLayout
+                      gridSlot={
+                        <GridViewForArray value={row.value as JsonArray} theme={gridProps.theme} />
+                      }
+                    />
+                  );
                 }
-              />
-            );
-          }
-          return renderCell(props.data.row, props.data.column?.label);
+                return renderCell(props.data.row, props.data.column?.label);
+              }}
+            </Observer>
+          );
         },
       },
     ],
@@ -301,11 +391,11 @@ const GridViewForArray = (gridProps: { value: JsonArray; theme?: "light" | "dark
     },
   });
   return <JsonGridView context={context as GridContextProps} />;
-};
+});
 
 const GridViewForArrayTable = (gridProps: { value: JsonArray; theme?: "light" | "dark" }) => {
   type DataModel = JsonDataModel[];
-  const rows = transformToTableRows(gridProps.value);
+  const [rows] = useState(() => observable(transformToTableRows(gridProps.value)));
   const columns: GridColumn<DataModel>[] = rows[0].map((column, columnIndex) => {
     const lastColumnIndex = rows[0].length - 1;
     if (column.key === "") {
@@ -401,3 +491,13 @@ function renderCell<DataModel>(item?: DataModel, key?: string) {
     </div>
   );
 }
+
+const FoldedValue = (props: { value: any }) => {
+  return (
+    <div className="relative w-full h-[24px] min-w-[300px] overflow-hidden">
+      <div className="absolute inset-0 px-1 w-full truncate text-(--cell-fg-muted)">
+        {JSON.stringify(props.value, null, 1).slice(0, 1000)}
+      </div>
+    </div>
+  );
+};

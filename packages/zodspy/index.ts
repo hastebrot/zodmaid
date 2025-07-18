@@ -31,6 +31,7 @@ export {
 export { JsonGridCellLayout } from "zodspy/components/json/json-grid-cell-layout";
 export {
   transformToGridRows,
+  transformToTableRows,
   type JsonArray,
   type JsonDataModel,
   type JsonObject,
