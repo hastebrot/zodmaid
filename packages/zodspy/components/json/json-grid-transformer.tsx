@@ -8,13 +8,14 @@ export type JsonDataModel = {
   key: string;
   type: string;
   value: JsonValue;
+  isFolded?: boolean;
 };
 
 export function transformToGridRows(json: JsonObject | JsonArray): JsonDataModel[] {
   const rows: JsonDataModel[] = [];
   for (const [key, value] of Object.entries(json)) {
     const type = determineJsonType(value);
-    rows.push({ key, type, value });
+    rows.push({ key, type, value, isFolded: true });
   }
   return rows;
 }
