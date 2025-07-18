@@ -1,7 +1,7 @@
 import { type CSSProperties } from "react";
 import { classNames } from "../../helpers/clsx";
 
-export const TanaOutlinerPage = () => {
+export const TanaStaticPage = () => {
   return (
     <div className="min-h-dvh overflow-auto p-8 bg-zinc-900 text-zinc-300">
       <TanaTheme>
@@ -11,7 +11,7 @@ export const TanaOutlinerPage = () => {
             <OutlineBullet variant="point" hasOutline />
             <OutlineBullet variant="point" hasOutlineBorder />
             <OutlineBullet variant="point" hasOutlineBorder hasOutline />
-            <span>Person</span>
+            <span>Text</span>
           </div>
           <div className="flex items-center gap-2.5">
             <OutlineBullet variant="button">
@@ -26,11 +26,11 @@ export const TanaOutlinerPage = () => {
             <OutlineBullet variant="button">
               <OutlineBulletIcon iconSlot={iconChevronDown} style={{ rotate: "-90deg" }} />
             </OutlineBullet>
-            <span>Person</span>
-            <OutlineBullet variant="action" textSlot="Person">
+            <span>Text</span>
+            <OutlineBullet variant="action" textSlot="Text">
               <OutlineBulletIcon iconSlot={iconPlus} />
             </OutlineBullet>
-            <OutlineBullet variant="action" textSlot="person" hasOutline>
+            <OutlineBullet variant="action" textSlot="Text" hasOutline>
               <OutlineBulletIcon iconSlot={iconHash} />
             </OutlineBullet>
           </div>
@@ -74,12 +74,12 @@ export const TanaOutlinerPage = () => {
             <OutlineBullet variant="field">
               <OutlineBulletIcon iconSlot={iconCurrencyDollar} />
             </OutlineBullet>
-            <span>Person</span>
+            <span>Text</span>
           </div>
           <div className="flex items-center gap-2 mt-1.5">
             <OutlineBullet variant="point" color="orange" />
-            <span>Person</span>
-            <OutlineBullet variant="action" textSlot="person" hasOutline color="orange">
+            <span>Person name</span>
+            <OutlineBullet variant="action" textSlot="Person" hasOutline color="orange">
               <OutlineBulletIcon iconSlot={iconHash} />
             </OutlineBullet>
           </div>
@@ -102,9 +102,9 @@ export const TanaOutlinerPage = () => {
                 <span>Works in</span>
               </div>
               <div className="flex items-center gap-2">
-                <OutlineBullet variant="point" color="magenta" hasOutline />
-                <span>Company</span>
-                <OutlineBullet variant="action" textSlot="company" hasOutline color="magenta">
+                <OutlineBullet variant="point" color="green" hasOutline hasOutlineBorder />
+                <span className="text-nowrap">Company name</span>
+                <OutlineBullet variant="action" textSlot="Company" hasOutline color="green">
                   <OutlineBulletIcon iconSlot={iconHash} />
                 </OutlineBullet>
               </div>
@@ -157,24 +157,24 @@ export const TanaOutlinerPage = () => {
             </div>
           </OutlineList>
           <div className="flex items-center gap-2 mt-1.5">
-            <OutlineBullet variant="point" color="magenta" />
-            <span>Company</span>
-            <OutlineBullet variant="action" textSlot="company" hasOutline color="magenta">
+            <OutlineBullet variant="point" color="green" />
+            <span className="text-nowrap">Company name</span>
+            <OutlineBullet variant="action" textSlot="Company" hasOutline color="green">
               <OutlineBulletIcon iconSlot={iconHash} />
             </OutlineBullet>
           </div>
           <OutlineList>
             <OutlineField>
               <div className="flex items-center gap-2">
-                <OutlineBullet variant="field" color="magenta">
+                <OutlineBullet variant="field" color="green">
                   <OutlineBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
                 </OutlineBullet>
                 <span>People</span>
               </div>
               <div className="flex items-center gap-2">
-                <OutlineBullet variant="point" color="orange" hasOutline />
-                <span>Person</span>
-                <OutlineBullet variant="action" textSlot="person" hasOutline color="orange">
+                <OutlineBullet variant="point" color="orange" hasOutline hasOutlineBorder />
+                <span className="text-nowrap">Person name</span>
+                <OutlineBullet variant="action" textSlot="Person" hasOutline color="orange">
                   <OutlineBulletIcon iconSlot={iconHash} />
                 </OutlineBullet>
               </div>
@@ -186,33 +186,33 @@ export const TanaOutlinerPage = () => {
           </OutlineList>
           <div className="flex items-center gap-2 mt-1.5">
             <OutlineBullet variant="point" />
-            <span>Table</span>
+            <span>Table view</span>
           </div>
           <OutlineList>
             <OutlineField>
               <div className="flex items-center gap-2">
-                <OutlineBullet variant="field">
-                  <OutlineBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
+                <OutlineBullet variant="field" color="magenta">
+                  <OutlineBulletIcon iconSlot={iconHash} />
                 </OutlineBullet>
-                <span>Column</span>
+                <span>Instance</span>
               </div>
               <div className="flex items-center gap-2">
-                <OutlineBullet variant="field">
+                <OutlineBullet variant="field" color="magenta">
                   <OutlineBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
                 </OutlineBullet>
-                <span>Column</span>
+                <span>Field</span>
               </div>
               <div className="flex items-center gap-2">
-                <OutlineBullet variant="field">
+                <OutlineBullet variant="field" color="magenta">
                   <OutlineBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
                 </OutlineBullet>
-                <span>Column</span>
+                <span>Field</span>
               </div>
               <div className="flex items-center gap-2">
-                <OutlineBullet variant="field">
+                <OutlineBullet variant="field" color="magenta">
                   <OutlineBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
                 </OutlineBullet>
-                <span>Column</span>
+                <span>Field</span>
               </div>
             </OutlineField>
             <OutlineField>
@@ -302,7 +302,7 @@ const OutlineList = (props: { children?: React.ReactNode }) => {
   return (
     <div className="relative flex flex-col gap-1.5 pl-[calc(var(--bullet-size)*2)]">
       <div className="absolute left-0 top-0 bottom-0 w-(--bullet-size) h-full flex justify-center">
-        <button className="w-[1px] h-full bg-(--color-gray-700) rounded-[4px]"></button>
+        <button className="w-[1px] h-full bg-(--color-stone-800) rounded-[4px]"></button>
       </div>
       {props.children}
     </div>
@@ -314,7 +314,7 @@ const OutlineField = (props: { children?: React.ReactNode }) => {
     <div
       className={classNames(
         "grid grid-cols-[repeat(10,minmax(140px,max-content))] grid-flow-col items-start",
-        "gap-4 pt-1 pb-1.5 border-b border-zinc-700",
+        "gap-4 pt-1 pb-1.5 border-b border-stone-800",
       )}
     >
       {props.children}
@@ -342,23 +342,37 @@ const OutlineBullet = (props: OutlineBulletProps) => {
   }
   if (props.color === "gray") {
     style = {
-      "--color-300": "var(--color-zinc-600)",
+      "--color-300": "var(--color-zinc-500)",
       "--color-500": "var(--color-zinc-950)",
       "--color-700": "var(--color-zinc-950)",
     } as CSSProperties;
   }
   if (props.color === "orange") {
     style = {
-      "--color-300": "var(--color-amber-600)",
+      "--color-300": "var(--color-amber-500)",
       "--color-500": "var(--color-amber-950)",
       "--color-700": "var(--color-amber-950)",
     } as CSSProperties;
   }
   if (props.color === "magenta") {
     style = {
-      "--color-300": "var(--color-fuchsia-600)",
+      "--color-300": "var(--color-fuchsia-500)",
       "--color-500": "var(--color-fuchsia-950)",
       "--color-700": "var(--color-fuchsia-950)",
+    } as CSSProperties;
+  }
+  if (props.color === "blue") {
+    style = {
+      "--color-300": "var(--color-blue-500)",
+      "--color-500": "var(--color-blue-950)",
+      "--color-700": "var(--color-blue-950)",
+    } as CSSProperties;
+  }
+  if (props.color === "green") {
+    style = {
+      "--color-300": "var(--color-green-500)",
+      "--color-500": "var(--color-green-950)",
+      "--color-700": "var(--color-green-950)",
     } as CSSProperties;
   }
 
@@ -414,7 +428,7 @@ const OutlineBullet = (props: OutlineBulletProps) => {
             {props.children}
           </div>
         </div>
-        <div className="flex items-center justify-center">{props.textSlot}</div>
+        <div className="flex items-center justify-center text-sm">{props.textSlot}</div>
       </div>
     );
   }
@@ -440,7 +454,7 @@ export const iconCursorText = (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth={2}
+    strokeWidth={2.5}
     strokeLinecap="round"
     strokeLinejoin="round"
     className="icon icon-tabler icons-tabler-outline icon-tabler-cursor-text"
@@ -459,7 +473,7 @@ export const iconHash = (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth={2}
+    strokeWidth={2.5}
     strokeLinecap="round"
     strokeLinejoin="round"
     className="icon icon-tabler icons-tabler-outline icon-tabler-hash"
@@ -480,7 +494,7 @@ export const iconList = (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth={2}
+    strokeWidth={2.5}
     strokeLinecap="round"
     strokeLinejoin="round"
     className="icon icon-tabler icons-tabler-outline icon-tabler-list"
@@ -503,7 +517,7 @@ export const iconUser = (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth={2}
+    strokeWidth={2.5}
     strokeLinecap="round"
     strokeLinejoin="round"
     className="icon icon-tabler icons-tabler-outline icon-tabler-user"
@@ -522,7 +536,7 @@ export const iconAt = (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth={2}
+    strokeWidth={2.5}
     strokeLinecap="round"
     strokeLinejoin="round"
     className="icon icon-tabler icons-tabler-outline icon-tabler-at"
@@ -541,7 +555,7 @@ export const iconNumber12 = (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth={2}
+    strokeWidth={2.5}
     strokeLinecap="round"
     strokeLinejoin="round"
     className="icon icon-tabler icons-tabler-outline icon-tabler-number-12-small"
@@ -560,7 +574,7 @@ export const iconAlphabetLatin = (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth={2}
+    strokeWidth={2.5}
     strokeLinecap="round"
     strokeLinejoin="round"
     className="icon icon-tabler icons-tabler-outline icon-tabler-alphabet-latin"
@@ -580,7 +594,7 @@ export const iconLink = (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth={2}
+    strokeWidth={2.5}
     strokeLinecap="round"
     strokeLinejoin="round"
     className="icon icon-tabler icons-tabler-outline icon-tabler-link"
@@ -600,7 +614,7 @@ export const iconCheck = (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth={2}
+    strokeWidth={2.5}
     strokeLinecap="round"
     strokeLinejoin="round"
     className="icon icon-tabler icons-tabler-outline icon-tabler-check"
@@ -618,7 +632,7 @@ export const iconClockHour4 = (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth={2}
+    strokeWidth={2.5}
     strokeLinecap="round"
     strokeLinejoin="round"
     className="icon icon-tabler icons-tabler-outline icon-tabler-clock-hour-4"
@@ -638,7 +652,7 @@ export const iconPlus = (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth={2}
+    strokeWidth={2.5}
     strokeLinecap="round"
     strokeLinejoin="round"
     className="icon icon-tabler icons-tabler-outline icon-tabler-plus"
@@ -657,7 +671,7 @@ export const iconChevronDown = (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth={2}
+    strokeWidth={2.5}
     strokeLinecap="round"
     strokeLinejoin="round"
     className="icon icon-tabler icons-tabler-outline icon-tabler-chevron-down"
@@ -675,7 +689,7 @@ export const iconSearch = (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth={2}
+    strokeWidth={2.5}
     strokeLinecap="round"
     strokeLinejoin="round"
     className="icon icon-tabler icons-tabler-outline icon-tabler-search"
@@ -694,7 +708,7 @@ export const iconCurrencyDollar = (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth={2}
+    strokeWidth={2.5}
     strokeLinecap="round"
     strokeLinejoin="round"
     className="icon icon-tabler icons-tabler-outline icon-tabler-currency-dollar"
@@ -713,7 +727,7 @@ const iconArrowForwardUp = (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth={2}
+    strokeWidth={2.5}
     strokeLinecap="round"
     strokeLinejoin="round"
     className="icon icon-tabler icons-tabler-outline icon-tabler-arrow-forward-up"
