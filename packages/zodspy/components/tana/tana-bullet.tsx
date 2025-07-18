@@ -4,7 +4,7 @@ import { classNames } from "../../helpers/clsx";
 export type TanaBulletProps = {
   children?: React.ReactNode;
   variant: "point" | "button" | "action" | "field";
-  color?: "gray" | "orange" | "magenta" | "blue" | "green";
+  color?: "gray" | "orange" | "magenta" | "blue" | "green" | "cyan";
   textSlot?: React.ReactNode;
   hasOutline?: boolean;
   hasOutlineBorder?: boolean;
@@ -45,6 +45,13 @@ export const TanaBullet = (props: TanaBulletProps) => {
       "--color-300": "var(--color-blue-600)",
       "--color-500": "var(--color-blue-950)",
       "--color-700": "var(--color-blue-950)",
+    } as CSSProperties;
+  }
+  if (props.color === "cyan") {
+    style = {
+      "--color-300": "var(--color-cyan-600)",
+      "--color-500": "var(--color-cyan-950)",
+      "--color-700": "var(--color-cyan-950)",
     } as CSSProperties;
   }
   if (props.color === "green") {

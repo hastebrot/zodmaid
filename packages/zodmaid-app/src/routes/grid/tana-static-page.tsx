@@ -342,35 +342,35 @@ const OutlineBullet = (props: OutlineBulletProps) => {
   }
   if (props.color === "gray") {
     style = {
-      "--color-300": "var(--color-zinc-600)",
+      "--color-300": "var(--color-zinc-500)",
       "--color-500": "var(--color-zinc-950)",
       "--color-700": "var(--color-zinc-950)",
     } as CSSProperties;
   }
   if (props.color === "orange") {
     style = {
-      "--color-300": "var(--color-amber-600)",
+      "--color-300": "var(--color-amber-500)",
       "--color-500": "var(--color-amber-950)",
       "--color-700": "var(--color-amber-950)",
     } as CSSProperties;
   }
   if (props.color === "magenta") {
     style = {
-      "--color-300": "var(--color-fuchsia-600)",
+      "--color-300": "var(--color-fuchsia-500)",
       "--color-500": "var(--color-fuchsia-950)",
       "--color-700": "var(--color-fuchsia-950)",
     } as CSSProperties;
   }
   if (props.color === "blue") {
     style = {
-      "--color-300": "var(--color-blue-600)",
+      "--color-300": "var(--color-blue-500)",
       "--color-500": "var(--color-blue-950)",
       "--color-700": "var(--color-blue-950)",
     } as CSSProperties;
   }
   if (props.color === "green") {
     style = {
-      "--color-300": "var(--color-green-600)",
+      "--color-300": "var(--color-green-500)",
       "--color-500": "var(--color-green-950)",
       "--color-700": "var(--color-green-950)",
     } as CSSProperties;
