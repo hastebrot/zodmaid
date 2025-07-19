@@ -1,0 +1,9 @@
+- https://www.stranger.systems/posts/by-slug/row-polymorphic-programming.html
+- https://en.wikipedia.org/wiki/Row_polymorphism
+- https://github.com/brownplt/B2T2
+  - The Brown Benchmark for Table Types (B2T2)
+  - https://cs.brown.edu/~sk/Publications/Papers/Published/lgk-b2t2/
+  - Types for Tables: A Language Design Benchmark
+  - Kuang-Chen Lu, Ben Greenman, Shriram Krishnamurthi
+  - The Art, Science, and Engineering of Programming, 2022
+  - https://github.com/brownplt/B2T2/blob/main/Media/TypeScript/TableAPI.ts
