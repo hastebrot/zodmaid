@@ -11,6 +11,8 @@ import { MockupGridPage } from "./grid/mockup-grid-page";
 import { ReactDataGridPage } from "./grid/react-data-grid-page";
 import { TanaDynamicPage } from "./grid/tana-dynamic-page";
 import { TanaStaticPage } from "./grid/tana-static-page";
+import { InterfaceColorsPage } from "./interface/colors-page";
+import { InterfaceLayoutPage } from "./interface/layout-page";
 
 // dagre, https://github.com/antvis/layout/blob/v5/packages/layout/src/dagre.ts
 // - uses @dagrejs/dagre, https://github.com/dagrejs/dagre
@@ -32,6 +34,14 @@ export const routes: RouteObject[] = [
       }, []);
       return null;
     },
+  },
+  {
+    path: "/interface",
+    children: [
+      // wrap.
+      { path: "colors", Component: () => <InterfaceColorsPage /> },
+      { path: "layout", Component: () => <InterfaceLayoutPage /> },
+    ],
   },
   {
     path: "/diagram",
