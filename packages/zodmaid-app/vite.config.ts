@@ -35,13 +35,22 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
+        assetFileNames(chunkInfo) {
+          if (chunkInfo.names[0] === "tabler-sprite-filled.svg") {
+            return `assets/tabler-sprite-filled-[hash][extname]`;
+          }
+          if (chunkInfo.names[0] === "tabler-sprite-nostroke.svg") {
+            return `assets/tabler-sprite-outlined-[hash][extname]`;
+          }
+          return `assets/[name]-[hash][extname]`;
+        },
         advancedChunks: {
           groups: [
             {
               name: "zodmaid",
               test: (id) => {
-                return id.includes("packages/zodmaid/")
-              }
+                return id.includes("packages/zodmaid/");
+              },
             },
             { name: "react-router", test: "react-router" },
             { name: "react", test: "react|react-dom" },

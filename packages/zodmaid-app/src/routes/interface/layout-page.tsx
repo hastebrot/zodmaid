@@ -1,4 +1,5 @@
 import { type CSSProperties } from "react";
+import { SysIcon } from "../../components/sys-icon";
 import { classNames } from "../../helpers/clsx";
 
 export const InterfaceLayoutPage = () => {
@@ -13,22 +14,61 @@ export const InterfaceLayoutPage = () => {
       >
         <div className="grid grid-cols-[auto_1fr_auto] h-full">
           <div className="flex flex-col w-[240px] bg-(--bg-layer) border-r border-(--border-base)">
-            <div className="p-[14px] flex items-center text-sm gap-2">
-              <div className="w-[18px] h-[18px] text-(--fg-base) bg-(--bg-layer-active) flex items-center justify-center font-bold text-xs">
+            <div className="p-[14px] pr-[8px] flex items-center text-sm gap-2">
+              <div className="w-[18px] h-[18px] text-(--fg-base) bg-(--bg-layer-active) rounded-sm flex items-center justify-center font-bold text-xs">
                 W
               </div>
               <div className="text-(--fg-base)">Workspace</div>
+              <SysIcon name="selector" variant="outlined" height={18} strokeWidth={2} />
+              <div className="ml-auto flex items-center justify-center size-[30px]">
+                <SysIcon name="layout-sidebar" variant="outlined" height={18} strokeWidth={2} />
+              </div>
             </div>
-            <div className="p-[8px]">
+            <div className="p-[8px] flex items-center">
               <div className="text-(--fg-base)">text base</div>
+              <div
+                className={classNames(
+                  "ml-auto border border-(--border-base) rounded-md flex items-center justify-center size-[30px]",
+                  "hover:bg-(--bg-layer-active) hover:border-(--border-active) cursor-pointer",
+                )}
+              >
+                <SysIcon name="plus" variant="outlined" height={18} strokeWidth={2} />
+              </div>
+            </div>
+            <hr className="h-px w-full bg-(--border-base) border-none" />
+          </div>
+          <div className="flex flex-col">
+            <div className="px-[14px] flex items-center h-[44px]">
+              <div className="flex items-center justify-center size-[30px]">
+                <SysIcon name="layout-sidebar" variant="outlined" height={18} strokeWidth={2} />
+              </div>
+              <div className="flex items-center justify-center size-[30px]">
+                <SysIcon name="arrow-left" variant="outlined" height={18} strokeWidth={2} />
+              </div>
+              <div className="flex items-center justify-center size-[30px]">
+                <SysIcon name="arrow-right" variant="outlined" height={18} strokeWidth={2} />
+              </div>
+              <div className="text-(--fg-base)">text base</div>
+              <div className="ml-auto flex items-center justify-center size-[30px]">
+                <SysIcon name="stack-2" variant="outlined" height={18} strokeWidth={2} />
+              </div>
+              <div className="flex items-center justify-center size-[30px]">
+                <SysIcon name="calendar-week" variant="outlined" height={18} strokeWidth={2} />
+              </div>
+              <div className="flex items-center justify-center size-[30px]">
+                <SysIcon name="books" variant="outlined" height={18} strokeWidth={2} />
+              </div>
+              <div className="flex items-center justify-center size-[30px]">
+                <SysIcon name="dots" variant="outlined" height={18} strokeWidth={2} />
+              </div>
+            </div>
+            <div className="px-[14px]">
+              <div className="text-(--fg-base)">text base</div>
+              <div className="text-(--fg-subtle)">text subtle</div>
+              <div className="text-(--fg-muted)">text muted</div>
             </div>
           </div>
-          <div className="p-8">
-            <div className="text-(--fg-base)">text base</div>
-            <div className="text-(--fg-subtle)">text subtle</div>
-            <div className="text-(--fg-muted)">text muted</div>
-          </div>
-          <div className="p-8">
+          <div className="p-8 bg-(--bg-layer) border-l border-(--border-base)">
             <div className="text-(--fg-base)">text base</div>
             <div className="text-(--fg-subtle)">text subtle</div>
             <div className="text-(--fg-muted)">text muted</div>
