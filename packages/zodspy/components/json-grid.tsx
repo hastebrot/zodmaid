@@ -44,7 +44,7 @@ const toGridStyles = (theme: "light" | "dark") => {
     const gridStyles = {
       "--cell-fg-base": "var(--color-gray-900)",
       "--cell-fg-label": "var(--color-indigo-800)",
-      "--cell-fg-accent": "var(--color-blue-800)",
+      "--cell-fg-accent": "var(--color-blue-700)",
       "--cell-fg-muted": "var(--color-gray-500)",
       "--cell-bg-base": "var(--color-gray-100)",
       "--cell-bg-header": "var(--color-gray-300)",
@@ -64,7 +64,7 @@ const toGridStyles = (theme: "light" | "dark") => {
     const gridStyles = {
       "--cell-fg-base": "var(--color-zinc-300)",
       "--cell-fg-label": "var(--color-blue-500)",
-      "--cell-fg-accent": "var(--color-blue-500)",
+      "--cell-fg-accent": "var(--color-sky-500)",
       "--cell-fg-muted": "var(--color-zinc-500)",
       "--cell-bg-base": "var(--color-zinc-900)",
       "--cell-bg-header": "var(--color-zinc-800)",

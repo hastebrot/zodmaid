@@ -43,13 +43,13 @@ export const GridViewDynamicPage = () => {
           "[--bg-base:var(--color-gray-100)]",
           "[--border-base:var(--color-gray-400)]",
           "[--fg-base:var(--color-gray-900)]",
-          "[--fg-accent:var(--color-blue-800)]",
+          "[--fg-accent:var(--color-blue-700)]",
         ],
         colorMode === "dark" && [
           "[--bg-base:var(--color-zinc-900)]",
           "[--border-base:var(--color-zinc-700)]",
           "[--fg-base:var(--color-zinc-300)]",
-          "[--fg-accent:var(--color-blue-500)]",
+          "[--fg-accent:var(--color-sky-500)]",
         ],
       )}
     >

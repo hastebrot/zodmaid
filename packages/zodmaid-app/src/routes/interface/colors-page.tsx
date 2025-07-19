@@ -5,9 +5,9 @@ export const InterfaceColorsPage = () => {
         <div className="w-[100px] h-full bg-white">bg-base</div>
         <div className="w-[100px] h-full bg-zinc-100">bg-layer</div>
         <div className="w-[100px] h-full bg-zinc-200">bg-layer-active</div>
-        <div className="w-[100px] h-full bg-zinc-600">fg-base</div>
-        <div className="w-[100px] h-full bg-zinc-400">fg-subtle</div>
-        <div className="w-[100px] h-full bg-zinc-300">fg-muted</div>
+        <div className="w-[100px] h-full bg-zinc-800">fg-base</div>
+        <div className="w-[100px] h-full bg-zinc-600">fg-subtle</div>
+        <div className="w-[100px] h-full bg-zinc-400">fg-muted</div>
         <div className="w-[100px] h-full bg-zinc-200">border-base</div>
         <div className="w-[100px] h-full bg-zinc-300">border-active</div>
         <div className="w-[100px] h-full bg-blue-500">fg-accent</div>

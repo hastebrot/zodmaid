@@ -36,6 +36,12 @@ export const InterfaceLayoutPage = () => {
               </div>
             </div>
             <hr className="h-px w-full bg-(--border-base) border-none" />
+            <div className="flex px-[8px] mt-[8px]">
+              <div className="h-[30px] w-full bg-(--bg-layer-active) rounded-md"></div>
+            </div>
+            <div className="flex px-[8px] mt-[8px]">
+              <div className="h-[30px] w-full bg-(--bg-layer-active) rounded-md"></div>
+            </div>
           </div>
           <div className="flex flex-col">
             <div className="px-[14px] flex items-center h-[44px]">
@@ -49,7 +55,7 @@ export const InterfaceLayoutPage = () => {
                 <SysIcon name="arrow-right" variant="outlined" height={18} strokeWidth={2} />
               </div>
               <div className="text-(--fg-base)">text base</div>
-              <div className="ml-auto flex items-center justify-center size-[30px]">
+              <div className="ml-auto flex items-center justify-center size-[30px] text-(--fg-accent)">
                 <SysIcon name="stack-2" variant="outlined" height={18} strokeWidth={2} />
               </div>
               <div className="flex items-center justify-center size-[30px]">
