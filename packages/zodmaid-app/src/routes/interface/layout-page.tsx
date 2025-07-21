@@ -4,7 +4,7 @@ import { classNames } from "../../helpers/clsx";
 
 export const InterfaceLayoutPage = () => {
   return (
-    <Theme theme="light">
+    <Theme theme="dark">
       <div
         className={classNames(
           "h-dvh overscroll-contain overflow-auto",

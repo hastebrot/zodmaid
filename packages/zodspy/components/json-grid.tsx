@@ -71,7 +71,7 @@ const toGridStyles = (theme: "light" | "dark") => {
       "--cell-bg-label": "var(--color-indigo-100)",
       "--cell-border-base": "var(--color-zinc-700)",
       "--cell-border-label": "var(--color-blue-300)",
-      "--cell-outline-selected": "var(--color-blue-700)",
+      "--cell-outline-selected": "var(--color-sky-500)",
       "--button-bg-base": "var(--color-zinc-800)",
       "--button-border-base": "var(--color-zinc-900)",
       "--button-border-contrast": "var(--color-zinc-700)",

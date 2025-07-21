@@ -226,7 +226,7 @@ export const TanaGridView = (gridProps: { value: TanaDataModel[] }) => {
                 <div className="flex flex-col">
                   <span className="text-nowrap">{title}</span>
                   {description && (
-                    <span className="text-nowrap text-sm text-zinc-500">{description}</span>
+                    <span className="mt-0.5 text-nowrap text-sm text-zinc-500">{description}</span>
                   )}
                 </div>
                 {tags?.map((tag) => (

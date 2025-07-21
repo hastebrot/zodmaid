@@ -77,7 +77,7 @@ export const GridViewDynamicPage = () => {
 const GridViewForRoot = observer((gridProps: { value: JsonObject; theme?: "light" | "dark" }) => {
   type DataModel = JsonDataModel;
   const [rows] = useState(() =>
-    observable([{ type: "object", key: "", value: gridProps.value, isFolded: true }]),
+    observable([{ type: "object", key: "", value: gridProps.value, isFolded: false }]),
   );
   const context = defineGridContext<DataModel>({
     label: "root",
