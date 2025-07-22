@@ -40,7 +40,6 @@ export const TanaDynamicPage = () => {
     const schema = z.toJSONSchema(MusicLibrarySchema);
     console.log(data, schema);
   }, []);
-
   const rows: TanaDataModel[] = [
     {
       title: "Person name",
@@ -51,7 +50,7 @@ export const TanaDynamicPage = () => {
         {
           title: "Company",
           description: "Name of the organization",
-          type: "field:plain",
+          type: "field:node",
           value: [
             // wrap.
             { title: "Company name", type: "node", tags: ["Company"], value: [] },
@@ -60,7 +59,7 @@ export const TanaDynamicPage = () => {
         {
           title: "Role",
           description: "Job title of the person",
-          type: "field:plain",
+          type: "field:node",
           value: [
             // wrap.
             { title: "", type: "node", value: [] },
@@ -117,17 +116,17 @@ export const TanaDynamicPage = () => {
             { title: "Text", type: "node", value: [] },
             {
               title: "Field",
-              type: "field:plain",
+              type: "field:node",
               value: [{ title: "", type: "node", value: [] }],
             },
             {
               title: "Field",
-              type: "field:plain",
+              type: "field:node",
               value: [{ title: "", type: "node", value: [] }],
             },
             {
               title: "Field",
-              type: "field:plain",
+              type: "field:node",
               value: [{ title: "", type: "node", value: [] }],
             },
           ],
@@ -142,17 +141,17 @@ export const TanaDynamicPage = () => {
             { title: "Text", type: "node", value: [] },
             {
               title: "Field",
-              type: "field:plain",
+              type: "field:node",
               value: [{ title: "", type: "node", value: [] }],
             },
             {
               title: "Field",
-              type: "field:plain",
+              type: "field:node",
               value: [{ title: "", type: "node", value: [] }],
             },
             {
               title: "Field",
-              type: "field:plain",
+              type: "field:node",
               value: [{ title: "", type: "node", value: [] }],
             },
           ],
@@ -190,7 +189,7 @@ export const TanaGridView = (gridProps: { value: TanaDataModel[] }) => {
     columns: [
       {
         label: "node",
-        width: "minmax(55px, max-content)",
+        width: "minmax(55px, 1fr)",
         cellRenderer(props) {
           const row = props.data.row ?? throwError("row is undefined");
           const title = row.title;
@@ -212,7 +211,7 @@ export const TanaGridView = (gridProps: { value: TanaDataModel[] }) => {
                       hasOutline={isFolded}
                     />
                   )}
-                  {type === "field:plain" && (
+                  {type === "field:node" && (
                     <TanaBullet variant="field" color={true ? "cyan" : undefined}>
                       <TanaBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
                     </TanaBullet>
@@ -226,7 +225,9 @@ export const TanaGridView = (gridProps: { value: TanaDataModel[] }) => {
                 <div className="flex flex-col">
                   <span className="text-nowrap">{title}</span>
                   {description && (
-                    <span className="mt-0.5 text-nowrap text-sm text-zinc-500">{description}</span>
+                    <span className="text-nowrap text-[14px]/[20px] text-zinc-500">
+                      {description}
+                    </span>
                   )}
                 </div>
                 {tags?.map((tag) => (
@@ -272,6 +273,7 @@ export const TanaGridView = (gridProps: { value: TanaDataModel[] }) => {
       },
     },
   });
+
   return <BaseGridView context={context as GridContextProps} />;
 };
 
@@ -284,6 +286,7 @@ export const TanaTheme = (props: { children?: React.ReactNode }) => {
     "--bullet-icon-size": "12px",
     "--bullet-point-size": "7px",
   } as CSSProperties;
+
   return (
     <div className="font-sans text-(size:--text-font-size)/(--text-line-height)" style={style}>
       {props.children}
