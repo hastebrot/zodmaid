@@ -14,7 +14,13 @@ import {
 import { TanaBullet } from "zodspy/components/tana/tana-bullet";
 import { TanaCellContext } from "zodspy/components/tana/tana-cell-context";
 import { TanaCellRenderer } from "zodspy/components/tana/tana-cell-renderer";
-import { iconAt, iconCursorText, iconHash } from "zodspy/components/tana/tana-icons";
+import {
+  iconAt,
+  iconCheck,
+  iconCode,
+  iconCursorText,
+  iconHash,
+} from "zodspy/components/tana/tana-icons";
 import { musicLibrary } from "zodspy/examples/music-library";
 import { MusicLibrarySchema } from "zodspy/examples/music-library-schema";
 import { classNames } from "../../helpers/clsx";
@@ -97,6 +103,111 @@ export const TanaDynamicPage = () => {
           value: [
             // wrap.
             { title: "Person name", type: "node", tags: ["Person"], value: [] },
+          ],
+        },
+      ],
+    },
+    {
+      title: "Album",
+      type: "field:tag",
+      value: [
+        // wrap.
+        {
+          title: "Name",
+          type: "field:node",
+          value: [{ title: "", type: "node", value: [] }],
+        },
+        {
+          title: "Genre",
+          type: "field:node",
+          value: [
+            {
+              title: "",
+              type: "node",
+              value: [],
+            },
+          ],
+        },
+        {
+          title: "ReleaseDate",
+          type: "field:node",
+          value: [
+            {
+              title: "Pattern",
+              type: "field:code",
+              value: [{ title: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$", type: "node", value: [] }],
+            },
+            {
+              title: "",
+              type: "node",
+              value: [],
+            },
+          ],
+        },
+        {
+          title: "Label",
+          type: "field:node",
+          value: [
+            {
+              title: "",
+              type: "node",
+              value: [],
+            },
+          ],
+        },
+        {
+          title: "Tracks",
+          type: "field:node",
+          value: [
+            {
+              title: "",
+              type: "node",
+              value: [],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      title: "Track",
+      type: "field:tag",
+      value: [
+        // wrap.
+        {
+          title: "Title",
+          type: "field:node",
+          value: [{ title: "", type: "node", value: [] }],
+        },
+        {
+          title: "Duration",
+          type: "field:node",
+          value: [
+            {
+              title: "Pattern",
+              type: "field:code",
+              value: [{ title: "^[0-9]{2}:[0-9]{2}$", type: "node", value: [] }],
+            },
+            {
+              title: "",
+              type: "node",
+              value: [],
+            },
+          ],
+        },
+        {
+          title: "Writer",
+          type: "field:node",
+          value: [
+            {
+              title: "Optional",
+              type: "field:bool",
+              value: [{ title: "True", type: "node", value: [] }],
+            },
+            {
+              title: "",
+              type: "node",
+              value: [],
+            },
           ],
         },
       ],
@@ -221,7 +332,23 @@ export const TanaGridView = (gridProps: { value: TanaDataModel[] }) => {
                       <TanaBulletIcon iconSlot={iconAt} />
                     </TanaBullet>
                   )}
+                  {type === "field:tag" && (
+                    <TanaBullet variant="field">
+                      <TanaBulletIcon iconSlot={iconHash} />
+                    </TanaBullet>
+                  )}
+                  {type === "field:bool" && (
+                    <TanaBullet variant="field">
+                      <TanaBulletIcon iconSlot={iconCheck} />
+                    </TanaBullet>
+                  )}
+                  {type === "field:code" && (
+                    <TanaBullet variant="field">
+                      <TanaBulletIcon iconSlot={iconCode} />
+                    </TanaBullet>
+                  )}
                 </div>
+
                 <div className="flex flex-col">
                   <span className="text-nowrap">{title}</span>
                   {description && (
@@ -244,9 +371,11 @@ export const TanaGridView = (gridProps: { value: TanaDataModel[] }) => {
                 ))}
               </TanaNode>
               {value && (
-                <TanaNodeValue>
-                  <TanaGridView value={value} />
-                </TanaNodeValue>
+                <div className={classNames(type === "field:code" && "font-mono")}>
+                  <TanaNodeValue>
+                    <TanaGridView value={value} />
+                  </TanaNodeValue>
+                </div>
               )}
             </TanaNodeList>
           );

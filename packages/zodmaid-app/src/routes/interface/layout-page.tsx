@@ -13,7 +13,7 @@ export const InterfaceLayoutPage = () => {
         )}
       >
         <div className="grid grid-cols-[auto_1fr_auto] h-full">
-          <div className="flex flex-col w-[240px] bg-(--bg-layer) border-r border-(--border-base)">
+          <div className="flex flex-col w-[240px] bg-(--bg-base) border-r border-(--border-base)">
             <div className="p-[14px] pr-[8px] flex items-center text-sm gap-2">
               <div className="w-[18px] h-[18px] text-(--fg-base) bg-(--bg-layer-active) rounded-sm flex items-center justify-center font-bold text-xs">
                 W
@@ -43,7 +43,7 @@ export const InterfaceLayoutPage = () => {
               <div className="h-[30px] w-full bg-(--bg-layer-active) rounded-md"></div>
             </div>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col bg-(--bg-layer)">
             <div className="px-[14px] flex items-center h-[44px]">
               <div className="flex items-center justify-center size-[30px]">
                 <SysIcon name="layout-sidebar" variant="outlined" height={18} strokeWidth={2} />
@@ -74,7 +74,7 @@ export const InterfaceLayoutPage = () => {
               <div className="text-(--fg-muted)">text muted</div>
             </div>
           </div>
-          <div className="p-8 bg-(--bg-layer) border-l border-(--border-base)">
+          <div className="p-8 bg-(--bg-base) border-l border-(--border-base)">
             <div className="text-(--fg-base)">text base</div>
             <div className="text-(--fg-subtle)">text subtle</div>
             <div className="text-(--fg-muted)">text muted</div>
