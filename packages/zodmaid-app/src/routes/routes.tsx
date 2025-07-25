@@ -6,6 +6,7 @@ import { GridViewDynamicPage } from "./grid/grid-view-dynamic-page";
 import { GridViewStaticPage } from "./grid/grid-view-static-page";
 import { GridViewStyledPage } from "./grid/grid-view-styled-page";
 import { InputFieldSizingPage } from "./grid/input-field-sizing-page";
+import { LexicalEditorPage } from "./grid/lexical-editor-page";
 import { MobxObserverPage } from "./grid/mobx-observer-page";
 import { MockupGridPage } from "./grid/mockup-grid-page";
 import { ReactDataGridPage } from "./grid/react-data-grid-page";
@@ -41,6 +42,7 @@ export const routes: RouteObject[] = [
       // wrap.
       { path: "colors", Component: () => <InterfaceColorsPage /> },
       { path: "layout", Component: () => <InterfaceLayoutPage /> },
+      { path: "editor", Component: () => <LexicalEditorPage /> },
     ],
   },
   {
