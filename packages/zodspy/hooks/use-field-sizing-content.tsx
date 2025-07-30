@@ -11,17 +11,17 @@ export const useFieldSizingContent = () => {
   const ref = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
   useLayoutEffect(() => {
     if (ref.current === null) return;
-    const input = ref.current;
+    const element = ref.current;
     function updateElementStyle() {
-      const text = input.value === "" ? input.placeholder : input.value;
-      const size = measureElementSize(input, text);
-      input.style.width = size.width;
-      input.style.height = size.height;
+      const text = element.value === "" ? element.placeholder : element.value;
+      const size = measureElementSize(element, text);
+      element.style.width = size.width;
+      element.style.height = size.height;
     }
     updateElementStyle();
-    input.addEventListener("input", updateElementStyle);
+    element.addEventListener("input", updateElementStyle);
     return () => {
-      input.removeEventListener("input", updateElementStyle);
+      element.removeEventListener("input", updateElementStyle);
     };
   }, [ref]);
   return {

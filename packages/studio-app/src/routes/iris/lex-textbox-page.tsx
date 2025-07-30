@@ -33,12 +33,12 @@ export const LexTextboxPage = () => {
           }}
         />
         <textarea
+          ref={textAreaRef}
           className={classNames(
             "bg-zinc-100 box-content p-2.5 py-2 w-fit text-[16px]/[22px]",
             "outline-2 -outline-offset-1 outline-zinc-400 focus:outline-blue-600",
             "resize-none whitespace-pre",
           )}
-          ref={textAreaRef}
           value={textValue}
           onChange={(event) => setTextValue(event.target.value)}
         />
