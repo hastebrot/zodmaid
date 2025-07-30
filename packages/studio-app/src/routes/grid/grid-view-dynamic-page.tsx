@@ -485,25 +485,26 @@ function renderCell<DataModel>(item?: DataModel, key?: string) {
   const value = item[key as keyof DataModel];
   const type = determineJsonType(value);
   const text = type === "array" || type === "object" ? JSON.stringify(value) : String(value);
-  const [inputValue, setInputValue] = useState(text);
+  const [textValue, setTextValue] = useState(text);
   useEffect(() => {
-    console.log("input value:", inputValue);
-  }, [inputValue]);
+    console.log("text value:", textValue);
+  }, [textValue]);
   const onKeyCommand = (name: string, event: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log("input command:", name, event);
+    console.log("key command:", name, event);
   };
   return (
     <div className="flex items-center">
       <JsonCellTypeButton type={type} />
       <div className="pr-1 w-full">
+        {/* {textValue} */}
         <IrisInput
           className={classNames(
             "outline-2 -outline-offset-1 outline-zinc-500 focus:outline-(--cell-outline-selected)",
             "box-content min-w-full min-h-lh",
           )}
           placeholder="Empty"
-          value={inputValue}
-          onValueChange={setInputValue}
+          value={textValue}
+          onValueChange={setTextValue}
           onKeyCommand={onKeyCommand}
         />
         {/* <LexTextbox
@@ -511,8 +512,8 @@ function renderCell<DataModel>(item?: DataModel, key?: string) {
             "outline-2 -outline-offset-1 outline-zinc-500 focus:outline-(--cell-outline-selected)",
             "w-full",
           )}
-          value={inputValue}
-          onValueChange={setInputValue}
+          value={textValue}
+          onValueChange={setTextValue}
         /> */}
       </div>
     </div>
