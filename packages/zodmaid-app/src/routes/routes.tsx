@@ -11,6 +11,9 @@ import { MockupGridPage } from "./grid/mockup-grid-page";
 import { ReactDataGridPage } from "./grid/react-data-grid-page";
 import { TanaDynamicPage } from "./grid/tana-dynamic-page";
 import { TanaStaticPage } from "./grid/tana-static-page";
+import { IrisColorsPage } from "./iris/iris-colors-page";
+import { IrisLayoutPage } from "./iris/iris-layout-page";
+import { LexTextboxPage } from "./iris/lex-textbox-page";
 
 // dagre, https://github.com/antvis/layout/blob/v5/packages/layout/src/dagre.ts
 // - uses @dagrejs/dagre, https://github.com/dagrejs/dagre
@@ -54,6 +57,15 @@ export const routes: RouteObject[] = [
       { path: "field-sizing", Component: () => <InputFieldSizingPage /> },
       { path: "tana-static", Component: () => <TanaStaticPage /> },
       { path: "tana-dynamic", Component: () => <TanaDynamicPage /> },
+    ],
+  },
+  {
+    path: "/iris",
+    children: [
+      // wrap.
+      { path: "colors", Component: () => <IrisColorsPage /> },
+      { path: "layout", Component: () => <IrisLayoutPage /> },
+      { path: "textbox", Component: () => <LexTextboxPage /> },
     ],
   },
 ];

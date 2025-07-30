@@ -1,6 +1,6 @@
 /// <reference types="@testing-library/jest-dom/vitest" />
 import * as matchers from "@testing-library/jest-dom/matchers";
-import chalk from "chalk";
+import pico from "picocolors";
 import { expect } from "vitest";
 
 export { matchers };
@@ -17,9 +17,9 @@ export function registerMatchers() {
   function patchMatcher(matcher: any) {
     return function (...args: any[]) {
       // @ts-ignore
-      this.utils.EXPECTED_COLOR = chalk.green;
+      this.utils.EXPECTED_COLOR = pico.green;
       // @ts-ignore
-      this.utils.RECEIVED_COLOR = chalk.red;
+      this.utils.RECEIVED_COLOR = pico.red;
       // @ts-ignore
       return matcher.apply(this, args);
     };

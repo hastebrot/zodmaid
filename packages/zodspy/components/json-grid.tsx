@@ -12,10 +12,10 @@ export const JsonGrid = (props: JsonGridProps) => {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
-      event.stopPropagation();
-      if (event.key === "ArrowUp") {
-        console.log("keyup", event);
-      }
+      // event.stopPropagation();
+      // if (event.key === "ArrowUp") {
+      //   console.log("keyup", event);
+      // }
     }
     if (ref.current) {
       ref.current.addEventListener("keyup", handleKeyDown);
@@ -44,7 +44,7 @@ const toGridStyles = (theme: "light" | "dark") => {
     const gridStyles = {
       "--cell-fg-base": "var(--color-gray-900)",
       "--cell-fg-label": "var(--color-indigo-800)",
-      "--cell-fg-accent": "var(--color-blue-800)",
+      "--cell-fg-accent": "var(--color-blue-700)",
       "--cell-fg-muted": "var(--color-gray-500)",
       "--cell-bg-base": "var(--color-gray-100)",
       "--cell-bg-header": "var(--color-gray-300)",
@@ -64,14 +64,14 @@ const toGridStyles = (theme: "light" | "dark") => {
     const gridStyles = {
       "--cell-fg-base": "var(--color-zinc-300)",
       "--cell-fg-label": "var(--color-blue-500)",
-      "--cell-fg-accent": "var(--color-blue-500)",
+      "--cell-fg-accent": "var(--color-sky-500)",
       "--cell-fg-muted": "var(--color-zinc-500)",
       "--cell-bg-base": "var(--color-zinc-900)",
       "--cell-bg-header": "var(--color-zinc-800)",
       "--cell-bg-label": "var(--color-indigo-100)",
       "--cell-border-base": "var(--color-zinc-700)",
       "--cell-border-label": "var(--color-blue-300)",
-      "--cell-outline-selected": "var(--color-blue-700)",
+      "--cell-outline-selected": "var(--color-sky-500)",
       "--button-bg-base": "var(--color-zinc-800)",
       "--button-border-base": "var(--color-zinc-900)",
       "--button-border-contrast": "var(--color-zinc-700)",

@@ -1,34 +1,34 @@
 import type { CSSProperties } from "react";
 
 export const measureElemSize = (elem: HTMLInputElement | HTMLTextAreaElement) => {
-  // text.
+  // span text.
   const text = elem.value === "" ? elem.placeholder : elem.value;
-  const div = document.createElement("span");
-  div.innerText = text;
+  const span = document.createElement("span");
+  span.innerText = text;
 
-  // styles.
+  // span styles.
   const styles = window.getComputedStyle(elem);
-  Object.assign(div.style, defaultStyles);
+  Object.assign(span.style, defaultStyles);
   for (const styleName of inheritedStyles) {
-    Object.assign(div.style, { [styleName]: styles[styleName] });
+    Object.assign(span.style, { [styleName]: styles[styleName] });
   }
   if (elem instanceof HTMLTextAreaElement) {
     const zeroWidthSpace = "\u200B";
-    div.innerText += zeroWidthSpace;
-    Object.assign(div.style, { whiteSpace: "pre-wrap" });
-    Object.assign(div.style, { minWidth: styles["minWidth"] });
-    Object.assign(div.style, { maxWidth: styles["maxWidth"] });
+    span.innerText += zeroWidthSpace;
+    Object.assign(span.style, { whiteSpace: "pre-wrap" });
+    Object.assign(span.style, { minWidth: styles["minWidth"] });
+    Object.assign(span.style, { maxWidth: styles["maxWidth"] });
   }
 
-  // size.
-  document.body.appendChild(div);
-  const width = div.scrollWidth;
-  const height = div.scrollHeight;
-  document.body.removeChild(div);
+  // span size.
+  document.body.appendChild(span);
+  const width = span.scrollWidth;
+  const height = span.scrollHeight;
+  document.body.removeChild(span);
 
   return {
-    width: toLengthString(width),
-    height: toLengthString(height),
+    width: toStyleLength(width),
+    height: toStyleLength(height),
   };
 };
 
@@ -58,7 +58,7 @@ const inheritedStyles: Array<keyof CSSStyleDeclaration> = [
   "textIndent",
 ] as const;
 
-const toLengthString = (length: string | number | null | void): string => {
+const toStyleLength = (length: string | number | null | void): string => {
   if (typeof length === "number") {
     return `${length}px`;
   }
