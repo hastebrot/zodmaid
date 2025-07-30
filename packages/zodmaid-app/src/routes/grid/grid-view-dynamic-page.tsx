@@ -1,6 +1,6 @@
 import { action, observable } from "mobx";
 import { Observer, observer } from "mobx-react-lite";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   defineGridContext,
   determineJsonType,
@@ -20,6 +20,7 @@ import {
   type JsonDataModel,
   type JsonObject,
 } from "zodspy";
+import { IrisInput } from "zodspy/components/iris-input";
 import { musicLibrary } from "zodspy/examples/music-library";
 import { purchaseOrder } from "zodspy/examples/purchase-order";
 import { classNames } from "../../helpers/clsx";
@@ -43,13 +44,13 @@ export const GridViewDynamicPage = () => {
           "[--bg-base:var(--color-gray-100)]",
           "[--border-base:var(--color-gray-400)]",
           "[--fg-base:var(--color-gray-900)]",
-          "[--fg-accent:var(--color-blue-800)]",
+          "[--fg-accent:var(--color-blue-700)]",
         ],
         colorMode === "dark" && [
           "[--bg-base:var(--color-zinc-900)]",
           "[--border-base:var(--color-zinc-700)]",
           "[--fg-base:var(--color-zinc-300)]",
-          "[--fg-accent:var(--color-blue-500)]",
+          "[--fg-accent:var(--color-sky-500)]",
         ],
       )}
     >
@@ -77,7 +78,7 @@ export const GridViewDynamicPage = () => {
 const GridViewForRoot = observer((gridProps: { value: JsonObject; theme?: "light" | "dark" }) => {
   type DataModel = JsonDataModel;
   const [rows] = useState(() =>
-    observable([{ type: "object", key: "", value: gridProps.value, isFolded: true }]),
+    observable([{ type: "object", key: "", value: gridProps.value, isFolded: false }]),
   );
   const context = defineGridContext<DataModel>({
     label: "root",
@@ -480,21 +481,47 @@ const GridViewForArrayTable = (gridProps: { value: JsonArray; theme?: "light" | 
 };
 
 function renderCell<DataModel>(item?: DataModel, key?: string) {
-  if (item == undefined || key == undefined) return null;
+  if (item == null || key == null) return null;
   const value = item[key as keyof DataModel];
   const type = determineJsonType(value);
   const text = type === "array" || type === "object" ? JSON.stringify(value) : String(value);
+  const [inputValue, setInputValue] = useState(text);
+  useEffect(() => {
+    console.log("input value:", inputValue);
+  }, [inputValue]);
+  const onKeyCommand = (name: string, event: React.KeyboardEvent<HTMLInputElement>) => {
+    console.log("input command:", name, event);
+  };
   return (
     <div className="flex items-center">
       <JsonCellTypeButton type={type} />
-      <div className="pr-1">{text}</div>
+      <div className="pr-1 w-full">
+        <IrisInput
+          className={classNames(
+            "outline-2 -outline-offset-1 outline-zinc-500 focus:outline-(--cell-outline-selected)",
+            "min-w-full min-h-lh",
+          )}
+          placeholder="Empty"
+          value={inputValue}
+          onValueChange={setInputValue}
+          onKeyCommand={onKeyCommand}
+        />
+        {/* <LexTextbox
+          className={classNames(
+            "outline-2 -outline-offset-1 outline-zinc-500 focus:outline-(--cell-outline-selected)",
+            "w-full",
+          )}
+          value={inputValue}
+          onValueChange={setInputValue}
+        /> */}
+      </div>
     </div>
   );
 }
 
 const FoldedValue = (props: { value: any }) => {
   return (
-    <div className="relative w-full h-[24px] min-w-[300px] overflow-hidden">
+    <div className="relative w-full h-[24px] min-w-[300px] overflow-hidden [font-size-adjust:ex-height_0.5]">
       <div className="absolute inset-0 px-1 w-full truncate text-(--cell-fg-muted)">
         {JSON.stringify(props.value, null, 1).slice(0, 1000)}
       </div>

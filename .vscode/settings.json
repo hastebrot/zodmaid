@@ -20,5 +20,6 @@
   "editor.quickSuggestions": {
     "strings": "on"
   },
-  "tailwindCSS.classFunctions": ["clsx", "classNames"]
+  "tailwindCSS.classFunctions": ["clsx", "classNames"],
+  "tailwindCSS.classAttributes": ["class", "className"],
 }

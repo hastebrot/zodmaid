@@ -59,7 +59,7 @@ describe("example grid view", () => {
       };
       return (
         <div>
-          <input type="text" value={value} onChange={action(onChange)} />
+          <input aria-label="text" type="text" value={value} onChange={action(onChange)} />
           <BaseGridView context={context} />
         </div>
       );
@@ -67,7 +67,7 @@ describe("example grid view", () => {
     const screen = render(<TextFixture />, { baseElement: global.document.body });
     const user = userEvent.setup({ document: global.document });
 
-    const input = screen.getByRole("textbox");
+    const input = screen.getByRole("textbox", { name: "text" });
     await user.click(input);
     await user.clear(input);
     await user.type(input, "test");

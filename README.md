@@ -3,6 +3,16 @@
 > [!NOTE]
 > This project is in a very early stage of development.
 
+**usage:**
+
+- `git clone https://github.com/hastebrot/zodmaid`
+- `cd zodmaid/packages/zodmaid`
+- `bun install --linker=isolated`
+- `bun run build`
+- `bun run test --watch zodmaid`
+
+**examples:**
+
 ![example http requests](./guides/images/zodmaid-nitric-http-requests.svg)
 
 ```ts
@@ -59,11 +69,3 @@ const diagram = [
   edge(node("jobs/generate-story.ts"), arrow("->"), node("model_key"), "access"),
 ];
 ```
-
-**usage:**
-
-- `git clone https://github.com/hastebrot/zodmaid`
-- `cd zodmaid/packages/zodmaid`
-- `bun install`
-- `bun run build`
-- `bun run test --watch zodmaid`

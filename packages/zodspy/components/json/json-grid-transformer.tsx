@@ -15,7 +15,7 @@ export function transformToGridRows(json: JsonObject | JsonArray): JsonDataModel
   const rows: JsonDataModel[] = [];
   for (const [key, value] of Object.entries(json)) {
     const type = determineJsonType(value);
-    rows.push({ key, type, value, isFolded: true });
+    rows.push({ key, type, value, isFolded: false });
   }
   return rows;
 }
