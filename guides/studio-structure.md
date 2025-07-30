@@ -1,4 +1,4 @@
-## zodspy structure
+## studio structure
 
 - non-interactive, static
 - interactive, dynamic
@@ -6,50 +6,50 @@
 ---
 
 - iris = document interface
-- zmaid = diagram graph
-- zspy = data grid
-- ztan = outline document
-- zhepta = whiteboard canvas
-- zbrat = annotated text
+- octo (zodmaid) = diagram graph
+- tetra (zodspy) = data grid
+- proto (zodtana) = outline document
+- hepta (zodhepta) = whiteboard canvas
+- duo (zodbrat) = annotated text
 
 ---
 
-- zspy grid view
-- ztan grid view
+- tetra grid view
+- proto grid view
 
-- ztan focus group
-- ztan bullet button
-- ztan outline button
-- ztan tag button
-- ztan action button
+- proto focus group
+- proto bullet button
+- proto outline button
+- proto tag button
+- proto action button
 
-- ztan node layout
-- ztan list cell
-- ztan field cell
-- ztan table cell
+- proto node layout
+- proto list cell
+- proto field cell
+- proto table cell
 
-- ztan data model
-- ztan grid / row / cell
-- ztan grid context
-- ztan grid view
+- proto data model
+- proto grid / row / cell
+- proto grid context
+- proto grid view
 
-- ztan cell context
-- ztan cell renderer
+- proto cell context
+- proto cell renderer
   - owner / key
 
-- ztan data mapper
+- proto data mapper
   - populate rows
   - populate columns
 
-- ztan style provider
-- ztan node title / description / tag list
+- proto style provider
+- proto node title / description / tag list
 
-- ztan toolbar
-- ztan toolbar overlay
+- iris toolbar
+- iris toolbar overlay
 
-- zhepta whiteboard
-- zhepta card
-- zhepta card group
+- hepta whiteboard
+- hepta card
+- hepta card group
 
 - iris screen layout
 - iris action list button

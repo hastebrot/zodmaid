@@ -499,7 +499,7 @@ function renderCell<DataModel>(item?: DataModel, key?: string) {
         <IrisInput
           className={classNames(
             "outline-2 -outline-offset-1 outline-zinc-500 focus:outline-(--cell-outline-selected)",
-            "min-w-full min-h-lh",
+            "box-content min-w-full min-h-lh",
           )}
           placeholder="Empty"
           value={inputValue}
