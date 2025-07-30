@@ -1,5 +1,5 @@
 import { useControllableState } from "../hooks/use-controllable-state";
-import { useInputFieldSizing } from "../hooks/use-input-field-sizing";
+import { useFieldSizingContent } from "../hooks/use-field-sizing-content";
 
 export type IrisInputProps = {
   className?: string;
@@ -17,7 +17,7 @@ export const IrisInput = (props: IrisInputProps) => {
     value: props.value,
     onChange: props.onValueChange,
   });
-  const { inputRef } = useInputFieldSizing();
+  const { inputRef } = useFieldSizingContent();
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       event.preventDefault();

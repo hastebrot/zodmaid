@@ -1,23 +1,18 @@
 import type { CSSProperties } from "react";
 
 export const measureElemSize = (elem: HTMLInputElement | HTMLTextAreaElement) => {
+  const ZERO_WIDTH_SPACE = "\u200B";
+
   // span text.
   const text = elem.value === "" ? elem.placeholder : elem.value;
   const span = document.createElement("span");
-  span.innerText = text;
+  span.innerText = text + ZERO_WIDTH_SPACE;
 
   // span styles.
   const styles = window.getComputedStyle(elem);
   Object.assign(span.style, defaultStyles);
   for (const styleName of inheritedStyles) {
     Object.assign(span.style, { [styleName]: styles[styleName] });
-  }
-  if (elem instanceof HTMLTextAreaElement) {
-    const zeroWidthSpace = "\u200B";
-    span.innerText += zeroWidthSpace;
-    Object.assign(span.style, { whiteSpace: "pre-wrap" });
-    Object.assign(span.style, { minWidth: styles["minWidth"] });
-    Object.assign(span.style, { maxWidth: styles["maxWidth"] });
   }
 
   // span size.
