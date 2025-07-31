@@ -65,7 +65,7 @@ const defaultStyles: CSSProperties = {
   height: "0px",
   visibility: "hidden",
   overflow: "scroll",
-  whiteSpace: "pre",
+  whiteSpace: "pre", // equivalent to preserve nowrap.
 } as const;
 
 const inheritedStyles: Array<keyof CSSStyleDeclaration> = [

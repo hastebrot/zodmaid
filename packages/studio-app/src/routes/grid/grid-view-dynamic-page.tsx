@@ -40,6 +40,7 @@ export const GridViewDynamicPage = () => {
         "h-dvh p-4 bg-(--bg-base) text-(--fg-base)",
         "[scrollbar-color:var(--border-base)_var(--bg-base)]",
         "overflow-auto overscroll-contain",
+        // "[font-size-adjust:ex-height_0.5]",
         colorMode === "light" && [
           "[--bg-base:var(--color-gray-100)]",
           "[--border-base:var(--color-gray-400)]",
@@ -489,8 +490,8 @@ function renderCell<DataModel>(item?: DataModel, key?: string) {
   useEffect(() => {
     console.log("text value:", textValue);
   }, [textValue]);
-  const onKeyCommand = (name: string, event: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log("key command:", name, event);
+  const onKeyCommand = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    console.log("key command:", event.key, event);
   };
   return (
     <div className="flex items-center">
@@ -522,7 +523,7 @@ function renderCell<DataModel>(item?: DataModel, key?: string) {
 
 const FoldedValue = (props: { value: any }) => {
   return (
-    <div className="relative w-full h-[24px] min-w-[300px] overflow-hidden [font-size-adjust:ex-height_0.5]">
+    <div className="relative w-full h-[24px] min-w-[300px] overflow-hidden">
       <div className="absolute inset-0 px-1 w-full truncate text-(--cell-fg-muted)">
         {JSON.stringify(props.value, null, 1).slice(0, 1000)}
       </div>
