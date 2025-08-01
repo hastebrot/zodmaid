@@ -490,7 +490,7 @@ function renderCell<DataModel>(item?: DataModel, key?: string) {
   useEffect(() => {
     console.log("text value:", textValue);
   }, [textValue]);
-  const onKeyCommand = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const onKeyCommand = (event: React.KeyboardEvent<HTMLElement>) => {
     console.log("key command:", event.key, event);
   };
   return (
@@ -508,13 +508,16 @@ function renderCell<DataModel>(item?: DataModel, key?: string) {
           onValueChange={setTextValue}
           onKeyCommand={onKeyCommand}
         />
-        {/* <LexTextbox
+        {/* <IrisTextarea
           className={classNames(
             "outline-2 -outline-offset-1 outline-zinc-500 focus:outline-(--cell-outline-selected)",
-            "w-full",
+            "box-content min-w-full min-h-lh",
+            "resize-none whitespace-pre overflow-hidden",
           )}
+          placeholder="Empty"
           value={textValue}
           onValueChange={setTextValue}
+          onKeyCommand={onKeyCommand}
         /> */}
       </div>
     </div>

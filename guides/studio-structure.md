@@ -5,44 +5,47 @@
 
 ---
 
+- studio-app = react vite application
 - iris = document interface
 - octo (zodmaid) = diagram graph
 - tetra (zodspy) = data grid
-- proto (zodtana) = outline document
+- juxta (zodtana) = outline document
 - hepta (zodhepta) = whiteboard canvas
 - duo (zodbrat) = annotated text
+
+- ortho, inter, circa, peri, proto, forma, orbis, structa, forma
 
 ---
 
 - tetra grid view
-- proto grid view
+- juxta grid view
 
-- proto focus group
-- proto bullet button
-- proto outline button
-- proto tag button
-- proto action button
+- juxta focus group
+- juxta bullet button
+- juxta outline button
+- juxta tag button
+- juxta action button
 
-- proto node layout
-- proto list cell
-- proto field cell
-- proto table cell
+- juxta node layout
+- juxta list cell
+- juxta field cell
+- juxta table cell
 
-- proto data model
-- proto grid / row / cell
-- proto grid context
-- proto grid view
+- juxta data model
+- juxta grid / row / cell
+- juxta grid context
+- juxta grid view
 
-- proto cell context
-- proto cell renderer
+- juxta cell context
+- juxta cell renderer
   - owner / key
 
-- proto data mapper
+- juxta data mapper
   - populate rows
   - populate columns
 
-- proto style provider
-- proto node title / description / tag list
+- juxta style provider
+- juxta node title / description / tag list
 
 - iris toolbar
 - iris toolbar overlay

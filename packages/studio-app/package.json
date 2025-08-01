@@ -17,6 +17,8 @@
     "@antv/layout-wasm": "^1.4.2",
     "@antv/x6": "^2.18.1",
     "@fontsource/inter": "^5.2.6",
+    "@fontsource/source-serif-4": "^5.2.8",
+    "@fontsource/spline-sans-mono": "^5.2.6",
     "@fontsource/iosevka": "^5.2.5",
     "@fontsource/roboto-mono": "^5.2.6",
     "@react-aria/interactions": "^3.25.4",

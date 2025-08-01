@@ -8,28 +8,8 @@
       "name": "graphre",
       "version": "0.1.3",
     },
-    "packages/zodmaid": {
-      "name": "zodmaid",
-      "devDependencies": {
-        "@fontsource/inter": "^5.2.6",
-        "@resvg/resvg-js": "^2.6.2",
-        "@types/bun": "^1.2.19",
-        "@types/d3-shape": "^3.1.7",
-        "@types/dagre": "^0.7.53",
-        "@types/graphlib": "^2.1.12",
-        "d3-shape": "^3.2.0",
-        "dagre": "^0.8.5",
-        "graphlib": "^2.1.8",
-        "graphre": "workspace:*",
-        "prettier": "^3.6.2",
-        "zod": "^4.0.14",
-      },
-      "peerDependencies": {
-        "typescript": "^5.8.3",
-      },
-    },
-    "packages/zodmaid-app": {
-      "name": "zodmaid-app",
+    "packages/studio-app": {
+      "name": "studio-app",
       "dependencies": {
         "react": "^19.1.1",
         "react-dom": "^19.1.1",
@@ -41,6 +21,8 @@
         "@fontsource/inter": "^5.2.6",
         "@fontsource/iosevka": "^5.2.5",
         "@fontsource/roboto-mono": "^5.2.6",
+        "@fontsource/source-serif-4": "^5.2.8",
+        "@fontsource/spline-sans-mono": "^5.2.6",
         "@react-aria/interactions": "^3.25.4",
         "@std/fmt": "npm:@jsr/std__fmt@1.0.8",
         "@tabler/icons-sprite": "^3.34.1",
@@ -73,6 +55,26 @@
         "zod": "^4.0.14",
         "zodmaid": "workspace:*",
         "zodspy": "workspace:*",
+      },
+    },
+    "packages/zodmaid": {
+      "name": "zodmaid",
+      "devDependencies": {
+        "@fontsource/inter": "^5.2.6",
+        "@resvg/resvg-js": "^2.6.2",
+        "@types/bun": "^1.2.19",
+        "@types/d3-shape": "^3.1.7",
+        "@types/dagre": "^0.7.53",
+        "@types/graphlib": "^2.1.12",
+        "d3-shape": "^3.2.0",
+        "dagre": "^0.8.5",
+        "graphlib": "^2.1.8",
+        "graphre": "workspace:*",
+        "prettier": "^3.6.2",
+        "zod": "^4.0.14",
+      },
+      "peerDependencies": {
+        "typescript": "^5.8.3",
       },
     },
     "packages/zodspy": {
@@ -144,6 +146,10 @@
     "@fontsource/iosevka": ["@fontsource/iosevka@5.2.5", "", {}, "sha512-Zv/UHJodDug1LcnWv2u2+GPp3oWP3U6Xp16cJOsqqZQNsCu8sA/ttT331N0NypxBZ+7c8szlSRlYDcy9liZ8pw=="],
 
     "@fontsource/roboto-mono": ["@fontsource/roboto-mono@5.2.6", "", {}, "sha512-fLCa3zs9XruKE8Fdbq0UWB0wqTi5dzi09QsnW7HgTwwnSVDZ3nH+X7Qg7l0yeIZs+E472cKE3RUD21ZnaXk4Zg=="],
+
+    "@fontsource/source-serif-4": ["@fontsource/source-serif-4@5.2.8", "", {}, "sha512-Z8/igNA8UJ+QrFEaR2mk7oywizPSUuKhEurKpKpPnquKDOmCNAwBHYkIAyDtA91ZluiWf7jRcBl22d8pVagO6A=="],
+
+    "@fontsource/spline-sans-mono": ["@fontsource/spline-sans-mono@5.2.6", "", {}, "sha512-TPAQoRX/UH6qqd38stFqJvBcDw/E6Nqnm/b5qxr/fV7jhvsRjIxcC0GR7EdVqPOELVAy1HtmQtO/bDz5S9VbPw=="],
 
     "@formatjs/ecma402-abstract": ["@formatjs/ecma402-abstract@2.3.4", "", { "dependencies": { "@formatjs/fast-memoize": "2.2.7", "@formatjs/intl-localematcher": "0.6.1", "decimal.js": "^10.4.3", "tslib": "^2.8.0" } }, "sha512-qrycXDeaORzIqNhBOx0btnhpD1c+/qFIHAN9znofuMJX6QBwtbrmlpWfD4oiUUD2vJUOIYFA/gYtg2KAMGG7sA=="],
 
@@ -907,6 +913,8 @@
 
     "strip-literal": ["strip-literal@3.0.0", "", { "dependencies": { "js-tokens": "^9.0.1" } }, "sha512-TcccoMhJOM3OebGhSBEmp3UZ2SfDMZUEBdRA/9ynfLi8yYajyWX3JiXArcJt4Umh4vISpspkQIY8ZZoCqjbviA=="],
 
+    "studio-app": ["studio-app@workspace:packages/studio-app"],
+
     "supports-color": ["supports-color@8.1.1", "", { "dependencies": { "has-flag": "^4.0.0" } }, "sha512-MpUEN2OodtUzxvKQl72cUF7RQ5EiHsGvSsVG0ia9c5RbWGL2CI4C7EpPS8UTBIplnlzZiNuV56w+FuNxy3ty2Q=="],
 
     "tailwindcss": ["tailwindcss@4.1.11", "", {}, "sha512-2E9TBm6MDD/xKYe+dvJZAmg3yxIEDNRc0jwlNyDg/4Fil2QcSLjFKGVff0lAf1jjeaArlG/M75Ey/EYr/OJtBA=="],
@@ -970,8 +978,6 @@
     "zod": ["zod@4.0.14", "", {}, "sha512-nGFJTnJN6cM2v9kXL+SOBq3AtjQby3Mv5ySGFof5UGRHrRioSJ5iG680cYNjE/yWk671nROcpPj4hAS8nyLhSw=="],
 
     "zodmaid": ["zodmaid@workspace:packages/zodmaid"],
-
-    "zodmaid-app": ["zodmaid-app@workspace:packages/zodmaid-app"],
 
     "zodspy": ["zodspy@workspace:packages/zodspy"],
 
