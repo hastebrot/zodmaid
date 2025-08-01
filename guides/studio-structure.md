@@ -13,7 +13,7 @@
 - hepta (zodhepta) = whiteboard canvas
 - duo (zodbrat) = annotated text
 
-- ortho, inter, circa, peri, proto, forma, orbis, structa, forma
+- ortho, inter, circa, peri, proto, forma, structa, orbis
 
 ---
 
@@ -49,6 +49,8 @@
 
 - iris toolbar
 - iris toolbar overlay
+- iris input
+- iris textarea
 
 - hepta whiteboard
 - hepta card

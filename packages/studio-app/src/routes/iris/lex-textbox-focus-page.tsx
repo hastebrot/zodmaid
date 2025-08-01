@@ -162,3 +162,6 @@ const Items = observer((props: ItemsProps) => {
 
 // - juxta grid context
 // - juxta cell context
+
+// useTetraGridSelection()
+// type Position = { grid: string; row: number; column: number; }
