@@ -13,6 +13,7 @@ import { TanaDynamicPage } from "./grid/tana-dynamic-page";
 import { TanaStaticPage } from "./grid/tana-static-page";
 import { IrisColorsPage } from "./iris/iris-colors-page";
 import { IrisLayoutPage } from "./iris/iris-layout-page";
+import { LexTextboxFocusPage } from "./iris/lex-textbox-focus-page";
 import { LexTextboxPage } from "./iris/lex-textbox-page";
 
 // dagre, https://github.com/antvis/layout/blob/v5/packages/layout/src/dagre.ts
@@ -66,6 +67,7 @@ export const routes: RouteObject[] = [
       { path: "colors", Component: () => <IrisColorsPage /> },
       { path: "layout", Component: () => <IrisLayoutPage /> },
       { path: "textbox", Component: () => <LexTextboxPage /> },
+      { path: "textbox-focus", Component: () => <LexTextboxFocusPage /> },
     ],
   },
 ];

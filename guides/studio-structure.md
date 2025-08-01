@@ -1,55 +1,60 @@
-## zodspy structure
+## studio structure
 
 - non-interactive, static
 - interactive, dynamic
 
 ---
 
+- studio-app = react vite application
 - iris = document interface
-- zmaid = diagram graph
-- zspy = data grid
-- ztan = outline document
-- zhepta = whiteboard canvas
-- zbrat = annotated text
+- octo (zodmaid) = diagram graph
+- tetra (zodspy) = data grid
+- juxta (zodtana) = outline document
+- hepta (zodhepta) = whiteboard canvas
+- duo (zodbrat) = annotated text
+
+- ortho, inter, circa, peri, proto, forma, structa, orbis
 
 ---
 
-- zspy grid view
-- ztan grid view
+- tetra grid view
+- juxta grid view
 
-- ztan focus group
-- ztan bullet button
-- ztan outline button
-- ztan tag button
-- ztan action button
+- juxta focus group
+- juxta bullet button
+- juxta outline button
+- juxta tag button
+- juxta action button
 
-- ztan node layout
-- ztan list cell
-- ztan field cell
-- ztan table cell
+- juxta node layout
+- juxta list cell
+- juxta field cell
+- juxta table cell
 
-- ztan data model
-- ztan grid / row / cell
-- ztan grid context
-- ztan grid view
+- juxta data model
+- juxta grid / row / cell
+- juxta grid context
+- juxta grid view
 
-- ztan cell context
-- ztan cell renderer
+- juxta cell context
+- juxta cell renderer
   - owner / key
 
-- ztan data mapper
+- juxta data mapper
   - populate rows
   - populate columns
 
-- ztan style provider
-- ztan node title / description / tag list
+- juxta style provider
+- juxta node title / description / tag list
 
-- ztan toolbar
-- ztan toolbar overlay
+- iris toolbar
+- iris toolbar overlay
+- iris input
+- iris textarea
 
-- zhepta whiteboard
-- zhepta card
-- zhepta card group
+- hepta whiteboard
+- hepta card
+- hepta card group
 
 - iris screen layout
 - iris action list button

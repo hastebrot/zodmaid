@@ -8,7 +8,7 @@ export const IrisLayoutPage = () => {
       <div
         className={classNames(
           "h-dvh overscroll-contain overflow-auto",
-          "bg-(--bg-base) text-(--fg-base)",
+          "bg-(--bg-base) text-(--fg-base) border-(--border-base)",
           "[scrollbar-color:var(--border-base)_var(--bg-base)]",
         )}
       >
