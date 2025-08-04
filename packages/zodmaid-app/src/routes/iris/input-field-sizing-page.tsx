@@ -1,7 +1,9 @@
+import { useDocumentTitle } from "../../helpers/react";
 import { useFieldSizingInput } from "./input-field-sizing/use-field-sizing-input";
 import { useFieldSizingTextarea } from "./input-field-sizing/use-field-sizing-textarea";
 
 export const InputFieldSizingPage = () => {
+  useDocumentTitle("iris: input field sizing");
   const { inputRef } = useFieldSizingInput();
   const { textareaRef } = useFieldSizingTextarea();
 

@@ -1,19 +1,20 @@
 import { useEffect } from "react";
 import { useNavigate, type RouteObject } from "react-router";
-import { DiagramAntvPage } from "./diagram/diagram-antv-page";
-import { DiagramPage } from "./diagram/diagram-page";
-import { GridViewDynamicPage } from "./grid/grid-view-dynamic-page";
-import { GridViewStaticPage } from "./grid/grid-view-static-page";
-import { GridViewStyledPage } from "./grid/grid-view-styled-page";
-import { InputFieldSizingPage } from "./grid/input-field-sizing-page";
-import { MobxObserverPage } from "./grid/mobx-observer-page";
-import { MockupGridPage } from "./grid/mockup-grid-page";
-import { ReactDataGridPage } from "./grid/react-data-grid-page";
-import { TanaDynamicPage } from "./grid/tana-dynamic-page";
-import { TanaStaticPage } from "./grid/tana-static-page";
+import { InputFieldSizingPage } from "./iris/input-field-sizing-page";
 import { IrisColorsPage } from "./iris/iris-colors-page";
 import { IrisLayoutPage } from "./iris/iris-layout-page";
+import { LexTextboxFocusPage } from "./iris/lex-textbox-focus-page";
 import { LexTextboxPage } from "./iris/lex-textbox-page";
+import { OctoDiagramAntvPage } from "./octo/diagram-antv-page";
+import { OctoDiagramPage } from "./octo/diagram-page";
+import { GridViewDynamicPage } from "./tetra/grid-view-dynamic-page";
+import { GridViewStaticPage } from "./tetra/grid-view-static-page";
+import { GridViewStyledPage } from "./tetra/grid-view-styled-page";
+import { MobxObserverPage } from "./tetra/mobx-observer-page";
+import { MockupGridPage } from "./tetra/mockup-grid-page";
+import { ReactDataGridPage } from "./tetra/react-data-grid-page";
+import { TriDynamicPage } from "./tri/tri-dynamic-page";
+import { TriStaticPage } from "./tri/tri-static-page";
 
 // dagre, https://github.com/antvis/layout/blob/v5/packages/layout/src/dagre.ts
 // - uses @dagrejs/dagre, https://github.com/dagrejs/dagre
@@ -31,33 +32,10 @@ export const routes: RouteObject[] = [
     Component: () => {
       const navigate = useNavigate();
       useEffect(() => {
-        navigate("/grid/dynamic", { replace: true });
+        navigate("/tetra/grid-dynamic", { replace: true });
       }, []);
       return null;
     },
-  },
-  {
-    path: "/diagram",
-    children: [
-      // wrap.
-      { path: "", Component: () => <DiagramPage /> },
-      { path: "antv", Component: () => <DiagramAntvPage /> },
-    ],
-  },
-  {
-    path: "/grid",
-    children: [
-      // wrap.
-      { path: "dynamic", Component: () => <GridViewDynamicPage /> },
-      { path: "static", Component: () => <GridViewStaticPage /> },
-      { path: "styled", Component: () => <GridViewStyledPage /> },
-      { path: "mockup", Component: () => <MockupGridPage /> },
-      { path: "react-data-grid", Component: () => <ReactDataGridPage /> },
-      { path: "mobx", Component: () => <MobxObserverPage /> },
-      { path: "field-sizing", Component: () => <InputFieldSizingPage /> },
-      { path: "tana-static", Component: () => <TanaStaticPage /> },
-      { path: "tana-dynamic", Component: () => <TanaDynamicPage /> },
-    ],
   },
   {
     path: "/iris",
@@ -66,6 +44,36 @@ export const routes: RouteObject[] = [
       { path: "colors", Component: () => <IrisColorsPage /> },
       { path: "layout", Component: () => <IrisLayoutPage /> },
       { path: "textbox", Component: () => <LexTextboxPage /> },
+      { path: "textbox-focus", Component: () => <LexTextboxFocusPage /> },
+      { path: "input", Component: () => <InputFieldSizingPage /> },
+    ],
+  },
+  {
+    path: "/octo",
+    children: [
+      // wrap.
+      { path: "", Component: () => <OctoDiagramPage /> },
+      { path: "antv", Component: () => <OctoDiagramAntvPage /> },
+    ],
+  },
+  {
+    path: "/tetra",
+    children: [
+      // wrap.
+      { path: "grid-dynamic", Component: () => <GridViewDynamicPage /> },
+      { path: "grid-static", Component: () => <GridViewStaticPage /> },
+      { path: "grid-styled", Component: () => <GridViewStyledPage /> },
+      { path: "mockup", Component: () => <MockupGridPage /> },
+      { path: "react-data-grid", Component: () => <ReactDataGridPage /> },
+      { path: "mobx", Component: () => <MobxObserverPage /> },
+    ],
+  },
+  {
+    path: "/tri",
+    children: [
+      // wrap.
+      { path: "grid-static", Component: () => <TriStaticPage /> },
+      { path: "grid-dynamic", Component: () => <TriDynamicPage /> },
     ],
   },
 ];

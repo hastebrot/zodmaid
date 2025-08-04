@@ -25,8 +25,10 @@ import { musicLibrary } from "zodspy/examples/music-library";
 import { purchaseOrder } from "zodspy/examples/purchase-order";
 import { classNames } from "../../helpers/clsx";
 import { throwError } from "../../helpers/error";
+import { useDocumentTitle } from "../../helpers/react";
 
 export const GridViewDynamicPage = () => {
+  useDocumentTitle("tetra: grid view dynamic");
   const examples = {
     purchaseOrder,
     musicLibrary,
@@ -40,6 +42,7 @@ export const GridViewDynamicPage = () => {
         "h-dvh p-4 bg-(--bg-base) text-(--fg-base)",
         "[scrollbar-color:var(--border-base)_var(--bg-base)]",
         "overflow-auto overscroll-contain",
+        // "[font-size-adjust:ex-height_0.5]",
         colorMode === "light" && [
           "[--bg-base:var(--color-gray-100)]",
           "[--border-base:var(--color-gray-400)]",
@@ -485,34 +488,38 @@ function renderCell<DataModel>(item?: DataModel, key?: string) {
   const value = item[key as keyof DataModel];
   const type = determineJsonType(value);
   const text = type === "array" || type === "object" ? JSON.stringify(value) : String(value);
-  const [inputValue, setInputValue] = useState(text);
+  const [textValue, setTextValue] = useState(text);
   useEffect(() => {
-    console.log("input value:", inputValue);
-  }, [inputValue]);
-  const onKeyCommand = (name: string, event: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log("input command:", name, event);
+    console.log("text value:", textValue);
+  }, [textValue]);
+  const onKeyCommand = (event: React.KeyboardEvent<HTMLElement>) => {
+    console.log("key command:", event.key, event);
   };
   return (
     <div className="flex items-center">
       <JsonCellTypeButton type={type} />
       <div className="pr-1 w-full">
+        {/* {textValue} */}
         <IrisInput
           className={classNames(
             "outline-2 -outline-offset-1 outline-zinc-500 focus:outline-(--cell-outline-selected)",
-            "min-w-full min-h-lh",
+            "box-content min-w-full min-h-lh",
           )}
           placeholder="Empty"
-          value={inputValue}
-          onValueChange={setInputValue}
+          value={textValue}
+          onValueChange={setTextValue}
           onKeyCommand={onKeyCommand}
         />
-        {/* <LexTextbox
+        {/* <IrisTextarea
           className={classNames(
             "outline-2 -outline-offset-1 outline-zinc-500 focus:outline-(--cell-outline-selected)",
-            "w-full",
+            "box-content min-w-full min-h-lh",
+            "resize-none whitespace-pre overflow-hidden",
           )}
-          value={inputValue}
-          onValueChange={setInputValue}
+          placeholder="Empty"
+          value={textValue}
+          onValueChange={setTextValue}
+          onKeyCommand={onKeyCommand}
         /> */}
       </div>
     </div>
@@ -521,7 +528,7 @@ function renderCell<DataModel>(item?: DataModel, key?: string) {
 
 const FoldedValue = (props: { value: any }) => {
   return (
-    <div className="relative w-full h-[24px] min-w-[300px] overflow-hidden [font-size-adjust:ex-height_0.5]">
+    <div className="relative w-full h-[24px] min-w-[300px] overflow-hidden">
       <div className="absolute inset-0 px-1 w-full truncate text-(--cell-fg-muted)">
         {JSON.stringify(props.value, null, 1).slice(0, 1000)}
       </div>

@@ -1,10 +1,12 @@
 import { type CSSProperties } from "react";
 import { classNames } from "../../helpers/clsx";
+import { useDocumentTitle } from "../../helpers/react";
 
-export const TanaStaticPage = () => {
+export const TriStaticPage = () => {
+  useDocumentTitle("tri: grid view static");
   return (
     <div className="min-h-dvh overflow-auto p-8 bg-zinc-900 text-zinc-300">
-      <TanaTheme>
+      <TriTheme>
         <div className="flex flex-col gap-1.5 font-sans text-(size:--text-font-size)/(--text-line-height)">
           <div className="flex items-center gap-2.5">
             <OutlineBullet variant="point" />
@@ -281,12 +283,12 @@ export const TanaStaticPage = () => {
             </div>
           </OutlineList>
         </div>
-      </TanaTheme>
+      </TriTheme>
     </div>
   );
 };
 
-const TanaTheme = (props: { children?: React.ReactNode }) => {
+const TriTheme = (props: { children?: React.ReactNode }) => {
   const style = {
     "--bullet-size": "17px",
     "--bullet-field-size": "12px",

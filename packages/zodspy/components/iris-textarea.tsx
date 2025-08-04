@@ -1,58 +1,58 @@
 import { useControllableState } from "../hooks/use-controllable-state";
 import { useFieldSizingContent } from "../hooks/use-field-sizing-content";
 
-export type IrisInputProps = {
+export type IrisTextareaProps = {
   className?: string;
   style?: React.CSSProperties;
   placeholder?: string;
   defaultValue?: string;
   value?: string;
   onValueChange?: (value: string) => void;
-  onKeyCommand?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  onKeyCommand?: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void;
 };
 
-export const IrisInput = (props: IrisInputProps) => {
+export const IrisTextarea = (props: IrisTextareaProps) => {
   const [inputValue, setInputValue] = useControllableState({
     defaultValue: props.defaultValue,
     value: props.value,
     onChange: props.onValueChange,
   });
-  const { inputRef } = useFieldSizingContent();
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const { textAreaRef } = useFieldSizingContent();
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter") {
-      event.preventDefault();
+      // event.preventDefault();
       props.onKeyCommand?.(event);
     }
     if (event.key === "Escape") {
-      event.preventDefault();
+      // event.preventDefault();
       props.onKeyCommand?.(event);
     }
     if (event.key === "ArrowUp") {
-      event.preventDefault();
+      // event.preventDefault();
       props.onKeyCommand?.(event);
     }
     if (event.key === "ArrowDown") {
-      event.preventDefault();
+      // event.preventDefault();
       props.onKeyCommand?.(event);
     }
-    if (event.target instanceof HTMLInputElement) {
+    if (event.target instanceof HTMLTextAreaElement) {
       const value = event.target.value;
       const selectionStart = event.target.selectionStart;
       const selectionEnd = event.target.selectionEnd;
       if (event.key === "ArrowLeft" && selectionStart === 0) {
-        event.preventDefault();
+        // event.preventDefault();
         props.onKeyCommand?.(event);
       }
       if (event.key === "ArrowRight" && selectionEnd === value.length) {
-        event.preventDefault();
+        // event.preventDefault();
         props.onKeyCommand?.(event);
       }
     }
   };
 
   return (
-    <input
-      ref={inputRef}
+    <textarea
+      ref={textAreaRef}
       className={props.className}
       style={props.style}
       placeholder={props.placeholder}

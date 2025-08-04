@@ -2,8 +2,10 @@ import { Graph as DagreGraph } from "@antv/graphlib";
 import { AntVDagreLayout as DagreLayout, type EdgeData, type NodeData } from "@antv/layout";
 import { Graph } from "@antv/x6";
 import { useEffect, useRef } from "react";
+import { useDocumentTitle } from "../../helpers/react";
 
-export const DiagramAntvPage = () => {
+export const OctoDiagramAntvPage = () => {
+  useDocumentTitle("octo: diagram antv");
   const container = useRef<HTMLDivElement>(null);
   useEffect(() => {
     async function process() {

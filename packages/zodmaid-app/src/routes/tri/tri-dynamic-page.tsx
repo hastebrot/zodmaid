@@ -11,42 +11,44 @@ import {
   type BaseRowProps,
   type GridContextProps,
 } from "zodspy";
-import { TanaBullet } from "zodspy/components/tana/tana-bullet";
-import { TanaCellContext } from "zodspy/components/tana/tana-cell-context";
-import { TanaCellRenderer } from "zodspy/components/tana/tana-cell-renderer";
+import { TanaBullet } from "zodspy/components/tri/tana-bullet";
+import { TanaCellContext } from "zodspy/components/tri/tana-cell-context";
+import { TanaCellRenderer } from "zodspy/components/tri/tana-cell-renderer";
 import {
   iconAt,
   iconCheck,
   iconCode,
   iconCursorText,
   iconHash,
-} from "zodspy/components/tana/tana-icons";
+} from "zodspy/components/tri/tana-icons";
 import { musicLibrary } from "zodspy/examples/music-library";
 import { MusicLibrarySchema } from "zodspy/examples/music-library-schema";
 import { classNames } from "../../helpers/clsx";
+import { useDocumentTitle } from "../../helpers/react";
 
 // TODO: fold and unfold nodes.
 // TODO: toolbar with toggle overlay, floating toolbar overlay
 // TODO: state management with owner/key.
 
-export type TanaDataModel = {
+export type TriDataModel = {
   title: string;
   description?: string;
   type: string;
   tags?: string[];
-  items: TanaDataModel[];
+  items: TriDataModel[];
   isFolded?: boolean;
   useFieldView?: boolean;
   useTableView?: boolean;
 };
 
-export const TanaDynamicPage = () => {
+export const TriDynamicPage = () => {
+  useDocumentTitle("tri: grid view dynamic");
   useEffect(() => {
     const data = MusicLibrarySchema.parse(musicLibrary);
     const schema = z.toJSONSchema(MusicLibrarySchema);
     console.log(data, schema);
   }, []);
-  const rows: TanaDataModel[] = [
+  const rows: TriDataModel[] = [
     {
       title: "Person name",
       type: "node",
@@ -285,15 +287,15 @@ export const TanaDynamicPage = () => {
         ],
       )}
     >
-      <TanaTheme>
-        <TanaGridView value={rows} />
-      </TanaTheme>
+      <TriTheme>
+        <TriGridView value={rows} />
+      </TriTheme>
     </div>
   );
 };
 
-export const TanaGridView = (gridProps: { value: TanaDataModel[] }) => {
-  type DataModel = TanaDataModel;
+export const TriGridView = (gridProps: { value: TriDataModel[] }) => {
+  type DataModel = TriDataModel;
   const context = defineGridContext<DataModel>({
     label: "root",
     rows: gridProps.value,
@@ -312,8 +314,8 @@ export const TanaGridView = (gridProps: { value: TanaDataModel[] }) => {
           const hasTags = tags.length > 0;
           const hasTitle = title.trim() !== "";
           return (
-            <TanaNodeList>
-              <TanaNode>
+            <TriNodeList>
+              <TriNode>
                 <div className="flex items-center h-(--text-line-height)">
                   {type === "node" && (
                     <TanaBullet
@@ -324,27 +326,27 @@ export const TanaGridView = (gridProps: { value: TanaDataModel[] }) => {
                   )}
                   {type === "field:node" && (
                     <TanaBullet variant="field" color={true ? "cyan" : undefined}>
-                      <TanaBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
+                      <TriBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
                     </TanaBullet>
                   )}
                   {type === "field:email" && (
                     <TanaBullet variant="field" color={true ? "cyan" : undefined}>
-                      <TanaBulletIcon iconSlot={iconAt} />
+                      <TriBulletIcon iconSlot={iconAt} />
                     </TanaBullet>
                   )}
                   {type === "field:tag" && (
                     <TanaBullet variant="field">
-                      <TanaBulletIcon iconSlot={iconHash} />
+                      <TriBulletIcon iconSlot={iconHash} />
                     </TanaBullet>
                   )}
                   {type === "field:bool" && (
                     <TanaBullet variant="field">
-                      <TanaBulletIcon iconSlot={iconCheck} />
+                      <TriBulletIcon iconSlot={iconCheck} />
                     </TanaBullet>
                   )}
                   {type === "field:code" && (
                     <TanaBullet variant="field">
-                      <TanaBulletIcon iconSlot={iconCode} />
+                      <TriBulletIcon iconSlot={iconCode} />
                     </TanaBullet>
                   )}
                 </div>
@@ -364,17 +366,17 @@ export const TanaGridView = (gridProps: { value: TanaDataModel[] }) => {
                       hasOutline
                       color={hasTags ? "cyan" : undefined}
                     >
-                      <TanaBulletIcon iconSlot={iconHash} />
+                      <TriBulletIcon iconSlot={iconHash} />
                     </TanaBullet>
                   </div>
                 ))}
-              </TanaNode>
+              </TriNode>
               {type === "node" && items && (
-                <TanaNodeItems>
-                  <TanaGridView value={items} />
-                </TanaNodeItems>
+                <TriNodeItems>
+                  <TriGridView value={items} />
+                </TriNodeItems>
               )}
-            </TanaNodeList>
+            </TriNodeList>
           );
         },
       },
@@ -389,7 +391,7 @@ export const TanaGridView = (gridProps: { value: TanaDataModel[] }) => {
             <div>
               {type !== "node" && items && (
                 <div className={classNames(type === "field:code" && "font-mono")}>
-                  <TanaGridView value={items} />
+                  <TriGridView value={items} />
                 </div>
               )}
             </div>
@@ -402,7 +404,7 @@ export const TanaGridView = (gridProps: { value: TanaDataModel[] }) => {
         return <BaseGrid {...props} />;
       },
       Row(props) {
-        return <TanaRow {...props} />;
+        return <TriRow {...props} />;
       },
       Cell(props) {
         return (
@@ -427,7 +429,7 @@ export const TanaGridView = (gridProps: { value: TanaDataModel[] }) => {
   );
 };
 
-export const TanaTheme = (props: { children?: React.ReactNode }) => {
+export const TriTheme = (props: { children?: React.ReactNode }) => {
   const style = {
     "--text-font-size": "15px",
     "--text-line-height": "21px",
@@ -450,7 +452,7 @@ export const TanaTheme = (props: { children?: React.ReactNode }) => {
   );
 };
 
-export const TanaRow = (props: BaseRowProps) => {
+export const TriRow = (props: BaseRowProps) => {
   return (
     <BaseRow
       {...props}
@@ -459,15 +461,15 @@ export const TanaRow = (props: BaseRowProps) => {
   );
 };
 
-export const TanaNodeList = (props: { children?: React.ReactNode }) => {
+export const TriNodeList = (props: { children?: React.ReactNode }) => {
   return <div className="flex flex-col">{props.children}</div>;
 };
 
-export const TanaNode = (props: { children?: React.ReactNode }) => {
+export const TriNode = (props: { children?: React.ReactNode }) => {
   return <div className="flex items-start gap-2 py-[3px]">{props.children}</div>;
 };
 
-export const TanaNodeItems = (props: { children?: React.ReactNode }) => {
+export const TriNodeItems = (props: { children?: React.ReactNode }) => {
   return (
     <div className="relative flex flex-col gap-1.5 pl-[calc(var(--bullet-size)*2)]">
       <div className="absolute left-0 top-0 bottom-0 w-(--bullet-size) h-full flex justify-center">
@@ -478,7 +480,7 @@ export const TanaNodeItems = (props: { children?: React.ReactNode }) => {
   );
 };
 
-export const TanaNodeField = (props: { children?: React.ReactNode }) => {
+export const TriNodeField = (props: { children?: React.ReactNode }) => {
   return (
     <div
       className={classNames(
@@ -491,7 +493,7 @@ export const TanaNodeField = (props: { children?: React.ReactNode }) => {
   );
 };
 
-export const TanaBulletIcon = (props: { iconSlot?: React.ReactNode; style?: CSSProperties }) => {
+export const TriBulletIcon = (props: { iconSlot?: React.ReactNode; style?: CSSProperties }) => {
   return (
     <span
       className="flex size-(--bullet-icon-size) items-center justify-center"

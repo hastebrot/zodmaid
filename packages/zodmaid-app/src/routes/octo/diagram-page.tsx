@@ -10,8 +10,10 @@ import {
   type DiagramOptions,
   type DiagramType,
 } from "zodmaid";
+import { useDocumentTitle } from "../../helpers/react";
 
-export const DiagramPage = () => {
+export const OctoDiagramPage = () => {
+  useDocumentTitle("octo: diagram");
   const diagram: DiagramType = [
     node(id("main"), ["«api»", "main"]),
     node(id("events"), ["«topic»", "events"]),

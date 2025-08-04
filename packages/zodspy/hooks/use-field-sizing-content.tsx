@@ -1,38 +1,44 @@
-import { useLayoutEffect, useRef, type CSSProperties } from "react";
+import { useLayoutEffect, useRef, type CSSProperties, type RefObject } from "react";
 
-// tested with <input>. not tested with <input type="file">, <textarea>, <select>.
-export const useInputFieldSizing = () => {
+// tested with <input> and <textarea>.
+// not tested with <input type="file"> and <select>.
+export const useFieldSizingContent = () => {
   // `field-sizing: content` overrides the default preferred sizing of form elements.
   // This setting provides an easy way to configure text inputs to shrinkwrap their
   // content and grow as more text is entered. They stop expanding when they reach
   // maximum size limits (defined by the size of their containing element or set via
   // CSS), at which point scrolling is required to view all the content.
-  const ref = useRef<HTMLInputElement>(null);
+  const ref = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
   useLayoutEffect(() => {
     if (ref.current === null) return;
-    const input = ref.current;
-    function updateInputStyle() {
-      const size = measureInputSize(input);
-      input.style.width = size.width;
-      input.style.height = size.height;
+    const element = ref.current;
+    function updateElementStyle() {
+      const text = element.value === "" ? element.placeholder : element.value;
+      const size = measureElementSize(element, text);
+      element.style.width = size.width;
+      element.style.height = size.height;
     }
-    updateInputStyle();
-    input.addEventListener("input", updateInputStyle);
+    updateElementStyle();
+    element.addEventListener("input", updateElementStyle);
     return () => {
-      input.removeEventListener("input", updateInputStyle);
+      element.removeEventListener("input", updateElementStyle);
     };
   }, [ref]);
-  return { inputRef: ref };
+  return {
+    inputRef: ref as RefObject<HTMLInputElement | null>,
+    textAreaRef: ref as RefObject<HTMLTextAreaElement | null>,
+  };
 };
 
-export const measureInputSize = (input: HTMLInputElement) => {
+const measureElementSize = (elem: HTMLElement, text: string) => {
+  const ZERO_WIDTH_SPACE = "\u200B";
+
   // span text.
-  const text = input.value === "" ? input.placeholder : input.value;
   const span = document.createElement("span");
-  span.innerText = text;
+  span.innerText = text + ZERO_WIDTH_SPACE;
 
   // span styles.
-  const styles = window.getComputedStyle(input);
+  const styles = window.getComputedStyle(elem);
   Object.assign(span.style, defaultStyles);
   for (const styleName of inheritedStyles) {
     Object.assign(span.style, { [styleName]: styles[styleName] });
@@ -59,7 +65,7 @@ const defaultStyles: CSSProperties = {
   height: "0px",
   visibility: "hidden",
   overflow: "scroll",
-  whiteSpace: "pre",
+  whiteSpace: "pre", // equivalent to preserve nowrap.
 } as const;
 
 const inheritedStyles: Array<keyof CSSStyleDeclaration> = [
@@ -83,5 +89,5 @@ const toStyleLength = (length: string | number | null | void): string => {
   if (typeof length === "string") {
     return length;
   }
-  return "";
+  return "0px";
 };
