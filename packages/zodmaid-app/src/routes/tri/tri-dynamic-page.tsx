@@ -11,16 +11,16 @@ import {
   type BaseRowProps,
   type GridContextProps,
 } from "zodspy";
-import { TanaBullet } from "zodspy/components/tri/tana-bullet";
-import { TanaCellContext } from "zodspy/components/tri/tana-cell-context";
-import { TanaCellRenderer } from "zodspy/components/tri/tana-cell-renderer";
+import { TriBulletButton } from "zodspy/components/tri/tri-bullet-button";
+import { TriCellContext } from "zodspy/components/tri/tri-cell-context";
+import { TriCellRenderer } from "zodspy/components/tri/tri-cell-renderer";
 import {
   iconAt,
   iconCheck,
   iconCode,
   iconCursorText,
   iconHash,
-} from "zodspy/components/tri/tana-icons";
+} from "zodspy/components/tri/tri-icons";
 import { musicLibrary } from "zodspy/examples/music-library";
 import { MusicLibrarySchema } from "zodspy/examples/music-library-schema";
 import { classNames } from "../../helpers/clsx";
@@ -318,36 +318,36 @@ export const TriGridView = (gridProps: { value: TriDataModel[] }) => {
               <TriNode>
                 <div className="flex items-center h-(--text-line-height)">
                   {type === "node" && (
-                    <TanaBullet
+                    <TriBulletButton
                       variant="point"
                       color={!hasTitle ? "gray" : hasTags ? "cyan" : undefined}
                       hasOutline={isFolded}
                     />
                   )}
                   {type === "field:node" && (
-                    <TanaBullet variant="field" color={true ? "cyan" : undefined}>
+                    <TriBulletButton variant="field" color={true ? "cyan" : undefined}>
                       <TriBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
-                    </TanaBullet>
+                    </TriBulletButton>
                   )}
                   {type === "field:email" && (
-                    <TanaBullet variant="field" color={true ? "cyan" : undefined}>
+                    <TriBulletButton variant="field" color={true ? "cyan" : undefined}>
                       <TriBulletIcon iconSlot={iconAt} />
-                    </TanaBullet>
+                    </TriBulletButton>
                   )}
                   {type === "field:tag" && (
-                    <TanaBullet variant="field">
+                    <TriBulletButton variant="field">
                       <TriBulletIcon iconSlot={iconHash} />
-                    </TanaBullet>
+                    </TriBulletButton>
                   )}
                   {type === "field:bool" && (
-                    <TanaBullet variant="field">
+                    <TriBulletButton variant="field">
                       <TriBulletIcon iconSlot={iconCheck} />
-                    </TanaBullet>
+                    </TriBulletButton>
                   )}
                   {type === "field:code" && (
-                    <TanaBullet variant="field">
+                    <TriBulletButton variant="field">
                       <TriBulletIcon iconSlot={iconCode} />
-                    </TanaBullet>
+                    </TriBulletButton>
                   )}
                 </div>
                 <div className="flex flex-col">
@@ -360,14 +360,14 @@ export const TriGridView = (gridProps: { value: TriDataModel[] }) => {
                 </div>
                 {tags?.map((tag) => (
                   <div key={tag} className="flex items-center h-(--text-line-height)">
-                    <TanaBullet
+                    <TriBulletButton
                       variant="action"
                       textSlot={tag}
                       hasOutline
                       color={hasTags ? "cyan" : undefined}
                     >
                       <TriBulletIcon iconSlot={iconHash} />
-                    </TanaBullet>
+                    </TriBulletButton>
                   </div>
                 ))}
               </TriNode>
@@ -408,15 +408,15 @@ export const TriGridView = (gridProps: { value: TriDataModel[] }) => {
       },
       Cell(props) {
         return (
-          <TanaCellContext value={{ cellProps: props as BaseCellProps }}>
+          <TriCellContext value={{ cellProps: props as BaseCellProps }}>
             <BaseCell
               {...props}
               className={classNames("relative grid cursor-auto text-nowrap")}
               style={props.style}
             >
-              <TanaCellRenderer />
+              <TriCellRenderer />
             </BaseCell>
-          </TanaCellContext>
+          </TriCellContext>
         );
       },
     },
