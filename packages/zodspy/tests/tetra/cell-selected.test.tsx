@@ -22,7 +22,7 @@ beforeEach(() => {
   cleanup();
 });
 
-describe("json grid view", () => {
+describe("tetra grid view", () => {
   describe("cell selected", () => {
     test("two columns", async () => {
       // given:

@@ -6,7 +6,7 @@ import {
 import { purchaseOrder } from "../../examples/purchase-order";
 import { throwError } from "../../helpers/error";
 
-describe("json grid view", () => {
+describe("tetra grid view", () => {
   describe("map json grid rows", () => {
     test("purchaseOrder", () => {
       // given:

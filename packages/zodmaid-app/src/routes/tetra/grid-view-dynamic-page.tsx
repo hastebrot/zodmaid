@@ -72,173 +72,193 @@ export const GridViewDynamicPage = () => {
         </button>
       </div>
       <div className="w-fit h-fit">
-        <GridViewForRoot key={exampleName} value={examples[exampleName]} theme={colorMode} />
+        <TetraGridViewJsonRoot key={exampleName} value={examples[exampleName]} theme={colorMode} />
       </div>
     </div>
   );
 };
 
-const GridViewForRoot = observer((gridProps: { value: JsonObject; theme?: "light" | "dark" }) => {
-  type DataModel = JsonDataModel;
-  const [rows] = useState(() =>
-    observable([{ type: "object", key: "", value: gridProps.value, isFolded: false }]),
-  );
-  const context = defineGridContext<DataModel>({
-    label: "root",
-    rows,
-    columns: [
-      {
-        label: "key",
-        width: "minmax(55px, max-content)",
-        cellRenderer(props) {
-          const row = props.data.row ?? throwError("row is undefined");
-          return (
-            <Observer>
-              {() => (
-                <JsonCellLayout
-                  prefixSlot={
-                    <TetraExpandButton
-                      isExpanded={!row.isFolded}
-                      setExpanded={action((isExpanded) => {
-                        row.isFolded = !isExpanded;
-                      })}
-                    />
-                  }
-                  primarySlot={<TetraJsonTypeButton type="object" />}
-                />
-              )}
-            </Observer>
-          );
+const TetraGridViewJsonRoot = observer(
+  (gridProps: { value: JsonObject; theme?: "light" | "dark" }) => {
+    type DataModel = JsonDataModel;
+    const [rows] = useState(() =>
+      observable([{ type: "object", key: "", value: gridProps.value, isFolded: false }]),
+    );
+    const context = defineGridContext<DataModel>({
+      label: "root",
+      rows,
+      columns: [
+        {
+          label: "key",
+          width: "minmax(55px, max-content)",
+          cellRenderer(props) {
+            const row = props.data.row ?? throwError("row is undefined");
+            return (
+              <Observer>
+                {() => (
+                  <JsonCellLayout
+                    prefixSlot={
+                      <TetraExpandButton
+                        isExpanded={!row.isFolded}
+                        setExpanded={action((isExpanded) => {
+                          row.isFolded = !isExpanded;
+                        })}
+                      />
+                    }
+                    primarySlot={<TetraJsonTypeButton type="object" />}
+                  />
+                )}
+              </Observer>
+            );
+          },
         },
-      },
-      {
-        label: "value",
-        width: "max-content",
-        cellRenderer(props) {
-          const row = props.data.row ?? throwError("row is undefined");
-          const value = row.value;
-          return (
-            <Observer>
-              {() => {
-                if (row.isFolded) {
-                  return <FoldedValue value={value} />;
-                }
-                if (props.data.row?.key === "") {
-                  return (
-                    <JsonGridCellLayout
-                      gridSlot={
-                        <GridViewForObject value={gridProps.value} theme={gridProps.theme} />
-                      }
-                    />
-                  );
-                }
-                return null;
-              }}
-            </Observer>
-          );
-        },
-      },
-    ],
-    elements: {
-      Grid(props) {
-        return <TetraGrid {...props} theme={gridProps.theme} />;
-      },
-      Row: TetraRow,
-      Cell(props) {
-        if (props.data.column?.label === "key") {
-          return <TetraCell {...props} gridRowOffset={0} gridColumnLimit={-1} />;
-        }
-        if (props.data.column?.label === "value") {
-          return <TetraCell {...props} gridRowOffset={1} />;
-        }
-        return <TetraCell {...props} />;
-      },
-    },
-  });
-  return <TetraGridView context={context as GridContextProps} />;
-});
-
-const GridViewForObject = observer((gridProps: { value: JsonObject; theme?: "light" | "dark" }) => {
-  type DataModel = JsonDataModel;
-  const [rows] = useState(() => observable(mapJsonToGridRows(gridProps.value)));
-  const context = defineGridContext<DataModel>({
-    label: "object",
-    rows,
-    columns: [
-      {
-        label: "key",
-        width: "minmax(55px, max-content)",
-        cellRenderer(props) {
-          const row = props.data.row ?? throwError("row is undefined");
-          return (
-            <Observer>
-              {() => {
-                const type = row.type;
-                const key = String(row.key);
-                if (type === "object" || type === "array") {
-                  return (
-                    <JsonCellLayout
-                      prefixSlot={
-                        <TetraExpandButton
-                          isExpanded={!row.isFolded}
-                          setExpanded={action((isExpanded) => {
-                            row.isFolded = !isExpanded;
-                          })}
-                        />
-                      }
-                      primarySlot={
-                        <div className="flex items-center">
-                          <TetraJsonTypeButton type={type} />
-                          <div className="pr-1.5 font-[700]">{key}</div>
-                        </div>
-                      }
-                    />
-                  );
-                }
-                return (
-                  <div className="flex items-center">
-                    <div className="px-1.5 font-[700]">{key}</div>
-                  </div>
-                );
-              }}
-            </Observer>
-          );
-        },
-      },
-      {
-        label: "value",
-        width: "1fr",
-        cellRenderer(props) {
-          const row = props.data.row ?? throwError("row is undefined");
-          return (
-            <Observer>
-              {() => {
-                const type = row.type;
-                const value = row.value;
-                if (type === "object") {
+        {
+          label: "value",
+          width: "max-content",
+          cellRenderer(props) {
+            const row = props.data.row ?? throwError("row is undefined");
+            const value = row.value;
+            return (
+              <Observer>
+                {() => {
                   if (row.isFolded) {
                     return <FoldedValue value={value} />;
                   }
-                  return (
-                    <JsonGridCellLayout
-                      gridSlot={
-                        <GridViewForObject value={value as JsonObject} theme={gridProps.theme} />
-                      }
-                    />
-                  );
-                }
-                if (type === "array") {
-                  if (row.isFolded) {
-                    return <FoldedValue value={value} />;
-                  }
-                  const hasArrayObjects = (value as JsonArray).every(
-                    (it) => determineJsonType(it) === "object",
-                  );
-                  if (hasArrayObjects) {
+                  if (props.data.row?.key === "") {
                     return (
                       <JsonGridCellLayout
                         gridSlot={
-                          <GridViewForArrayTable
+                          <TetraGridViewJsonObject
+                            value={gridProps.value}
+                            theme={gridProps.theme}
+                          />
+                        }
+                      />
+                    );
+                  }
+                  return null;
+                }}
+              </Observer>
+            );
+          },
+        },
+      ],
+      elements: {
+        Grid(props) {
+          return <TetraGrid {...props} theme={gridProps.theme} />;
+        },
+        Row: TetraRow,
+        Cell(props) {
+          if (props.data.column?.label === "key") {
+            return <TetraCell {...props} gridRowOffset={0} gridColumnLimit={-1} />;
+          }
+          if (props.data.column?.label === "value") {
+            return <TetraCell {...props} gridRowOffset={1} />;
+          }
+          return <TetraCell {...props} />;
+        },
+      },
+    });
+    return <TetraGridView context={context as GridContextProps} />;
+  },
+);
+
+const TetraGridViewJsonObject = observer(
+  (gridProps: { value: JsonObject; theme?: "light" | "dark" }) => {
+    type DataModel = JsonDataModel;
+    const [rows] = useState(() => observable(mapJsonToGridRows(gridProps.value)));
+    const context = defineGridContext<DataModel>({
+      label: "object",
+      rows,
+      columns: [
+        {
+          label: "key",
+          width: "minmax(55px, max-content)",
+          cellRenderer(props) {
+            const row = props.data.row ?? throwError("row is undefined");
+            return (
+              <Observer>
+                {() => {
+                  const type = row.type;
+                  const key = String(row.key);
+                  if (type === "object" || type === "array") {
+                    return (
+                      <JsonCellLayout
+                        prefixSlot={
+                          <TetraExpandButton
+                            isExpanded={!row.isFolded}
+                            setExpanded={action((isExpanded) => {
+                              row.isFolded = !isExpanded;
+                            })}
+                          />
+                        }
+                        primarySlot={
+                          <div className="flex items-center">
+                            <TetraJsonTypeButton type={type} />
+                            <div className="pr-1.5 font-[700]">{key}</div>
+                          </div>
+                        }
+                      />
+                    );
+                  }
+                  return (
+                    <div className="flex items-center">
+                      <div className="px-1.5 font-[700]">{key}</div>
+                    </div>
+                  );
+                }}
+              </Observer>
+            );
+          },
+        },
+        {
+          label: "value",
+          width: "1fr",
+          cellRenderer(props) {
+            const row = props.data.row ?? throwError("row is undefined");
+            return (
+              <Observer>
+                {() => {
+                  const type = row.type;
+                  const value = row.value;
+                  if (type === "object") {
+                    if (row.isFolded) {
+                      return <FoldedValue value={value} />;
+                    }
+                    return (
+                      <JsonGridCellLayout
+                        gridSlot={
+                          <TetraGridViewJsonObject
+                            value={value as JsonObject}
+                            theme={gridProps.theme}
+                          />
+                        }
+                      />
+                    );
+                  }
+                  if (type === "array") {
+                    if (row.isFolded) {
+                      return <FoldedValue value={value} />;
+                    }
+                    const hasArrayObjects = (value as JsonArray).every(
+                      (it) => determineJsonType(it) === "object",
+                    );
+                    if (hasArrayObjects) {
+                      return (
+                        <JsonGridCellLayout
+                          gridSlot={
+                            <TetraGridViewJsonArrayTable
+                              value={value as JsonArray}
+                              theme={gridProps.theme}
+                            />
+                          }
+                        />
+                      );
+                    }
+                    return (
+                      <JsonGridCellLayout
+                        gridSlot={
+                          <TetraGridViewJsonArray
                             value={value as JsonArray}
                             theme={gridProps.theme}
                           />
@@ -246,158 +266,156 @@ const GridViewForObject = observer((gridProps: { value: JsonObject; theme?: "lig
                       />
                     );
                   }
-                  return (
-                    <JsonGridCellLayout
-                      gridSlot={
-                        <GridViewForArray value={value as JsonArray} theme={gridProps.theme} />
-                      }
-                    />
-                  );
-                }
-                return renderCell(props.data.row, props.data.column?.label);
-              }}
-            </Observer>
-          );
+                  return renderCell(props.data.row, props.data.column?.label);
+                }}
+              </Observer>
+            );
+          },
+        },
+      ],
+      elements: {
+        Grid(props) {
+          return <TetraGrid {...props} theme={gridProps.theme} />;
+        },
+        Row: TetraRow,
+        Cell(props) {
+          const type = props.data.row?.type;
+          if (type === "object" || type === "array") {
+            if (props.data.column?.label === "key") {
+              return <TetraCell {...props} gridRowOffset={0} gridColumnLimit={-1} />;
+            }
+            if (props.data.column?.label === "value") {
+              return <TetraCell {...props} gridRowOffset={1} />;
+            }
+          }
+          return <TetraCell {...props} />;
         },
       },
-    ],
-    elements: {
-      Grid(props) {
-        return <TetraGrid {...props} theme={gridProps.theme} />;
-      },
-      Row: TetraRow,
-      Cell(props) {
-        const type = props.data.row?.type;
-        if (type === "object" || type === "array") {
-          if (props.data.column?.label === "key") {
-            return <TetraCell {...props} gridRowOffset={0} gridColumnLimit={-1} />;
-          }
-          if (props.data.column?.label === "value") {
-            return <TetraCell {...props} gridRowOffset={1} />;
-          }
-        }
-        return <TetraCell {...props} />;
-      },
-    },
-  });
-  return <TetraGridView context={context as GridContextProps} />;
-});
+    });
+    return <TetraGridView context={context as GridContextProps} />;
+  },
+);
 
-const GridViewForArray = observer((gridProps: { value: JsonArray; theme?: "light" | "dark" }) => {
-  type DataModel = JsonDataModel;
-  const [rows] = useState(() => observable(mapJsonToGridRows(gridProps.value)));
-  const context = defineGridContext<DataModel>({
-    label: "array",
-    rows,
-    columns: [
-      {
-        label: "key",
-        width: "minmax(55px, max-content)",
-        cellRenderer(props) {
-          const row = props.data.row ?? throwError("row is undefined");
-          return (
-            <Observer>
-              {() => {
-                const type = row.type;
-                const index = Number(row.key) + 1;
-                if (type === "object" || type === "array") {
-                  return (
-                    <JsonCellLayout
-                      prefixSlot={
-                        <TetraExpandButton
-                          isExpanded={!row.isFolded}
-                          setExpanded={action((isExpanded) => {
-                            row.isFolded = !isExpanded;
-                          })}
-                        />
-                      }
-                      primarySlot={
-                        <div className="flex items-center">
-                          <TetraJsonTypeButton type={type} />
-                          <div className="pr-1.5 font-[700] text-(--cell-fg-muted)">{index}</div>
-                        </div>
-                      }
-                    />
-                  );
-                }
-                return (
-                  <div className="flex items-center">
-                    <div className="px-1.5 font-[700] text-(--cell-fg-muted)">{index}</div>
-                  </div>
-                );
-              }}
-            </Observer>
-          );
-        },
-      },
-      {
-        label: "value",
-        width: "1fr",
-        cellRenderer(props) {
-          const row = props.data.row ?? throwError("row is undefined");
-          return (
-            <Observer>
-              {() => {
-                const type = row.type;
-                const value = row.value;
-                if (type === "object") {
-                  if (row.isFolded) {
-                    return <FoldedValue value={value} />;
+const TetraGridViewJsonArray = observer(
+  (gridProps: { value: JsonArray; theme?: "light" | "dark" }) => {
+    type DataModel = JsonDataModel;
+    const [rows] = useState(() => observable(mapJsonToGridRows(gridProps.value)));
+    const context = defineGridContext<DataModel>({
+      label: "array",
+      rows,
+      columns: [
+        {
+          label: "key",
+          width: "minmax(55px, max-content)",
+          cellRenderer(props) {
+            const row = props.data.row ?? throwError("row is undefined");
+            return (
+              <Observer>
+                {() => {
+                  const type = row.type;
+                  const index = Number(row.key) + 1;
+                  if (type === "object" || type === "array") {
+                    return (
+                      <JsonCellLayout
+                        prefixSlot={
+                          <TetraExpandButton
+                            isExpanded={!row.isFolded}
+                            setExpanded={action((isExpanded) => {
+                              row.isFolded = !isExpanded;
+                            })}
+                          />
+                        }
+                        primarySlot={
+                          <div className="flex items-center">
+                            <TetraJsonTypeButton type={type} />
+                            <div className="pr-1.5 font-[700] text-(--cell-fg-muted)">{index}</div>
+                          </div>
+                        }
+                      />
+                    );
                   }
                   return (
-                    <JsonGridCellLayout
-                      gridSlot={
-                        <GridViewForObject
-                          value={row.value as JsonObject}
-                          theme={gridProps.theme}
-                        />
-                      }
-                    />
+                    <div className="flex items-center">
+                      <div className="px-1.5 font-[700] text-(--cell-fg-muted)">{index}</div>
+                    </div>
                   );
-                }
-                if (type === "array") {
-                  if (row.isFolded) {
-                    return <FoldedValue value={value} />;
+                }}
+              </Observer>
+            );
+          },
+        },
+        {
+          label: "value",
+          width: "1fr",
+          cellRenderer(props) {
+            const row = props.data.row ?? throwError("row is undefined");
+            return (
+              <Observer>
+                {() => {
+                  const type = row.type;
+                  const value = row.value;
+                  if (type === "object") {
+                    if (row.isFolded) {
+                      return <FoldedValue value={value} />;
+                    }
+                    return (
+                      <JsonGridCellLayout
+                        gridSlot={
+                          <TetraGridViewJsonObject
+                            value={row.value as JsonObject}
+                            theme={gridProps.theme}
+                          />
+                        }
+                      />
+                    );
                   }
-                  return (
-                    <JsonGridCellLayout
-                      gridSlot={
-                        <GridViewForArray value={row.value as JsonArray} theme={gridProps.theme} />
-                      }
-                    />
-                  );
-                }
-                return renderCell(props.data.row, props.data.column?.label);
-              }}
-            </Observer>
-          );
+                  if (type === "array") {
+                    if (row.isFolded) {
+                      return <FoldedValue value={value} />;
+                    }
+                    return (
+                      <JsonGridCellLayout
+                        gridSlot={
+                          <TetraGridViewJsonArray
+                            value={row.value as JsonArray}
+                            theme={gridProps.theme}
+                          />
+                        }
+                      />
+                    );
+                  }
+                  return renderCell(props.data.row, props.data.column?.label);
+                }}
+              </Observer>
+            );
+          },
+        },
+      ],
+      elements: {
+        Grid(props) {
+          return <TetraGrid {...props} theme={gridProps.theme} />;
+        },
+        Row: TetraRow,
+        Cell(props) {
+          const type = props.data.row?.type;
+          const isObjectOrArray = type === "object" || type === "array";
+          if (isObjectOrArray) {
+            if (props.data.column?.label === "key") {
+              return <TetraCell {...props} gridRowOffset={0} gridColumnLimit={-1} />;
+            }
+            if (props.data.column?.label === "value") {
+              return <TetraCell {...props} gridRowOffset={1} />;
+            }
+          }
+          return <TetraCell {...props} />;
         },
       },
-    ],
-    elements: {
-      Grid(props) {
-        return <TetraGrid {...props} theme={gridProps.theme} />;
-      },
-      Row: TetraRow,
-      Cell(props) {
-        const type = props.data.row?.type;
-        const isObjectOrArray = type === "object" || type === "array";
-        if (isObjectOrArray) {
-          if (props.data.column?.label === "key") {
-            return <TetraCell {...props} gridRowOffset={0} gridColumnLimit={-1} />;
-          }
-          if (props.data.column?.label === "value") {
-            return <TetraCell {...props} gridRowOffset={1} />;
-          }
-        }
-        return <TetraCell {...props} />;
-      },
-    },
-  });
-  return <TetraGridView context={context as GridContextProps} />;
-});
+    });
+    return <TetraGridView context={context as GridContextProps} />;
+  },
+);
 
-const GridViewForArrayTable = (gridProps: { value: JsonArray; theme?: "light" | "dark" }) => {
+const TetraGridViewJsonArrayTable = (gridProps: { value: JsonArray; theme?: "light" | "dark" }) => {
   type DataModel = JsonDataModel[];
   const [rows] = useState(() => observable(mapJsonToTableRows(gridProps.value)));
   const columns: GridColumn<DataModel>[] = rows[0].map((column, columnIndex) => {
@@ -451,14 +469,18 @@ const GridViewForArrayTable = (gridProps: { value: JsonArray; theme?: "light" | 
         if (type === "object") {
           return (
             <JsonGridCellLayout
-              gridSlot={<GridViewForObject value={value as JsonObject} theme={gridProps.theme} />}
+              gridSlot={
+                <TetraGridViewJsonObject value={value as JsonObject} theme={gridProps.theme} />
+              }
             />
           );
         }
         if (type === "array") {
           return (
             <JsonGridCellLayout
-              gridSlot={<GridViewForArray value={value as JsonArray} theme={gridProps.theme} />}
+              gridSlot={
+                <TetraGridViewJsonArray value={value as JsonArray} theme={gridProps.theme} />
+              }
             />
           );
         }

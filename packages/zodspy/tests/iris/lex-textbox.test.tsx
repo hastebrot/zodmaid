@@ -10,10 +10,10 @@ import {
 } from "lexical";
 import { act } from "react";
 import { beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
-import { LexTextbox } from "../components/lex-textbox";
-import { throwError } from "../helpers/error";
-import { registerGlobals } from "./register-globals";
-import { registerMatchers } from "./register-matchers";
+import { LexTextbox } from "../../components/lex-textbox";
+import { throwError } from "../../helpers/error";
+import { registerGlobals } from "./../register-globals";
+import { registerMatchers } from "./../register-matchers";
 
 beforeAll(() => {
   registerGlobals();
