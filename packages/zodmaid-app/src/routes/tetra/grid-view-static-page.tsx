@@ -2,16 +2,16 @@ import { Fragment } from "react";
 import {
   defineGridContext,
   determineJsonType,
-  JsonCellExpandButton,
   JsonCellLayout,
-  JsonCellRenderer,
-  JsonCellTableButton,
   JsonGridCellLayout,
   TetraCell,
+  TetraCellRenderer,
+  TetraExpandButton,
   TetraGrid,
   TetraGridView,
   TetraJsonTypeButton,
   TetraRow,
+  TetraTableViewButton,
   type GridContextProps,
 } from "zodspy";
 import { useDocumentTitle } from "../../helpers/react";
@@ -45,7 +45,7 @@ const GridViewForRoot = () => {
         cellRenderer(props) {
           return (
             <JsonCellLayout
-              prefixSlot={<JsonCellExpandButton isExpanded={props.data.rowIndex === 4} />}
+              prefixSlot={<TetraExpandButton isExpanded={props.data.rowIndex === 4} />}
               primarySlot={<TetraJsonTypeButton type="object" />}
             />
           );
@@ -150,7 +150,7 @@ const GridViewForOrder = () => {
       Cell(props) {
         return (
           <TetraCell {...props}>
-            <JsonCellRenderer />
+            <TetraCellRenderer />
           </TetraCell>
         );
       },
@@ -229,7 +229,7 @@ const GridViewForItems = (_props: { columnOffset?: number; rowOffset?: number })
       Cell(props) {
         return (
           <TetraCell {...props}>
-            <JsonCellRenderer />
+            <TetraCellRenderer />
           </TetraCell>
         );
       },
@@ -264,9 +264,9 @@ const GridViewForShipTo = (_props: { columnOffset?: number; rowOffset?: number }
         cellRenderer(props) {
           return (
             <JsonCellLayout
-              prefixSlot={<JsonCellExpandButton isExpanded={props.data.rowIndex === 4} />}
+              prefixSlot={<TetraExpandButton isExpanded={props.data.rowIndex === 4} />}
               primarySlot={renderCell(props.data.row, props.data.column?.label)}
-              secondarySlot={props.data.rowIndex === 4 && <JsonCellTableButton />}
+              secondarySlot={props.data.rowIndex === 4 && <TetraTableViewButton />}
             />
           );
         },
@@ -313,7 +313,7 @@ const GridViewForShipTo = (_props: { columnOffset?: number; rowOffset?: number }
         if (column.label === "key" && props.data.rowIndex === 4) {
           return (
             <TetraCell {...props} gridRowOffset={0} gridColumnLimit={-1}>
-              <JsonCellRenderer />
+              <TetraCellRenderer />
             </TetraCell>
           );
         }
@@ -321,16 +321,16 @@ const GridViewForShipTo = (_props: { columnOffset?: number; rowOffset?: number }
           return (
             <TetraCell {...props} gridRowOffset={1}>
               <div className="flex flex-col">
-                <JsonCellRenderer />
-                <JsonCellRenderer />
-                <JsonCellRenderer />
+                <TetraCellRenderer />
+                <TetraCellRenderer />
+                <TetraCellRenderer />
               </div>
             </TetraCell>
           );
         }
         return (
           <TetraCell {...props}>
-            <JsonCellRenderer />
+            <TetraCellRenderer />
           </TetraCell>
         );
       },

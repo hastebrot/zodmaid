@@ -1,13 +1,13 @@
 import { classNames } from "../../helpers/clsx";
 import { useControllableState } from "../../hooks/use-controllable-state";
 
-export type JsonCellExpandButtonProps = {
+export type TetraExpandButtonProps = {
   defaultExpanded?: boolean;
   isExpanded?: boolean;
   setExpanded?: (isExpanded: boolean) => void;
 };
 
-export const JsonCellExpandButton = (props: JsonCellExpandButtonProps) => {
+export const TetraExpandButton = (props: TetraExpandButtonProps) => {
   const [isExpanded, setExpanded] = useControllableState({
     defaultValue: props.defaultExpanded ?? true,
     value: props.isExpanded,

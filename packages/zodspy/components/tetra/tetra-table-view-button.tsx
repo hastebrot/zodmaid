@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { classNames } from "../../helpers/clsx";
 
-export type JsonCellTableButtonProps = {
+export type TetraTableViewButtonProps = {
   isSelected?: boolean;
 };
 
-export const JsonCellTableButton = (props: JsonCellTableButtonProps) => {
+export const TetraTableViewButton = (props: TetraTableViewButtonProps) => {
   const [isSelected, setSelected] = useState(props.isSelected);
 
   return (

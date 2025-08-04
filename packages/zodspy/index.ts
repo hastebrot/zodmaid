@@ -20,11 +20,10 @@ export { TetraCell } from "./components/tetra-cell";
 export { TetraGrid } from "./components/tetra-grid";
 export { TetraGridView } from "./components/tetra-grid-view";
 export { TetraRow } from "./components/tetra-row";
-export { JsonCellExpandButton } from "./components/tetra/json-cell-expand-button";
 export { JsonCellLayout } from "./components/tetra/json-cell-layout";
-export { JsonCellRenderer } from "./components/tetra/json-cell-renderer";
-export { JsonCellTableButton } from "./components/tetra/json-cell-table-button";
 export { JsonGridCellLayout } from "./components/tetra/json-grid-cell-layout";
+export { TetraCellRenderer } from "./components/tetra/tetra-cell-renderer";
+export { TetraExpandButton } from "./components/tetra/tetra-expand-button";
 export {
   mapJsonToGridRows,
   mapJsonToTableRows,
@@ -34,3 +33,4 @@ export {
   type JsonValue,
 } from "./components/tetra/tetra-json-data-mapper";
 export { determineJsonType, TetraJsonTypeButton } from "./components/tetra/tetra-json-type-button";
+export { TetraTableViewButton } from "./components/tetra/tetra-table-view-button";

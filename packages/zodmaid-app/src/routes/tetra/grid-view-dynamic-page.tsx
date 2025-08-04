@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import {
   defineGridContext,
   determineJsonType,
-  JsonCellExpandButton,
   JsonCellLayout,
   JsonGridCellLayout,
   mapJsonToGridRows,
   mapJsonToTableRows,
   TetraCell,
+  TetraExpandButton,
   TetraGrid,
   TetraGridView,
   TetraJsonTypeButton,
@@ -97,7 +97,7 @@ const GridViewForRoot = observer((gridProps: { value: JsonObject; theme?: "light
               {() => (
                 <JsonCellLayout
                   prefixSlot={
-                    <JsonCellExpandButton
+                    <TetraExpandButton
                       isExpanded={!row.isFolded}
                       setExpanded={action((isExpanded) => {
                         row.isFolded = !isExpanded;
@@ -179,7 +179,7 @@ const GridViewForObject = observer((gridProps: { value: JsonObject; theme?: "lig
                   return (
                     <JsonCellLayout
                       prefixSlot={
-                        <JsonCellExpandButton
+                        <TetraExpandButton
                           isExpanded={!row.isFolded}
                           setExpanded={action((isExpanded) => {
                             row.isFolded = !isExpanded;
@@ -304,7 +304,7 @@ const GridViewForArray = observer((gridProps: { value: JsonArray; theme?: "light
                   return (
                     <JsonCellLayout
                       prefixSlot={
-                        <JsonCellExpandButton
+                        <TetraExpandButton
                           isExpanded={!row.isFolded}
                           setExpanded={action((isExpanded) => {
                             row.isFolded = !isExpanded;
