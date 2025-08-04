@@ -1,12 +1,12 @@
 import { BaseGridView } from "./base-grid-view";
 import type { GridContextProps } from "./grid-context";
 
-export type JsonGridViewProps = {
+export type TetraGridViewProps = {
   context: GridContextProps;
   showHeader?: boolean;
 };
 
-export const JsonGridView = (props: JsonGridViewProps) => {
+export const TetraGridView = (props: TetraGridViewProps) => {
   if (props.showHeader) {
     return <BaseGridView.WithHeader context={props.context} />;
   }

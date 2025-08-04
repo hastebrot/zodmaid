@@ -10,22 +10,22 @@ export const LexTextboxFocusPage = () => {
   useDocumentTitle("iris: textbox focus");
   const ref = useRef<HTMLDivElement>(null);
   const [items1] = useState(() => [
+    { value: "Lorem" },
     { value: "Text 1 Lorem" },
     { value: "Text 2 Lore" },
     { value: "Text 3 Lor" },
-    { value: "Text 4" },
   ]);
   const [items2] = useState(() => [
+    { value: "Ipsum" },
     { value: "Text 1 Ipsum" },
     { value: "Text 2 Ipsu" },
     { value: "Text 3 Ips" },
-    { value: "Text 4" },
   ]);
   const [items3] = useState(() => [
+    { value: "Dolor" },
     { value: "Text 1 Dolor" },
     { value: "Text 2 Dolo" },
     { value: "Text 3 Dol" },
-    { value: "Text 4" },
   ]);
   const onKeyCommand = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const currentInput = event.currentTarget;
@@ -76,13 +76,13 @@ export const LexTextboxFocusPage = () => {
   return (
     <div ref={ref} className="h-dvh w-full overflow-hidden overscroll-contain bg-white">
       <div className="flex flex-row gap-4 p-4">
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 p-4 border-2 border-zinc-400">
           <Items columnIndex={0} items={items1} onKeyCommand={onKeyCommand} />
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 p-4 border-2 border-zinc-400">
           <Items columnIndex={1} items={items2} onKeyCommand={onKeyCommand} />
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 p-4 border-2 border-zinc-400">
           <Items columnIndex={2} items={items3} onKeyCommand={onKeyCommand} />
         </div>
       </div>
@@ -162,4 +162,4 @@ const Items = observer((props: ItemsProps) => {
 // - on arrow left or right, the last cell coordinate x is updated
 // - on arrow up or down, the last cell coordinate y is updated
 
-// type Position = { grid: string; row: number; column: number; }
+// type Position = { grid: string; row: number; col: number; }

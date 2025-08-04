@@ -1,8 +1,14 @@
 import { cleanup, render } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { beforeAll, beforeEach, describe, expect, test } from "vitest";
-import { defineGridContext, JsonCell, JsonGrid, JsonRow, type GridContextProps } from "zodspy";
-import { JsonGridView } from "../../components/json-grid-view";
+import {
+  defineGridContext,
+  TetraCell,
+  TetraGrid,
+  TetraGridView,
+  TetraRow,
+  type GridContextProps,
+} from "zodspy";
 import { queryHelper } from "../query-helper";
 import { registerGlobals } from "../register-globals";
 import { registerMatchers } from "../register-matchers";
@@ -51,19 +57,19 @@ describe("json grid view", () => {
         ],
         elements: {
           Grid(props) {
-            return <JsonGrid {...props} />;
+            return <TetraGrid {...props} />;
           },
           Row(props) {
-            return <JsonRow {...props} />;
+            return <TetraRow {...props} />;
           },
           Cell(props) {
-            return <JsonCell {...props} />;
+            return <TetraCell {...props} />;
           },
         },
       });
 
       // when:
-      const screen = render(<JsonGridView context={context as GridContextProps} />, {
+      const screen = render(<TetraGridView context={context as GridContextProps} />, {
         baseElement: global.document.body,
       });
       const user = userEvent.setup({ document: global.document });

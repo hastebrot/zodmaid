@@ -4,12 +4,12 @@ import { JsonCellContext } from "./tetra/json-cell-context";
 import { JsonCellGroup } from "./tetra/json-cell-group";
 import { JsonCellRenderer } from "./tetra/json-cell-renderer";
 
-export type JsonCellProps<DataModel> = BaseCellProps<DataModel> & {
+export type TetraCellProps<DataModel> = BaseCellProps<DataModel> & {
   gridColumnLimit?: number;
   gridRowOffset?: number;
 };
 
-export const JsonCell = <DataModel,>({ ...props }: JsonCellProps<DataModel>) => {
+export const TetraCell = <DataModel,>({ ...props }: TetraCellProps<DataModel>) => {
   props.children = props.children ?? <JsonCellRenderer />;
   props.style = {
     ...props.style,

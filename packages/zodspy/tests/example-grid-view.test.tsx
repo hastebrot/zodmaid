@@ -1,8 +1,8 @@
-import { render } from "@testing-library/react";
+import { cleanup, render } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { action, observable } from "mobx";
 import { observer } from "mobx-react-lite";
-import { beforeAll, describe, expect, test } from "vitest";
+import { beforeAll, beforeEach, describe, expect, test } from "vitest";
 import { BaseCell, type BaseCellProps } from "../components/base-cell";
 import { BaseGrid, type BaseGridProps } from "../components/base-grid";
 import { BaseGridView, type BaseGridViewProps } from "../components/base-grid-view";
@@ -15,6 +15,10 @@ import { registerMatchers } from "./register-matchers";
 beforeAll(() => {
   registerGlobals();
   registerMatchers();
+});
+
+beforeEach(() => {
+  cleanup();
 });
 
 describe("example grid view", () => {

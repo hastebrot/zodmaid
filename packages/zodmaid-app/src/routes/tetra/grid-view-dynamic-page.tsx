@@ -4,14 +4,14 @@ import { useEffect, useState } from "react";
 import {
   defineGridContext,
   determineJsonType,
-  JsonCell,
   JsonCellExpandButton,
   JsonCellLayout,
   JsonCellTypeButton,
-  JsonGrid,
   JsonGridCellLayout,
-  JsonGridView,
-  JsonRow,
+  TetraCell,
+  TetraGrid,
+  TetraGridView,
+  TetraRow,
   transformToGridRows,
   transformToTableRows,
   type GridColumn,
@@ -141,21 +141,21 @@ const GridViewForRoot = observer((gridProps: { value: JsonObject; theme?: "light
     ],
     elements: {
       Grid(props) {
-        return <JsonGrid {...props} theme={gridProps.theme} />;
+        return <TetraGrid {...props} theme={gridProps.theme} />;
       },
-      Row: JsonRow,
+      Row: TetraRow,
       Cell(props) {
         if (props.data.column?.label === "key") {
-          return <JsonCell {...props} gridRowOffset={0} gridColumnLimit={-1} />;
+          return <TetraCell {...props} gridRowOffset={0} gridColumnLimit={-1} />;
         }
         if (props.data.column?.label === "value") {
-          return <JsonCell {...props} gridRowOffset={1} />;
+          return <TetraCell {...props} gridRowOffset={1} />;
         }
-        return <JsonCell {...props} />;
+        return <TetraCell {...props} />;
       },
     },
   });
-  return <JsonGridView context={context as GridContextProps} />;
+  return <TetraGridView context={context as GridContextProps} />;
 });
 
 const GridViewForObject = observer((gridProps: { value: JsonObject; theme?: "light" | "dark" }) => {
@@ -263,24 +263,24 @@ const GridViewForObject = observer((gridProps: { value: JsonObject; theme?: "lig
     ],
     elements: {
       Grid(props) {
-        return <JsonGrid {...props} theme={gridProps.theme} />;
+        return <TetraGrid {...props} theme={gridProps.theme} />;
       },
-      Row: JsonRow,
+      Row: TetraRow,
       Cell(props) {
         const type = props.data.row?.type;
         if (type === "object" || type === "array") {
           if (props.data.column?.label === "key") {
-            return <JsonCell {...props} gridRowOffset={0} gridColumnLimit={-1} />;
+            return <TetraCell {...props} gridRowOffset={0} gridColumnLimit={-1} />;
           }
           if (props.data.column?.label === "value") {
-            return <JsonCell {...props} gridRowOffset={1} />;
+            return <TetraCell {...props} gridRowOffset={1} />;
           }
         }
-        return <JsonCell {...props} />;
+        return <TetraCell {...props} />;
       },
     },
   });
-  return <JsonGridView context={context as GridContextProps} />;
+  return <TetraGridView context={context as GridContextProps} />;
 });
 
 const GridViewForArray = observer((gridProps: { value: JsonArray; theme?: "light" | "dark" }) => {
@@ -376,25 +376,25 @@ const GridViewForArray = observer((gridProps: { value: JsonArray; theme?: "light
     ],
     elements: {
       Grid(props) {
-        return <JsonGrid {...props} theme={gridProps.theme} />;
+        return <TetraGrid {...props} theme={gridProps.theme} />;
       },
-      Row: JsonRow,
+      Row: TetraRow,
       Cell(props) {
         const type = props.data.row?.type;
         const isObjectOrArray = type === "object" || type === "array";
         if (isObjectOrArray) {
           if (props.data.column?.label === "key") {
-            return <JsonCell {...props} gridRowOffset={0} gridColumnLimit={-1} />;
+            return <TetraCell {...props} gridRowOffset={0} gridColumnLimit={-1} />;
           }
           if (props.data.column?.label === "value") {
-            return <JsonCell {...props} gridRowOffset={1} />;
+            return <TetraCell {...props} gridRowOffset={1} />;
           }
         }
-        return <JsonCell {...props} />;
+        return <TetraCell {...props} />;
       },
     },
   });
-  return <JsonGridView context={context as GridContextProps} />;
+  return <TetraGridView context={context as GridContextProps} />;
 });
 
 const GridViewForArrayTable = (gridProps: { value: JsonArray; theme?: "light" | "dark" }) => {
@@ -472,15 +472,15 @@ const GridViewForArrayTable = (gridProps: { value: JsonArray; theme?: "light" | 
     columns,
     elements: {
       Grid(props) {
-        return <JsonGrid {...props} theme={gridProps.theme} />;
+        return <TetraGrid {...props} theme={gridProps.theme} />;
       },
-      Row: JsonRow,
+      Row: TetraRow,
       Cell(props) {
-        return <JsonCell {...props} />;
+        return <TetraCell {...props} />;
       },
     },
   });
-  return <JsonGridView context={context as GridContextProps} showHeader />;
+  return <TetraGridView context={context as GridContextProps} showHeader />;
 };
 
 function renderCell<DataModel>(item?: DataModel, key?: string) {

@@ -15,11 +15,11 @@ export { BaseGrid, type BaseGridProps } from "zodspy/components/base-grid";
 export { BaseGridView, type BaseGridViewProps } from "zodspy/components/base-grid-view";
 export { BaseRow, type BaseRowProps } from "zodspy/components/base-row";
 
-// json.
-export { JsonCell } from "zodspy/components/json-cell";
-export { JsonGrid } from "zodspy/components/json-grid";
-export { JsonGridView } from "zodspy/components/json-grid-view";
-export { JsonRow } from "zodspy/components/json-row";
+// tetra.
+export { TetraCell } from "./components/tetra-cell";
+export { TetraGrid } from "./components/tetra-grid";
+export { TetraGridView } from "./components/tetra-grid-view";
+export { TetraRow } from "./components/tetra-row";
 export { JsonCellExpandButton } from "./components/tetra/json-cell-expand-button";
 export { JsonCellLayout } from "./components/tetra/json-cell-layout";
 export { JsonCellRenderer } from "./components/tetra/json-cell-renderer";
