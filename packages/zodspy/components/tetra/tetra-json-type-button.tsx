@@ -1,15 +1,12 @@
 import { classNames } from "../../helpers/clsx";
 import { throwError } from "../../helpers/error";
 
-type JsonCellType = "array" | "object" | "string" | "number" | "boolean" | "null";
-type JsonExtCellType = "comment" | "datetime" | "money" | "alias" | "formula";
-
-export type JsonCellTypeButtonProps = {
+export type TetraJsonTypeButtonProps = {
   type: JsonCellType | JsonExtCellType;
   symbol?: string;
 };
 
-export const JsonCellTypeButton = (props: JsonCellTypeButtonProps) => {
+export const TetraJsonTypeButton = (props: TetraJsonTypeButtonProps) => {
   return (
     <button
       type="button"
@@ -43,6 +40,9 @@ export const JsonCellTypeButton = (props: JsonCellTypeButtonProps) => {
     </button>
   );
 };
+
+type JsonCellType = "array" | "object" | "string" | "number" | "boolean" | "null";
+type JsonExtCellType = "comment" | "datetime" | "money" | "alias" | "formula";
 
 export function renderJsonType(type: JsonCellType | JsonExtCellType) {
   const typeMap: Record<JsonCellType, string> = {

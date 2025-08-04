@@ -1,4 +1,4 @@
-import { determineJsonType } from "./json-cell-type-button";
+import { determineJsonType } from "./tetra-json-type-button";
 
 export type JsonObject = { [key: string]: JsonValue };
 export type JsonArray = JsonValue[];
@@ -11,7 +11,7 @@ export type JsonDataModel = {
   isFolded?: boolean;
 };
 
-export function transformToGridRows(json: JsonObject | JsonArray): JsonDataModel[] {
+export function mapJsonToGridRows(json: JsonObject | JsonArray): JsonDataModel[] {
   const rows: JsonDataModel[] = [];
   for (const [key, value] of Object.entries(json)) {
     const type = determineJsonType(value);
@@ -20,12 +20,12 @@ export function transformToGridRows(json: JsonObject | JsonArray): JsonDataModel
   return rows;
 }
 
-export function transformToTableRows(json: JsonArray): JsonDataModel[][] {
+export function mapJsonToTableRows(json: JsonArray): JsonDataModel[][] {
   const rowsOfRows: JsonDataModel[][] = [];
   for (const [index, item] of Object.entries(json)) {
     const rows = [
       { key: "", type: "string", value: index },
-      ...transformToGridRows(item as JsonObject),
+      ...mapJsonToGridRows(item as JsonObject),
     ];
     rowsOfRows.push(rows);
   }

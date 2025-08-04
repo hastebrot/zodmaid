@@ -1,4 +1,4 @@
-import { fireEvent, render, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import {
   $getRoot,
@@ -9,15 +9,19 @@ import {
   type LexicalEditor,
 } from "lexical";
 import { act } from "react";
-import { beforeAll, describe, expect, test, vi } from "vitest";
-import { LexTextbox } from "../components/lex-textbox";
-import { throwError } from "../helpers/error";
-import { registerGlobals } from "./register-globals";
-import { registerMatchers } from "./register-matchers";
+import { beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
+import { LexTextbox } from "../../components/lex-textbox";
+import { throwError } from "../../helpers/error";
+import { registerGlobals } from "./../register-globals";
+import { registerMatchers } from "./../register-matchers";
 
 beforeAll(() => {
   registerGlobals();
   registerMatchers();
+});
+
+beforeEach(() => {
+  cleanup();
 });
 
 const toLexicalEditorOrThrow = (element: HTMLElement) => {
@@ -106,8 +110,8 @@ describe("lex textbox", () => {
     console.log("lex elem", reprEditorElem(textbox));
     // screen.debug();
 
-    // expect(onChange).toHaveBeenCalledTimes(8);
-    expect(onChange).toHaveBeenLastCalledWith("text12xyyx3\nxxyy");
+    expect(onChange).toHaveBeenCalledTimes(8);
+    expect(onChange).toHaveBeenLastCalledWith("text12\nxyyx3");
   });
 });
 

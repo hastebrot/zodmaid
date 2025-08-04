@@ -3,11 +3,11 @@ import { classNames } from "../helpers/clsx";
 import { throwError } from "../helpers/error";
 import { BaseGrid, type BaseGridProps } from "./base-grid";
 
-export type JsonGridProps = BaseGridProps & {
+export type TetraGridProps = BaseGridProps & {
   theme?: "light" | "dark";
 };
 
-export const JsonGrid = (props: JsonGridProps) => {
+export const TetraGrid = (props: TetraGridProps) => {
   const gridStyles = toGridStyles(props.theme ?? "dark");
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {

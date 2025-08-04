@@ -15,22 +15,22 @@ export { BaseGrid, type BaseGridProps } from "zodspy/components/base-grid";
 export { BaseGridView, type BaseGridViewProps } from "zodspy/components/base-grid-view";
 export { BaseRow, type BaseRowProps } from "zodspy/components/base-row";
 
-// json.
-export { JsonCell } from "zodspy/components/json-cell";
-export { JsonGrid } from "zodspy/components/json-grid";
-export { JsonGridView } from "zodspy/components/json-grid-view";
-export { JsonRow } from "zodspy/components/json-row";
-export { JsonCellExpandButton } from "./components/tetra/json-cell-expand-button";
+// tetra.
+export { TetraCell } from "./components/tetra-cell";
+export { TetraGrid } from "./components/tetra-grid";
+export { TetraGridView } from "./components/tetra-grid-view";
+export { TetraRow } from "./components/tetra-row";
 export { JsonCellLayout } from "./components/tetra/json-cell-layout";
-export { JsonCellRenderer } from "./components/tetra/json-cell-renderer";
-export { JsonCellTableButton } from "./components/tetra/json-cell-table-button";
-export { determineJsonType, JsonCellTypeButton } from "./components/tetra/json-cell-type-button";
 export { JsonGridCellLayout } from "./components/tetra/json-grid-cell-layout";
+export { TetraCellRenderer } from "./components/tetra/tetra-cell-renderer";
+export { TetraExpandButton } from "./components/tetra/tetra-expand-button";
 export {
-  transformToGridRows,
-  transformToTableRows,
+  mapJsonToGridRows,
+  mapJsonToTableRows,
   type JsonArray,
   type JsonDataModel,
   type JsonObject,
   type JsonValue,
-} from "./components/tetra/json-grid-transformer";
+} from "./components/tetra/tetra-json-data-mapper";
+export { determineJsonType, TetraJsonTypeButton } from "./components/tetra/tetra-json-type-button";
+export { TetraTableViewButton } from "./components/tetra/tetra-table-view-button";

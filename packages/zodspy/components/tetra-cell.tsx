@@ -1,16 +1,16 @@
 import { classNames } from "../helpers/clsx";
 import { BaseCell, type BaseCellProps } from "./base-cell";
-import { JsonCellContext } from "./tetra/json-cell-context";
-import { JsonCellGroup } from "./tetra/json-cell-group";
-import { JsonCellRenderer } from "./tetra/json-cell-renderer";
+import { TetraCellContext } from "./tetra/tetra-cell-context";
+import { TetraCellRenderer } from "./tetra/tetra-cell-renderer";
+import { TetraFocusGroup } from "./tetra/tetra-focus-group";
 
-export type JsonCellProps<DataModel> = BaseCellProps<DataModel> & {
+export type TetraCellProps<DataModel> = BaseCellProps<DataModel> & {
   gridColumnLimit?: number;
   gridRowOffset?: number;
 };
 
-export const JsonCell = <DataModel,>({ ...props }: JsonCellProps<DataModel>) => {
-  props.children = props.children ?? <JsonCellRenderer />;
+export const TetraCell = <DataModel,>({ ...props }: TetraCellProps<DataModel>) => {
+  props.children = props.children ?? <TetraCellRenderer />;
   props.style = {
     ...props.style,
     // grid column limit:
@@ -22,13 +22,13 @@ export const JsonCell = <DataModel,>({ ...props }: JsonCellProps<DataModel>) => 
   };
 
   return (
-    <JsonCellContext value={{ cellProps: props as BaseCellProps }}>
+    <TetraCellContext value={{ cellProps: props as BaseCellProps }}>
       <BaseCell
         {...props}
         className={classNames("relative grid cursor-auto select-none text-nowrap")}
         style={props.style}
       >
-        <JsonCellGroup
+        <TetraFocusGroup
           className={classNames(
             "text-[14px]/[24px] min-w-[24px] box-border",
             "border-(--cell-border-base) border-t",
@@ -50,8 +50,8 @@ export const JsonCell = <DataModel,>({ ...props }: JsonCellProps<DataModel>) => 
           }}
         >
           {props.children}
-        </JsonCellGroup>
+        </TetraFocusGroup>
       </BaseCell>
-    </JsonCellContext>
+    </TetraCellContext>
   );
 };

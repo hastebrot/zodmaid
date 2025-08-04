@@ -1,9 +1,9 @@
 import { cleanup, render } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
-import { IrisInput } from "../components/iris-input";
-import { registerGlobals } from "./register-globals";
-import { registerMatchers } from "./register-matchers";
+import { IrisInput } from "../../components/iris-input";
+import { registerGlobals } from "./../register-globals";
+import { registerMatchers } from "./../register-matchers";
 
 beforeAll(() => {
   registerGlobals();

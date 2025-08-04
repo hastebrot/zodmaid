@@ -2,16 +2,16 @@ import { Fragment } from "react";
 import {
   defineGridContext,
   determineJsonType,
-  JsonCell,
-  JsonCellExpandButton,
   JsonCellLayout,
-  JsonCellRenderer,
-  JsonCellTableButton,
-  JsonCellTypeButton,
-  JsonGrid,
   JsonGridCellLayout,
-  JsonGridView,
-  JsonRow,
+  TetraCell,
+  TetraCellRenderer,
+  TetraExpandButton,
+  TetraGrid,
+  TetraGridView,
+  TetraJsonTypeButton,
+  TetraRow,
+  TetraTableViewButton,
   type GridContextProps,
 } from "zodspy";
 import { useDocumentTitle } from "../../helpers/react";
@@ -45,8 +45,8 @@ const GridViewForRoot = () => {
         cellRenderer(props) {
           return (
             <JsonCellLayout
-              prefixSlot={<JsonCellExpandButton isExpanded={props.data.rowIndex === 4} />}
-              primarySlot={<JsonCellTypeButton type="object" />}
+              prefixSlot={<TetraExpandButton isExpanded={props.data.rowIndex === 4} />}
+              primarySlot={<TetraJsonTypeButton type="object" />}
             />
           );
         },
@@ -62,22 +62,22 @@ const GridViewForRoot = () => {
       },
     ],
     elements: {
-      Grid: JsonGrid,
-      Row: JsonRow,
+      Grid: TetraGrid,
+      Row: TetraRow,
       Cell(props) {
         if (props.data.column?.label === "label") {
-          return <JsonCell {...props} gridRowOffset={0} gridColumnLimit={-1} />;
+          return <TetraCell {...props} gridRowOffset={0} gridColumnLimit={-1} />;
         }
         if (props.data.column?.label === "value") {
-          return <JsonCell {...props} gridRowOffset={1} />;
+          return <TetraCell {...props} gridRowOffset={1} />;
         }
-        return <JsonCell {...props} />;
+        return <TetraCell {...props} />;
       },
     },
   });
   return (
     <div className="w-fit">
-      <JsonGridView context={context as GridContextProps} />
+      <TetraGridView context={context as GridContextProps} />
     </div>
   );
 };
@@ -102,7 +102,7 @@ const GridViewForOrder = () => {
           const type = determineJsonType(props.data.row?.value);
           return (
             <div className="flex items-center">
-              <JsonCellTypeButton type={type} />
+              <TetraJsonTypeButton type={type} />
               <div className="pr-1">{props.data.row?.key}</div>
             </div>
           );
@@ -142,21 +142,21 @@ const GridViewForOrder = () => {
     ],
     elements: {
       Grid(props) {
-        return <JsonGrid {...props} />;
+        return <TetraGrid {...props} />;
       },
       Row(props) {
-        return <JsonRow {...props} />;
+        return <TetraRow {...props} />;
       },
       Cell(props) {
         return (
-          <JsonCell {...props}>
-            <JsonCellRenderer />
-          </JsonCell>
+          <TetraCell {...props}>
+            <TetraCellRenderer />
+          </TetraCell>
         );
       },
     },
   });
-  return <JsonGridView context={context as GridContextProps} />;
+  return <TetraGridView context={context as GridContextProps} />;
 };
 
 const GridViewForItems = (_props: { columnOffset?: number; rowOffset?: number }) => {
@@ -221,21 +221,21 @@ const GridViewForItems = (_props: { columnOffset?: number; rowOffset?: number })
     ],
     elements: {
       Grid(props) {
-        return <JsonGrid {...props} />;
+        return <TetraGrid {...props} />;
       },
       Row(props) {
-        return <JsonRow {...props} />;
+        return <TetraRow {...props} />;
       },
       Cell(props) {
         return (
-          <JsonCell {...props}>
-            <JsonCellRenderer />
-          </JsonCell>
+          <TetraCell {...props}>
+            <TetraCellRenderer />
+          </TetraCell>
         );
       },
     },
   });
-  return <JsonGridView context={context as GridContextProps} showHeader />;
+  return <TetraGridView context={context as GridContextProps} showHeader />;
 };
 
 const GridViewForShipTo = (_props: { columnOffset?: number; rowOffset?: number }) => {
@@ -264,9 +264,9 @@ const GridViewForShipTo = (_props: { columnOffset?: number; rowOffset?: number }
         cellRenderer(props) {
           return (
             <JsonCellLayout
-              prefixSlot={<JsonCellExpandButton isExpanded={props.data.rowIndex === 4} />}
+              prefixSlot={<TetraExpandButton isExpanded={props.data.rowIndex === 4} />}
               primarySlot={renderCell(props.data.row, props.data.column?.label)}
-              secondarySlot={props.data.rowIndex === 4 && <JsonCellTableButton />}
+              secondarySlot={props.data.rowIndex === 4 && <TetraTableViewButton />}
             />
           );
         },
@@ -292,10 +292,10 @@ const GridViewForShipTo = (_props: { columnOffset?: number; rowOffset?: number }
     ],
     elements: {
       Grid(props) {
-        return <JsonGrid {...props} />;
+        return <TetraGrid {...props} />;
       },
       Row(props) {
-        return <JsonRow {...props} />;
+        return <TetraRow {...props} />;
       },
       Cell(props) {
         const row = { type: null, ...props.data.row };
@@ -303,40 +303,40 @@ const GridViewForShipTo = (_props: { columnOffset?: number; rowOffset?: number }
         if (row.type === "comment") {
           if (props.data.columnIndex === 0) {
             return (
-              <JsonCell {...props} gridColumnLimit={-1}>
+              <TetraCell {...props} gridColumnLimit={-1}>
                 <JsonCellLayout primarySlot={renderCommentCell(row, "value")} />
-              </JsonCell>
+              </TetraCell>
             );
           }
           return <Fragment />;
         }
         if (column.label === "key" && props.data.rowIndex === 4) {
           return (
-            <JsonCell {...props} gridRowOffset={0} gridColumnLimit={-1}>
-              <JsonCellRenderer />
-            </JsonCell>
+            <TetraCell {...props} gridRowOffset={0} gridColumnLimit={-1}>
+              <TetraCellRenderer />
+            </TetraCell>
           );
         }
         if (column.label === "value" && props.data.rowIndex === 4) {
           return (
-            <JsonCell {...props} gridRowOffset={1}>
+            <TetraCell {...props} gridRowOffset={1}>
               <div className="flex flex-col">
-                <JsonCellRenderer />
-                <JsonCellRenderer />
-                <JsonCellRenderer />
+                <TetraCellRenderer />
+                <TetraCellRenderer />
+                <TetraCellRenderer />
               </div>
-            </JsonCell>
+            </TetraCell>
           );
         }
         return (
-          <JsonCell {...props}>
-            <JsonCellRenderer />
-          </JsonCell>
+          <TetraCell {...props}>
+            <TetraCellRenderer />
+          </TetraCell>
         );
       },
     },
   });
-  return <JsonGridView context={context as GridContextProps} />;
+  return <TetraGridView context={context as GridContextProps} />;
 };
 
 function renderCell<DataModel>(item?: DataModel, key?: string) {
@@ -346,7 +346,7 @@ function renderCell<DataModel>(item?: DataModel, key?: string) {
   const text = type === "array" || type === "object" ? JSON.stringify(value) : String(value);
   return (
     <div className="flex items-center">
-      <JsonCellTypeButton type={type} />
+      <TetraJsonTypeButton type={type} />
       <div className="pr-1">{text}</div>
     </div>
   );
@@ -358,7 +358,7 @@ function renderCommentCell<DataModel>(item?: DataModel, key?: string) {
   const text = String(value);
   return (
     <div className="flex items-center">
-      <JsonCellTypeButton type="comment" symbol="//" />
+      <TetraJsonTypeButton type="comment" symbol="//" />
       <div className="pr-1 text-(--color-green-700)">{text}</div>
     </div>
   );

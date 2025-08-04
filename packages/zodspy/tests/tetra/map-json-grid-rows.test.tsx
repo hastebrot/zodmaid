@@ -1,18 +1,18 @@
 import { describe, expect, test } from "vitest";
 import {
-  transformToGridRows,
-  transformToTableRows,
-} from "../../components/tetra/json-grid-transformer";
+  mapJsonToGridRows,
+  mapJsonToTableRows,
+} from "../../components/tetra/tetra-json-data-mapper";
 import { purchaseOrder } from "../../examples/purchase-order";
 import { throwError } from "../../helpers/error";
 
-describe("json grid view", () => {
-  describe("transform grid rows", () => {
+describe("tetra grid view", () => {
+  describe("map json grid rows", () => {
     test("purchaseOrder", () => {
       // given:
       const json = purchaseOrder;
       // when:
-      const rows = transformToGridRows(json);
+      const rows = mapJsonToGridRows(json);
       // then:
       expect(rows.length).toBe(3);
       expect(rows[0]).toMatchObject({ key: "orderDate", type: "string", value: "2019-12-01" });
@@ -24,7 +24,7 @@ describe("json grid view", () => {
       // given:
       const json = purchaseOrder.items;
       // when:
-      const rows = transformToGridRows(json);
+      const rows = mapJsonToGridRows(json);
       // then:
       expect(rows.length).toBe(5);
       expect(rows[0]).toMatchObject({ key: "0", type: "object" });
@@ -36,7 +36,7 @@ describe("json grid view", () => {
       // given:
       const json = purchaseOrder.items[0] ?? throwError("item not found");
       // when:
-      const rows = transformToGridRows(json);
+      const rows = mapJsonToGridRows(json);
       // then:
       expect(rows.length).toBe(3);
       expect(rows[0]).toMatchObject({ key: "productName", type: "string", value: "Diamond heart" });
@@ -48,7 +48,7 @@ describe("json grid view", () => {
       // given:
       const json = purchaseOrder.shipTo;
       // when:
-      const rows = transformToGridRows(json);
+      const rows = mapJsonToGridRows(json);
       // then:
       expect(rows.length).toBe(4);
       expect(rows[0]).toMatchObject({ key: "name", type: "string", value: "Helen Zoe" });
@@ -63,7 +63,7 @@ describe("json grid view", () => {
       // given:
       const json = purchaseOrder.items;
       // when:
-      const rows = transformToTableRows(json);
+      const rows = mapJsonToTableRows(json);
       const row = rows[0] ?? throwError("row not found");
       // then:
       expect(rows.length).toBe(5);
