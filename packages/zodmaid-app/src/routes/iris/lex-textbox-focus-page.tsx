@@ -162,8 +162,4 @@ const Items = observer((props: ItemsProps) => {
 // - on arrow left or right, the last cell coordinate x is updated
 // - on arrow up or down, the last cell coordinate y is updated
 
-// - juxta grid context
-// - juxta cell context
-
-// useTetraGridSelection()
 // type Position = { grid: string; row: number; column: number; }
