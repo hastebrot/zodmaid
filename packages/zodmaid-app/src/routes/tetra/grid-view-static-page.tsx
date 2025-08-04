@@ -6,11 +6,11 @@ import {
   JsonCellLayout,
   JsonCellRenderer,
   JsonCellTableButton,
-  JsonCellTypeButton,
   JsonGridCellLayout,
   TetraCell,
   TetraGrid,
   TetraGridView,
+  TetraJsonTypeButton,
   TetraRow,
   type GridContextProps,
 } from "zodspy";
@@ -46,7 +46,7 @@ const GridViewForRoot = () => {
           return (
             <JsonCellLayout
               prefixSlot={<JsonCellExpandButton isExpanded={props.data.rowIndex === 4} />}
-              primarySlot={<JsonCellTypeButton type="object" />}
+              primarySlot={<TetraJsonTypeButton type="object" />}
             />
           );
         },
@@ -102,7 +102,7 @@ const GridViewForOrder = () => {
           const type = determineJsonType(props.data.row?.value);
           return (
             <div className="flex items-center">
-              <JsonCellTypeButton type={type} />
+              <TetraJsonTypeButton type={type} />
               <div className="pr-1">{props.data.row?.key}</div>
             </div>
           );
@@ -346,7 +346,7 @@ function renderCell<DataModel>(item?: DataModel, key?: string) {
   const text = type === "array" || type === "object" ? JSON.stringify(value) : String(value);
   return (
     <div className="flex items-center">
-      <JsonCellTypeButton type={type} />
+      <TetraJsonTypeButton type={type} />
       <div className="pr-1">{text}</div>
     </div>
   );
@@ -358,7 +358,7 @@ function renderCommentCell<DataModel>(item?: DataModel, key?: string) {
   const text = String(value);
   return (
     <div className="flex items-center">
-      <JsonCellTypeButton type="comment" symbol="//" />
+      <TetraJsonTypeButton type="comment" symbol="//" />
       <div className="pr-1 text-(--color-green-700)">{text}</div>
     </div>
   );

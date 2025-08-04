@@ -24,13 +24,13 @@ export { JsonCellExpandButton } from "./components/tetra/json-cell-expand-button
 export { JsonCellLayout } from "./components/tetra/json-cell-layout";
 export { JsonCellRenderer } from "./components/tetra/json-cell-renderer";
 export { JsonCellTableButton } from "./components/tetra/json-cell-table-button";
-export { determineJsonType, JsonCellTypeButton } from "./components/tetra/json-cell-type-button";
 export { JsonGridCellLayout } from "./components/tetra/json-grid-cell-layout";
 export {
-  transformToGridRows,
-  transformToTableRows,
+  mapJsonToGridRows,
+  mapJsonToTableRows,
   type JsonArray,
   type JsonDataModel,
   type JsonObject,
   type JsonValue,
-} from "./components/tetra/json-grid-transformer";
+} from "./components/tetra/tetra-json-data-mapper";
+export { determineJsonType, TetraJsonTypeButton } from "./components/tetra/tetra-json-type-button";

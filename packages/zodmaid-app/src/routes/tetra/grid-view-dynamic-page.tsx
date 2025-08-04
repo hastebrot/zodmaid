@@ -6,14 +6,14 @@ import {
   determineJsonType,
   JsonCellExpandButton,
   JsonCellLayout,
-  JsonCellTypeButton,
   JsonGridCellLayout,
+  mapJsonToGridRows,
+  mapJsonToTableRows,
   TetraCell,
   TetraGrid,
   TetraGridView,
+  TetraJsonTypeButton,
   TetraRow,
-  transformToGridRows,
-  transformToTableRows,
   type GridColumn,
   type GridContextProps,
   type JsonArray,
@@ -104,7 +104,7 @@ const GridViewForRoot = observer((gridProps: { value: JsonObject; theme?: "light
                       })}
                     />
                   }
-                  primarySlot={<JsonCellTypeButton type="object" />}
+                  primarySlot={<TetraJsonTypeButton type="object" />}
                 />
               )}
             </Observer>
@@ -160,7 +160,7 @@ const GridViewForRoot = observer((gridProps: { value: JsonObject; theme?: "light
 
 const GridViewForObject = observer((gridProps: { value: JsonObject; theme?: "light" | "dark" }) => {
   type DataModel = JsonDataModel;
-  const [rows] = useState(() => observable(transformToGridRows(gridProps.value)));
+  const [rows] = useState(() => observable(mapJsonToGridRows(gridProps.value)));
   const context = defineGridContext<DataModel>({
     label: "object",
     rows,
@@ -188,7 +188,7 @@ const GridViewForObject = observer((gridProps: { value: JsonObject; theme?: "lig
                       }
                       primarySlot={
                         <div className="flex items-center">
-                          <JsonCellTypeButton type={type} />
+                          <TetraJsonTypeButton type={type} />
                           <div className="pr-1.5 font-[700]">{key}</div>
                         </div>
                       }
@@ -285,7 +285,7 @@ const GridViewForObject = observer((gridProps: { value: JsonObject; theme?: "lig
 
 const GridViewForArray = observer((gridProps: { value: JsonArray; theme?: "light" | "dark" }) => {
   type DataModel = JsonDataModel;
-  const [rows] = useState(() => observable(transformToGridRows(gridProps.value)));
+  const [rows] = useState(() => observable(mapJsonToGridRows(gridProps.value)));
   const context = defineGridContext<DataModel>({
     label: "array",
     rows,
@@ -313,7 +313,7 @@ const GridViewForArray = observer((gridProps: { value: JsonArray; theme?: "light
                       }
                       primarySlot={
                         <div className="flex items-center">
-                          <JsonCellTypeButton type={type} />
+                          <TetraJsonTypeButton type={type} />
                           <div className="pr-1.5 font-[700] text-(--cell-fg-muted)">{index}</div>
                         </div>
                       }
@@ -399,7 +399,7 @@ const GridViewForArray = observer((gridProps: { value: JsonArray; theme?: "light
 
 const GridViewForArrayTable = (gridProps: { value: JsonArray; theme?: "light" | "dark" }) => {
   type DataModel = JsonDataModel[];
-  const [rows] = useState(() => observable(transformToTableRows(gridProps.value)));
+  const [rows] = useState(() => observable(mapJsonToTableRows(gridProps.value)));
   const columns: GridColumn<DataModel>[] = rows[0].map((column, columnIndex) => {
     const lastColumnIndex = rows[0].length - 1;
     if (column.key === "") {
@@ -417,7 +417,7 @@ const GridViewForArrayTable = (gridProps: { value: JsonArray; theme?: "light" | 
           }
           return (
             <div className={classNames("flex items-center px-1.5", type === "object" && "!pl-0")}>
-              {type === "object" && <JsonCellTypeButton type={type} />}
+              {type === "object" && <TetraJsonTypeButton type={type} />}
               <div className="font-[700] text-(--cell-fg-muted)">{index}</div>
             </div>
           );
@@ -442,8 +442,8 @@ const GridViewForArrayTable = (gridProps: { value: JsonArray; theme?: "light" | 
                 type === "array" && "!pl-0",
               )}
             >
-              {type === "object" && <JsonCellTypeButton type={type} />}
-              {type === "array" && <JsonCellTypeButton type={type} />}
+              {type === "object" && <TetraJsonTypeButton type={type} />}
+              {type === "array" && <TetraJsonTypeButton type={type} />}
               <div className="font-[700]">{label}</div>
             </div>
           );
@@ -497,7 +497,7 @@ function renderCell<DataModel>(item?: DataModel, key?: string) {
   };
   return (
     <div className="flex items-center">
-      <JsonCellTypeButton type={type} />
+      <TetraJsonTypeButton type={type} />
       <div className="pr-1 w-full">
         {/* {textValue} */}
         <IrisInput

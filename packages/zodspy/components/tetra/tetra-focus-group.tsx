@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { classNames } from "../../helpers/clsx";
 
-export type JsonCellGroupProps = {
+export type TetraFocusGroupProps = {
   children?: React.ReactNode;
   className?: string;
   isReadonly?: boolean;
@@ -14,7 +14,7 @@ export type JsonCellGroupProps = {
   };
 };
 
-export const JsonCellGroup = (props: JsonCellGroupProps) => {
+export const TetraFocusGroup = (props: TetraFocusGroupProps) => {
   const [isSelected, setSelected] = useState(false);
   const [isEditable, setEditable] = useState(false);
   const handleFocus = (event: React.FocusEvent) => {
