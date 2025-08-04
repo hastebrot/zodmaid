@@ -9,7 +9,7 @@ import {
   type LexicalEditor,
 } from "lexical";
 import { act } from "react";
-import { beforeAll, describe, test, vi } from "vitest";
+import { beforeAll, describe, expect, test, vi } from "vitest";
 import { LexTextbox } from "../components/lex-textbox";
 import { throwError } from "../helpers/error";
 import { registerGlobals } from "./register-globals";
@@ -56,7 +56,7 @@ describe("lex textbox", () => {
         editor.update(
           () => {
             if ($getSelection() === null) {
-              $getRoot().selectEnd();
+              // $getRoot().selectEnd();
               // $selectAll();
             }
             if (event.key === "ArrowUp") {
@@ -71,7 +71,7 @@ describe("lex textbox", () => {
             if (event.key === "Enter") {
               return;
             }
-            $getSelection()?.insertText(event.key);
+            // $getSelection()?.insertText(event.key);
           },
           // { discrete: true },
         );
@@ -101,12 +101,13 @@ describe("lex textbox", () => {
 
     await waitFor(() => Promise.resolve());
     await act(async () => await editor.update(() => {}));
-    // expect(onChange).toHaveBeenCalledTimes(8);
-    // expect(onChange).toHaveBeenLastCalledWith("text12xyyx3\nxxyy");
 
     console.log("lex state", reprEditorState(editor.getEditorState()));
     console.log("lex elem", reprEditorElem(textbox));
     // screen.debug();
+
+    // expect(onChange).toHaveBeenCalledTimes(8);
+    expect(onChange).toHaveBeenLastCalledWith("text12xyyx3\nxxyy");
   });
 });
 

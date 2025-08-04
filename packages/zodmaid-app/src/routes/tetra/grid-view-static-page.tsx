@@ -14,8 +14,11 @@ import {
   JsonRow,
   type GridContextProps,
 } from "zodspy";
+import { useDocumentTitle } from "../../helpers/react";
 
 export const GridViewStaticPage = () => {
+  useDocumentTitle("tetra: grid view static");
+
   return (
     <div className="min-h-dvh bg-gray-100 text-gray-900 p-4">
       <GridViewForRoot />

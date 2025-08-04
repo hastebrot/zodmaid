@@ -3,6 +3,9 @@ import { GlobalWindow } from "happy-dom";
 
 export const dom = new GlobalWindow({ url: "http://localhost/" });
 
+const settings = dom.happyDOM.settings;
+settings.disableComputedStyleRendering = false;
+
 export function registerGlobals() {
   const ignoredKeys = ["undefined"];
   for (const key in Object.getOwnPropertyDescriptors(dom)) {

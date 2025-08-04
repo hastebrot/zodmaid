@@ -1,8 +1,8 @@
 import { useLayoutEffect, useRef } from "react";
-import { measureElemSize } from "./helpers/measure-elem-size";
+import { measureElemSize } from "./measure-elem-size";
 
-export const useFieldSizingTextarea = () => {
-  const ref = useRef<HTMLTextAreaElement>(null);
+export const useFieldSizingInput = () => {
+  const ref = useRef<HTMLInputElement>(null);
   useLayoutEffect(() => {
     if (ref.current === null) return;
     const elem = ref.current;
@@ -13,9 +13,12 @@ export const useFieldSizingTextarea = () => {
     }
     updateElem();
     elem.addEventListener("input", updateElem);
+    const observer = new MutationObserver(updateElem);
+    observer.observe(elem, { attributes: true, childList: true });
     return () => {
       elem.removeEventListener("input", updateElem);
+      observer.disconnect();
     };
   }, [ref]);
-  return { textareaRef: ref };
+  return { inputRef: ref };
 };

@@ -1,55 +1,58 @@
-## zodspy structure
+## studio structure
 
 - non-interactive, static
 - interactive, dynamic
 
 ---
 
+- studio-app = react vite application
 - iris = document interface
-- zmaid = diagram graph
-- zspy = data grid
-- ztan = outline document
-- zhepta = whiteboard canvas
-- zbrat = annotated text
+- octo (zodmaid) = node-link diagram
+- tetra (zodspy) = data grid
+- tri (zodtana) = outline document
+- hepta (zodhepta) = whiteboard canvas
+- duo (zodbrat) = annotated text
 
 ---
 
-- zspy grid view
-- ztan grid view
+- tetra grid view
+- tri grid view
 
-- ztan focus group
-- ztan bullet button
-- ztan outline button
-- ztan tag button
-- ztan action button
+- tri focus group
+- tri bullet button
+- tri outline button
+- tri tag button
+- tri action button
 
-- ztan node layout
-- ztan list cell
-- ztan field cell
-- ztan table cell
+- tri node layout
+- tri list cell
+- tri field cell
+- tri table cell
 
-- ztan data model
-- ztan grid / row / cell
-- ztan grid context
-- ztan grid view
+- tri data model
+- tri grid / row / cell
+- tri grid context
+- tri grid view
 
-- ztan cell context
-- ztan cell renderer
+- tri cell context
+- tri cell renderer
   - owner / key
 
-- ztan data mapper
+- tri data mapper
   - populate rows
   - populate columns
 
-- ztan style provider
-- ztan node title / description / tag list
+- tri style provider
+- tri node title / description / tag list
 
-- ztan toolbar
-- ztan toolbar overlay
+- iris toolbar
+- iris toolbar overlay
+- iris input
+- iris textarea
 
-- zhepta whiteboard
-- zhepta card
-- zhepta card group
+- hepta whiteboard
+- hepta card
+- hepta card group
 
 - iris screen layout
 - iris action list button

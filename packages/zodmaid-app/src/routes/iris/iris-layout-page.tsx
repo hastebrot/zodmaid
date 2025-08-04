@@ -1,14 +1,17 @@
 import { type CSSProperties } from "react";
 import { IrisIcon } from "../../components/iris-icon";
 import { classNames } from "../../helpers/clsx";
+import { useDocumentTitle } from "../../helpers/react";
 
 export const IrisLayoutPage = () => {
+  useDocumentTitle("iris: layout");
+
   return (
     <Theme theme="dark">
       <div
         className={classNames(
           "h-dvh overscroll-contain overflow-auto",
-          "bg-(--bg-base) text-(--fg-base)",
+          "bg-(--bg-base) text-(--fg-base) border-(--border-base)",
           "[scrollbar-color:var(--border-base)_var(--bg-base)]",
         )}
       >

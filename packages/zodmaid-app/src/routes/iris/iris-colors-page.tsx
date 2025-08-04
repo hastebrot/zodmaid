@@ -1,4 +1,8 @@
+import { useDocumentTitle } from "../../helpers/react";
+
 export const IrisColorsPage = () => {
+  useDocumentTitle("iris: colors");
+
   return (
     <div className="grid auto-rows-fr grid-flow-row h-dvh text-sm">
       <div className="flex flex-row text-sm text-black">

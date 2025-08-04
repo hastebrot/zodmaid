@@ -1,8 +1,8 @@
 import { classNames } from "../helpers/clsx";
 import { BaseCell, type BaseCellProps } from "./base-cell";
-import { JsonCellContext } from "./json/json-cell-context";
-import { JsonCellGroup } from "./json/json-cell-group";
-import { JsonCellRenderer } from "./json/json-cell-renderer";
+import { JsonCellContext } from "./tetra/json-cell-context";
+import { JsonCellGroup } from "./tetra/json-cell-group";
+import { JsonCellRenderer } from "./tetra/json-cell-renderer";
 
 export type JsonCellProps<DataModel> = BaseCellProps<DataModel> & {
   gridColumnLimit?: number;

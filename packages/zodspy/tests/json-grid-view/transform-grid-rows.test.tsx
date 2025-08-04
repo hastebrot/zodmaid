@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import {
   transformToGridRows,
   transformToTableRows,
-} from "../../components/json/json-grid-transformer";
+} from "../../components/tetra/json-grid-transformer";
 import { purchaseOrder } from "../../examples/purchase-order";
 import { throwError } from "../../helpers/error";
 

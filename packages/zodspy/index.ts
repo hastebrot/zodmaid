@@ -20,15 +20,12 @@ export { JsonCell } from "zodspy/components/json-cell";
 export { JsonGrid } from "zodspy/components/json-grid";
 export { JsonGridView } from "zodspy/components/json-grid-view";
 export { JsonRow } from "zodspy/components/json-row";
-export { JsonCellExpandButton } from "zodspy/components/json/json-cell-expand-button";
-export { JsonCellLayout } from "zodspy/components/json/json-cell-layout";
-export { JsonCellRenderer } from "zodspy/components/json/json-cell-renderer";
-export { JsonCellTableButton } from "zodspy/components/json/json-cell-table-button";
-export {
-  determineJsonType,
-  JsonCellTypeButton,
-} from "zodspy/components/json/json-cell-type-button";
-export { JsonGridCellLayout } from "zodspy/components/json/json-grid-cell-layout";
+export { JsonCellExpandButton } from "./components/tetra/json-cell-expand-button";
+export { JsonCellLayout } from "./components/tetra/json-cell-layout";
+export { JsonCellRenderer } from "./components/tetra/json-cell-renderer";
+export { JsonCellTableButton } from "./components/tetra/json-cell-table-button";
+export { determineJsonType, JsonCellTypeButton } from "./components/tetra/json-cell-type-button";
+export { JsonGridCellLayout } from "./components/tetra/json-grid-cell-layout";
 export {
   transformToGridRows,
   transformToTableRows,
@@ -36,4 +33,4 @@ export {
   type JsonDataModel,
   type JsonObject,
   type JsonValue,
-} from "zodspy/components/json/json-grid-transformer";
+} from "./components/tetra/json-grid-transformer";
