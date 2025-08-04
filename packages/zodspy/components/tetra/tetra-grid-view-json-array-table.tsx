@@ -59,7 +59,7 @@ export const TetraGridViewJsonArrayTable = (gridProps: {
         const value = row?.value;
         if (props.data.type === "header-cell") {
           const label = String(props.data.column?.label ?? "");
-          const type = rows[0][columnIndex].type;
+          const type = rows[0]![columnIndex]!.type;
           return (
             <div
               className={classNames(
