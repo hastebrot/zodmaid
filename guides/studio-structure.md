@@ -160,3 +160,68 @@ navigation
     - position [grid name, row index, col index] = cell type, cell ref
     - registerCell
     - unregisterCell
+
+---
+
+- `<Grid name="">` and parent grid name
+- `<Cell row={0} col={0}>` and grid name
+
+- `<Grid>` use grid view context
+- `<Cell>` use grid view context, use effect, register and unregister
+
+- selection =
+  - grid name
+  - cell row
+  - cell col
+
+- movements = + grid type, current selection
+  - arrow up cell
+  - arrow down cell
+  - arrow left cell
+  - arrow right cell
+
+- to sub grid
+- to parent grid
+
+- test: to sub grid
+  - selection: grid / 1 / 1
+  - on arrow down
+  - selection: grid / 1 / 2
+  - selection: subgrid / 1 / 1
+
+- test: to parent grid
+  - selection: subgrid / 1 / 1
+  - on arrow up
+  - selection: grid / 1 / 2
+  - selection: subgrid / 1 / 1
+
+- grid view context
+- grid context
+- cell cotext
+
+- lookup parent grid + cell in parent grid
+- lookup subgrid + cell in subgrid + grid row + grid col
+- lookup cell
+
+- json object
+- json array
+- json array table
+- json root
+
+- keydown handler
+  - enter + cell selection to text selection
+  - escape
+
+- tri grid layout
+- tri cell layout
+
+- expand last column
+  - fixed width
+  - width: max px
+  - width: 100% + screen right end
+
+- tri bullet button
+- tri tag button
+  - static
+  - playwright test
+  - headless test
