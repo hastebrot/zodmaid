@@ -430,7 +430,7 @@ export const TriGridView = (gridProps: { value: TriDataModel[] }) => {
   });
 
   return (
-    <div className="w-fit">
+    <div className="w-min">
       <BaseGridView context={context as GridContextProps} />
     </div>
   );
@@ -469,11 +469,16 @@ export const TriRow = (props: BaseRowProps) => {
 };
 
 export const TriNodeList = (props: { children?: React.ReactNode }) => {
-  return <div className="flex flex-col w-0">{props.children}</div>;
+  return <div className={classNames("flex flex-col")}>{props.children}</div>;
 };
 
 export const TriNode = (props: { children?: React.ReactNode }) => {
-  return <div className="flex items-start gap-2 py-[3px]">{props.children}</div>;
+  return (
+    <div className="relative flex items-start gap-2 py-[3px]">
+      {props.children}
+      <div className="absolute inset-0 m-0.5 -mx-0.5 bg-blue-500/20 outline outline-blue-500/50 rounded-md"></div>
+    </div>
+  );
 };
 
 export const TriNodeItems = (props: { children?: React.ReactNode }) => {

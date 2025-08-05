@@ -25,7 +25,7 @@ describe("example grid view", () => {
   test("should grid", async () => {
     const data = observable(MusicLibrarySchema.parse(musicLibrary));
     const TextFixture = observer(() => {
-      const { value, onChange } = useInputValue(
+      const { value, onChange } = withInputValue(
         data,
         (data) => String(data.Title),
         (data, value) => (data.Title = String(value)),
@@ -81,7 +81,7 @@ describe("example grid view", () => {
   });
 });
 
-const useInputValue = <T extends object>(
+const withInputValue = <T extends object>(
   data: T,
   readValue: (data: T) => string,
   writeValue: (data: T, value: string) => void,

@@ -96,13 +96,13 @@ export type NodeCellProps = {
   titleSlot?: React.ReactNode;
   descriptionSlot?: React.ReactNode;
   itemsSlot?: React.ReactNode;
-}
+};
 
 export type FieldCellProps = {
   bulletSlot?: React.ReactNode;
   titleSlot?: React.ReactNode;
   descriptionSlot?: React.ReactNode;
-}
+};
 
 export type TableCellProps = {
   bulletSlot?: React.ReactNode;
@@ -110,5 +110,53 @@ export type TableCellProps = {
   titleSlot?: React.ReactNode;
   descriptionSlot?: React.ReactNode;
   itemsSlot?: React.ReactNode;
-}
+};
 ```
+
+- https://mobx.js.org/computeds-with-args.html#2-close-over-the-arguments
+
+```js
+import * as React from "react";
+import { computed } from "mobx";
+import { observer } from "mobx-react-lite";
+
+const Item = observer(({ item, store }) => {
+  const isSelected = computed(() => store.isSelected(item.id)).get();
+  return (
+    <div className={isSelected ? "selected" : ""}>
+      {item.title}
+    </div>
+  );
+});
+```
+
+selection
+- we have a grid cell
+- on click, the cell becomes selected
+  - on enter, the cell input becomes focused
+  - on escape, the cell input looses focus
+- on click the cell contains cell text
+  - on enter, the cell text is replaced by the cell input
+  - on escape, the cell input is replaced by the cell text
+
+navigation
+- we have a grid context
+- we have useGridContext() hook
+- we have useGridNavigation() hook. it uses an effect that registers
+  the cell coordinates and unregisters them when the component unmounts
+- we have a grid with subgrids. each subgrid knows the parent grid coordinates
+- we use the grid context to store the last cell coordinates
+- on arrow left or right, the last cell coordinate x is updated
+- on arrow up or down, the last cell coordinate y is updated
+
+- grid view context
+  - model
+  - selection: text, grid
+  - position: grid
+    - position [grid name, row index, col index] = grid type, grid ref
+    - registerGrid
+    - unregisterGrid
+  - position: cell
+    - position [grid name, row index, col index] = cell type, cell ref
+    - registerCell
+    - unregisterCell
