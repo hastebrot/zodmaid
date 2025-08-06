@@ -1,0 +1,301 @@
+import { Fragment, type CSSProperties } from "react";
+import { throwError } from "zodmaid/engines/dagreEngine";
+import { BaseGridView, defineGridContext, type BaseCellProps, type GridContextProps } from "zodspy";
+import { TriCell } from "zodspy/components/tri-cell";
+import { TriGrid } from "zodspy/components/tri-grid";
+import { TriRow } from "zodspy/components/tri-row";
+import { TriBulletButton } from "zodspy/components/tri/tri-bullet-button";
+import { TriCellContext } from "zodspy/components/tri/tri-cell-context";
+import { TriCellRenderer } from "zodspy/components/tri/tri-cell-renderer";
+import { iconCursorText, iconHash } from "zodspy/components/tri/tri-icons";
+import { classNames } from "../../helpers/clsx";
+import { useDocumentTitle } from "../../helpers/react";
+
+export type TriItem = {
+  title: string;
+  description?: string;
+  items?: TriItem[];
+  type?: TriType;
+  view?: TriView;
+  tags?: TriTag[];
+  isFolded?: boolean;
+  isReference?: boolean;
+};
+
+export type TriType = "plain" | "field:plain" | "field:tag";
+export type TriView = "list" | "field" | "table";
+export type TriTag = TriItem;
+
+const items: TriItem[] = [
+  // item title, folded, and reference.
+  { title: "Text", isFolded: false },
+  { title: "Text", isFolded: true },
+  { title: "Text", isFolded: false, isReference: true },
+  { title: "Text", isFolded: true, isReference: true },
+
+  // item type, and tags.
+  { title: "Text", type: "plain" },
+  { title: "Text", type: "plain", tags: [{ title: "Text" }] },
+  { title: "Text", type: "field:plain" },
+  { title: "Text", type: "field:tag" },
+
+  // item description.
+  { title: "Text", description: "Description", type: "plain" },
+  { title: "Text", description: "Description", type: "field:plain" },
+
+  // item view.
+  { title: "Text", type: "plain", view: "list", items: [{ title: "" }] },
+  { title: "Text", type: "plain", view: "list", items: [{ title: "", items: [{ title: "" }] }] },
+  { title: "Text", type: "field:plain", view: "list", items: [{ title: "" }] },
+  {
+    title: "Text",
+    type: "field:plain",
+    view: "list",
+    items: [{ title: "", items: [{ title: "" }] }],
+  },
+  { title: "Text", type: "field:plain", view: "field", items: [{ title: "" }] },
+  {
+    title: "Text",
+    type: "field:plain",
+    view: "field",
+    items: [{ title: "", items: [{ title: "" }] }],
+  },
+  {
+    title: "Text",
+    type: "field:plain",
+    view: "field",
+    items: [{ title: "", items: [{ title: "" }] }],
+  },
+  {
+    title: "Text",
+    type: "plain",
+    view: "table",
+    items: [
+      { title: "Text", type: "field:tag", items: [{ title: "", items: [{ title: "" }] }] },
+      { title: "Text", type: "field:plain", items: [{ title: "" }] },
+    ],
+  },
+];
+
+export const TriStyledPage = () => {
+  useDocumentTitle("tri: grid view styled");
+  const rows: TriItem[] = items;
+
+  return (
+    <div
+      className={classNames(
+        "h-dvh p-8 bg-(--bg-base) text-(--fg-base)",
+        "[scrollbar-color:var(--border-base)_var(--bg-base)]",
+        "overflow-auto overscroll-contain",
+        [
+          "[--bg-base:var(--color-zinc-900)]",
+          "[--border-base:var(--color-zinc-700)]",
+          "[--fg-base:var(--color-zinc-300)]",
+          "[--fg-accent:var(--color-blue-500)]",
+        ],
+      )}
+    >
+      <TriTheme>
+        <TriGridView value={rows} />
+      </TriTheme>
+    </div>
+  );
+};
+
+export const TriGridView = (gridProps: { value: TriItem[] }) => {
+  const context = defineGridContext<TriItem>({
+    rows: gridProps.value,
+    columns: [
+      {
+        label: "item",
+        width: "minmax(180px, max-content)",
+        cellRenderer(props) {
+          const row = props.data.row ?? throwError("row is undefined");
+          return <TriColumnItem item={row} />;
+        },
+      },
+      {
+        label: "items",
+        width: "1fr",
+        cellRenderer(props) {
+          const row = props.data.row ?? throwError("row is undefined");
+          return <TriColumnItems item={row} />;
+        },
+      },
+    ],
+    elements: {
+      Grid(props) {
+        return <TriGrid {...props} className="w-full" />;
+      },
+      Row(props) {
+        return <TriRow {...props} className="grid grid-cols-subgrid grid-flow-col col-span-full" />;
+      },
+      Cell(props) {
+        const row = props.data.row ?? throwError("row is undefined");
+        row.type = row.type ?? "plain";
+        row.view = row.view ?? "list";
+        const style = { ...props.style };
+        if (row.view === "list" && props.data.columnIndex === 0) {
+          style.gridColumn = props.data.columnIndex + 1;
+          style.gridColumnEnd = -1;
+        }
+        if (row.view === "list" && props.data.columnIndex > 0) {
+          return <Fragment />;
+        }
+
+        return (
+          <TriCellContext value={{ cellProps: props as BaseCellProps }}>
+            <TriCell {...props} className="relative grid cursor-auto text-nowrap" style={style}>
+              <TriCellRenderer />
+            </TriCell>
+          </TriCellContext>
+        );
+      },
+    },
+  });
+
+  return <BaseGridView context={context as GridContextProps} />;
+};
+
+const TriColumnItem = (props: { item: TriItem }) => {
+  const title = props.item.title;
+  const description = props.item.description;
+  const type = props.item.type;
+  const tags = props.item.tags ?? [];
+  const items = props.item.items;
+  const isFolded = props.item.isFolded ?? false;
+  const hasTags = tags.length > 0;
+  const hasTitle = title.trim() !== "";
+  return (
+    <TriNodeList>
+      <TriNode isSelected>
+        <div className="flex items-center h-(--text-line-height)">
+          {type === "plain" && (
+            <TriBulletButton
+              variant="point"
+              color={!hasTitle ? "gray" : hasTags ? "cyan" : undefined}
+              hasOutline={isFolded}
+            />
+          )}
+          {type === "field:plain" && (
+            <TriBulletButton variant="field" color={true ? "cyan" : undefined}>
+              <TriBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
+            </TriBulletButton>
+          )}
+          {type === "field:tag" && (
+            <TriBulletButton variant="field" color={true ? "cyan" : undefined}>
+              <TriBulletIcon iconSlot={iconHash} />
+            </TriBulletButton>
+          )}
+        </div>
+        <div className="flex flex-col">
+          <span className={classNames("text-nowrap", !hasTitle && "text-zinc-500")}>
+            {title === "" ? "Empty" : title}
+          </span>
+          {description && (
+            <span className="text-nowrap text-[14px]/[20px] text-zinc-500">{description}</span>
+          )}
+        </div>
+        {tags?.map((tag) => (
+          <div key={tag.title} className="flex items-center h-(--text-line-height)">
+            <TriBulletButton
+              variant="action"
+              textSlot={tag.title}
+              hasOutline
+              color={hasTags ? "cyan" : undefined}
+            >
+              <TriBulletIcon iconSlot={iconHash} />
+            </TriBulletButton>
+          </div>
+        ))}
+      </TriNode>
+      {type === "plain" && items && items.length > 0 && (
+        <TriNodeItems>
+          <TriGridView value={items} />
+        </TriNodeItems>
+      )}
+    </TriNodeList>
+  );
+};
+
+const TriColumnItems = (props: { item: TriItem }) => {
+  const type = props.item.type;
+  const items = props.item.items;
+  return <Fragment>{type !== "plain" && items && <TriGridView value={items} />}</Fragment>;
+};
+
+export const TriTheme = (props: { children?: React.ReactNode }) => {
+  const style = {
+    "--text-font-size": "15px",
+    "--text-line-height": "21px",
+    "--bullet-size": "17px",
+    "--bullet-field-size": "12px",
+    "--bullet-icon-size": "12px",
+    "--bullet-point-size": "7px",
+  } as CSSProperties;
+  const colors = {
+    "--color-zinc-750": "color-mix(in oklch, var(--color-zinc-700), var(--color-zinc-800))",
+  } as CSSProperties;
+
+  return (
+    <div
+      className="font-sans text-(size:--text-font-size)/(--text-line-height)"
+      style={{ ...style, ...colors }}
+    >
+      {props.children}
+    </div>
+  );
+};
+
+export const TriNodeList = (props: { children?: React.ReactNode }) => {
+  return <div className={classNames("flex flex-col")}>{props.children}</div>;
+};
+
+export const TriNode = (props: { children?: React.ReactNode; isSelected?: boolean }) => {
+  return (
+    <div className="relative flex items-start gap-2 py-[3px]">
+      {props.children}
+      <div
+        className={classNames(
+          "absolute inset-0 my-0.5 -ml-0.5 mr-1.5",
+          props.isSelected && "bg-blue-500/20 outline outline-blue-500/50 rounded-md",
+        )}
+      ></div>
+    </div>
+  );
+};
+
+export const TriNodeItems = (props: { children?: React.ReactNode }) => {
+  return (
+    <div className="relative flex flex-col gap-1.5 pl-[calc(var(--bullet-size)*2)]">
+      <div className="absolute left-0 top-0 bottom-0 w-(--bullet-size) h-full flex justify-center">
+        <button className="w-[1px] h-full rounded-[4px] bg-(--color-zinc-750)"></button>
+      </div>
+      {props.children}
+    </div>
+  );
+};
+
+export const TriNodeField = (props: { children?: React.ReactNode }) => {
+  return (
+    <div
+      className={classNames(
+        "grid grid-cols-[repeat(10,_minmax(140px,_max-content))] grid-flow-col items-start",
+        "gap-4 pt-1 pb-1.5 border-b border-(--color-zinc-750)",
+      )}
+    >
+      {props.children}
+    </div>
+  );
+};
+
+export const TriBulletIcon = (props: { iconSlot?: React.ReactNode; style?: CSSProperties }) => {
+  return (
+    <span
+      className="flex size-(--bullet-icon-size) items-center justify-center"
+      style={props.style}
+    >
+      {props.iconSlot}
+    </span>
+  );
+};

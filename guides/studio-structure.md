@@ -24,7 +24,7 @@
 - tri tag button
 - tri action button
 
-- tri node layout
+- tri item layout
 - tri list cell
 - tri field cell
 - tri table cell
@@ -43,7 +43,7 @@
   - populate columns
 
 - tri style provider
-- tri node title / description / tag list
+- tri item title / description / tag list
 
 - iris toolbar
 - iris toolbar overlay
@@ -131,6 +131,7 @@ const Item = observer(({ item, store }) => {
 ```
 
 selection
+
 - we have a grid cell
 - on click, the cell becomes selected
   - on enter, the cell input becomes focused
@@ -140,10 +141,11 @@ selection
   - on escape, the cell input is replaced by the cell text
 
 navigation
+
 - we have a grid context
 - we have useGridContext() hook
-- we have useGridNavigation() hook. it uses an effect that registers
-  the cell coordinates and unregisters them when the component unmounts
+- we have useGridNavigation() hook. it uses an effect that registers the cell
+  coordinates and unregisters them when the component unmounts
 - we have a grid with subgrids. each subgrid knows the parent grid coordinates
 - we use the grid context to store the last cell coordinates
 - on arrow left or right, the last cell coordinate x is updated
@@ -197,7 +199,7 @@ navigation
 
 - grid view context
 - grid context
-- cell cotext
+- cell context
 
 - lookup parent grid + cell in parent grid
 - lookup subgrid + cell in subgrid + grid row + grid col
@@ -225,3 +227,40 @@ navigation
   - static
   - playwright test
   - headless test
+
+- https://www.rfc-editor.org/rfc/rfc9535.html, JSONPath: Query Expressions for
+  JSON
+
+```json
+{ "store": {
+    "book": [
+      { "category": "reference",
+        "author": "Nigel Rees",
+        "title": "Sayings of the Century",
+        "price": 8.95
+      },
+      { "category": "fiction",
+        "author": "Evelyn Waugh",
+        "title": "Sword of Honour",
+        "price": 12.99
+      },
+      { "category": "fiction",
+        "author": "Herman Melville",
+        "title": "Moby Dick",
+        "isbn": "0-553-21311-3",
+        "price": 8.99
+      },
+      { "category": "fiction",
+        "author": "J. R. R. Tolkien",
+        "title": "The Lord of the Rings",
+        "isbn": "0-395-19395-8",
+        "price": 22.99
+      }
+    ],
+    "bicycle": {
+      "color": "red",
+      "price": 399
+    }
+  }
+}
+```
