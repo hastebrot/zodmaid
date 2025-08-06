@@ -62,16 +62,10 @@ const items: TriItem[] = [
   },
   {
     title: "Text",
-    type: "field:plain",
-    view: "field",
-    items: [{ title: "", items: [{ title: "" }] }],
-  },
-  {
-    title: "Text",
     type: "plain",
     view: "table",
     items: [
-      { title: "Text", type: "field:tag", items: [{ title: "", items: [{ title: "" }] }] },
+      { title: "Text", type: "field:tag", items: [{ title: "" }] },
       { title: "Text", type: "field:plain", items: [{ title: "" }] },
     ],
   },
@@ -161,6 +155,7 @@ const TriColumnItem = (props: { item: TriItem }) => {
   const title = props.item.title;
   const description = props.item.description;
   const type = props.item.type;
+  const view = props.item.view;
   const tags = props.item.tags ?? [];
   const items = props.item.items;
   const isFolded = props.item.isFolded ?? false;
@@ -209,7 +204,7 @@ const TriColumnItem = (props: { item: TriItem }) => {
           </div>
         ))}
       </TriNode>
-      {type === "plain" && items && items.length > 0 && (
+      {view === "list" && items && items.length > 0 && (
         <TriNodeItems>
           <TriGridView value={items} />
         </TriNodeItems>
@@ -219,9 +214,8 @@ const TriColumnItem = (props: { item: TriItem }) => {
 };
 
 const TriColumnItems = (props: { item: TriItem }) => {
-  const type = props.item.type;
-  const items = props.item.items;
-  return <Fragment>{type !== "plain" && items && <TriGridView value={items} />}</Fragment>;
+  const items = props.item.items ?? [];
+  return items.length > 0 && <TriGridView value={items} />;
 };
 
 export const TriTheme = (props: { children?: React.ReactNode }) => {
@@ -258,7 +252,7 @@ export const TriNode = (props: { children?: React.ReactNode; isSelected?: boolea
       <div
         className={classNames(
           "absolute inset-0 my-0.5 -ml-0.5 mr-1.5",
-          props.isSelected && "bg-blue-500/20 outline outline-blue-500/50 rounded-md",
+          props.isSelected && "bg-blue-500/20 outline-blue-500/50 outline rounded-sm",
         )}
       ></div>
     </div>
