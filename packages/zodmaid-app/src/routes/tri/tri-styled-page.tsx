@@ -7,7 +7,13 @@ import { TriRow } from "zodspy/components/tri-row";
 import { TriBulletButton } from "zodspy/components/tri/tri-bullet-button";
 import { TriCellContext } from "zodspy/components/tri/tri-cell-context";
 import { TriCellRenderer } from "zodspy/components/tri/tri-cell-renderer";
-import { iconCursorText, iconHash } from "zodspy/components/tri/tri-icons";
+import {
+  iconAt,
+  iconCheck,
+  iconCode,
+  iconCursorText,
+  iconHash,
+} from "zodspy/components/tri/tri-icons";
 import { classNames } from "../../helpers/clsx";
 import { useDocumentTitle } from "../../helpers/react";
 
@@ -22,9 +28,229 @@ export type TriItem = {
   isReference?: boolean;
 };
 
-export type TriType = "plain" | "field:plain" | "field:tag";
+export type TriType =
+  | "plain"
+  | "field:plain"
+  | "field:tag"
+  | "field:email"
+  | "field:bool"
+  | "field:code";
 export type TriView = "list" | "field" | "table";
 export type TriTag = TriItem;
+
+const _rows: TriItem[] = [
+  {
+    title: "Person name",
+    type: "plain",
+    tags: [{ title: "Person" }],
+    items: [
+      {
+        title: "Company",
+        description: "Name of the organization",
+        type: "field:plain",
+        view: "field",
+        items: [
+          // wrap.
+          { title: "Company name", type: "plain", tags: [{ title: "Company" }] },
+        ],
+      },
+      {
+        title: "Role",
+        description: "Job title of the person",
+        type: "field:plain",
+        view: "field",
+        items: [
+          // wrap.
+          { title: "", type: "plain" },
+        ],
+      },
+      {
+        title: "Email",
+        type: "field:email",
+        view: "field",
+        items: [
+          // wrap.
+          { title: "", type: "plain" },
+        ],
+      },
+      {
+        title: "Text",
+        type: "plain",
+        items: [
+          // wrap.
+          { title: "Text", type: "plain" },
+        ],
+      },
+      { title: "Text", type: "plain", isFolded: true },
+      { title: "Text", type: "plain", isFolded: true },
+    ],
+  },
+  {
+    title: "Company name",
+    type: "plain",
+    tags: [{ title: "Company" }],
+    items: [
+      {
+        title: "People",
+        type: "plain",
+        items: [
+          // wrap.
+          { title: "Person name", type: "plain", tags: [{ title: "Person" }] },
+        ],
+      },
+    ],
+  },
+  {
+    title: "Album",
+    type: "field:tag",
+    view: "field",
+    items: [
+      // wrap.
+      {
+        title: "Name",
+        type: "field:plain",
+        view: "field",
+        items: [{ title: "", type: "plain" }],
+      },
+      {
+        title: "Genre",
+        type: "field:plain",
+        view: "field",
+        items: [{ title: "", type: "plain" }],
+      },
+      {
+        title: "ReleaseDate",
+        type: "field:plain",
+        view: "field",
+        items: [
+          { title: "", type: "plain" },
+          {
+            title: "Pattern",
+            type: "field:code",
+            view: "field",
+            items: [{ title: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$", type: "plain" }],
+          },
+        ],
+      },
+      {
+        title: "Label",
+        type: "field:plain",
+        view: "field",
+        items: [{ title: "", type: "plain" }],
+      },
+      {
+        title: "Tracks",
+        type: "field:plain",
+        view: "field",
+        items: [{ title: "", type: "plain" }],
+      },
+    ],
+  },
+  {
+    title: "Track",
+    type: "field:tag",
+    view: "field",
+    items: [
+      // wrap.
+      {
+        title: "Title",
+        type: "field:plain",
+        view: "field",
+        items: [{ title: "", type: "plain" }],
+      },
+      {
+        title: "Duration",
+        type: "field:plain",
+        view: "field",
+        items: [
+          {
+            title: "",
+            type: "plain",
+          },
+          {
+            title: "Pattern",
+            type: "field:code",
+            view: "field",
+            items: [{ title: "^[0-9]{2}:[0-9]{2}$", type: "plain" }],
+          },
+        ],
+      },
+      {
+        title: "Writer",
+        type: "field:plain",
+        view: "field",
+        items: [
+          {
+            title: "",
+            type: "plain",
+          },
+          {
+            title: "Optional",
+            type: "field:bool",
+            view: "field",
+            items: [{ title: "True", type: "plain" }],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    title: "Table view",
+    type: "plain",
+    view: "table",
+    items: [
+      {
+        title: "Text",
+        type: "plain",
+        tags: [{ title: "Instance" }],
+        items: [
+          // wrap.
+          { title: "Text", type: "plain" },
+          { title: "Text", type: "plain" },
+          {
+            title: "Field",
+            type: "field:plain",
+            items: [{ title: "", type: "plain" }],
+          },
+          {
+            title: "Field",
+            type: "field:plain",
+            items: [{ title: "", type: "plain" }],
+          },
+          {
+            title: "Field",
+            type: "field:plain",
+            items: [{ title: "", type: "plain" }],
+          },
+        ],
+      },
+      {
+        title: "Text",
+        type: "plain",
+        tags: [{ title: "Instance" }],
+        items: [
+          { title: "Text", type: "plain" },
+          { title: "Text", type: "plain" },
+          {
+            title: "Field",
+            type: "field:plain",
+            items: [{ title: "", type: "plain" }],
+          },
+          {
+            title: "Field",
+            type: "field:plain",
+            items: [{ title: "", type: "plain" }],
+          },
+          {
+            title: "Field",
+            type: "field:plain",
+            items: [{ title: "", type: "plain" }],
+          },
+        ],
+      },
+    ],
+  },
+];
 
 const items: TriItem[] = [
   // item title, folded, and reference.
@@ -38,6 +264,9 @@ const items: TriItem[] = [
   { title: "Text", type: "plain", tags: [{ title: "Text" }] },
   { title: "Text", type: "field:plain" },
   { title: "Text", type: "field:tag" },
+  { title: "Text", type: "field:email" },
+  { title: "Text", type: "field:bool" },
+  { title: "Text", type: "field:code" },
 
   // item description.
   { title: "Text", description: "Description", type: "plain" },
@@ -73,7 +302,7 @@ const items: TriItem[] = [
 
 export const TriStyledPage = () => {
   useDocumentTitle("tri: grid view styled");
-  const rows: TriItem[] = items;
+  const rows: TriItem[] = _rows;
 
   return (
     <div
@@ -102,7 +331,7 @@ export const TriGridView = (gridProps: { value: TriItem[] }) => {
     columns: [
       {
         label: "item",
-        width: "minmax(180px, max-content)",
+        width: "minmax(200px, max-content)",
         cellRenderer(props) {
           const row = props.data.row ?? throwError("row is undefined");
           return <TriColumnItem item={row} />;
@@ -159,17 +388,19 @@ const TriColumnItem = (props: { item: TriItem }) => {
   const tags = props.item.tags ?? [];
   const items = props.item.items;
   const isFolded = props.item.isFolded ?? false;
+  const isReference = props.item.isReference ?? false;
   const hasTags = tags.length > 0;
   const hasTitle = title.trim() !== "";
   return (
     <TriNodeList>
-      <TriNode isSelected>
+      <TriNode isSelected={true} isField={false}>
         <div className="flex items-center h-(--text-line-height)">
           {type === "plain" && (
             <TriBulletButton
               variant="point"
               color={!hasTitle ? "gray" : hasTags ? "cyan" : undefined}
               hasOutline={isFolded}
+              hasOutlineBorder={isReference}
             />
           )}
           {type === "field:plain" && (
@@ -180,6 +411,21 @@ const TriColumnItem = (props: { item: TriItem }) => {
           {type === "field:tag" && (
             <TriBulletButton variant="field" color={true ? "cyan" : undefined}>
               <TriBulletIcon iconSlot={iconHash} />
+            </TriBulletButton>
+          )}
+          {type === "field:email" && (
+            <TriBulletButton variant="field" color={true ? "cyan" : undefined}>
+              <TriBulletIcon iconSlot={iconAt} />
+            </TriBulletButton>
+          )}
+          {type === "field:bool" && (
+            <TriBulletButton variant="field" color={true ? "cyan" : undefined}>
+              <TriBulletIcon iconSlot={iconCheck} />
+            </TriBulletButton>
+          )}
+          {type === "field:code" && (
+            <TriBulletButton variant="field" color={true ? "cyan" : undefined}>
+              <TriBulletIcon iconSlot={iconCode} />
             </TriBulletButton>
           )}
         </div>
@@ -241,13 +487,22 @@ export const TriTheme = (props: { children?: React.ReactNode }) => {
   );
 };
 
-export const TriNodeList = (props: { children?: React.ReactNode }) => {
-  return <div className={classNames("flex flex-col")}>{props.children}</div>;
+export const TriNodeList = (props: { children?: React.ReactNode; isField?: boolean }) => {
+  return <div className="flex flex-col">{props.children}</div>;
 };
 
-export const TriNode = (props: { children?: React.ReactNode; isSelected?: boolean }) => {
+export const TriNode = (props: {
+  children?: React.ReactNode;
+  isSelected?: boolean;
+  isField?: boolean;
+}) => {
   return (
-    <div className="relative flex items-start gap-2 py-[3px]">
+    <div
+      className={classNames(
+        "relative flex items-start gap-2 py-[3px] h-full",
+        props.isField && "border-b border-(--color-zinc-750)",
+      )}
+    >
       {props.children}
       <div
         className={classNames(
