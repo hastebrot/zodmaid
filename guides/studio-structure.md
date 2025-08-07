@@ -296,3 +296,30 @@ navigation
   - field row divider
   - table row divider
   - list indent guide
+
+> 2025 / Aug / 7
+
+- tri item layout
+  - tri focus group
+  - tri bullet button (variant: plain, field)
+  - tri outline button
+  - tri tag button
+  - tri action button
+  - tri item title
+  - tri item description
+  - tri item tag list
+
+- tri item list
+  - is nested
+  - is inline
+
+<tri focus group>
+  <tri item layout>
+    <div flex row auto_1fr> (if inline then auto_200px_1fr)
+      <div flex col>
+        <tri bullet button>
+        <tri outline button>
+      <div flex col>
+        <tri title> <tri tag list>
+        <tri description>
+        <tri item list> (if inline then wrapped in div flex col)

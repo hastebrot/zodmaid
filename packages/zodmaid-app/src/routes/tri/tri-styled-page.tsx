@@ -103,7 +103,7 @@ const _rows: TriItem[] = [
   {
     title: "Album",
     type: "field:tag",
-    view: "field",
+    // view: "field",
     items: [
       // wrap.
       {
@@ -149,7 +149,7 @@ const _rows: TriItem[] = [
   {
     title: "Track",
     type: "field:tag",
-    view: "field",
+    // view: "field",
     items: [
       // wrap.
       {
@@ -362,7 +362,7 @@ export const TriGridView = (gridProps: { value: TriItem[] }) => {
           style.gridColumn = props.data.columnIndex + 1;
           style.gridColumnEnd = -1;
         }
-        if (row.view === "list" && props.data.columnIndex > 0) {
+        if (row.view === "list" && props.data.columnIndex === 1) {
           return <Fragment />;
         }
 
@@ -378,6 +378,24 @@ export const TriGridView = (gridProps: { value: TriItem[] }) => {
   });
 
   return <BaseGridView context={context as GridContextProps} />;
+};
+
+type TriItemProps = {
+  item: TriItem;
+  isNested?: boolean; // is items nested or is items inline
+};
+
+const TriItem = (props: TriItemProps) => {
+  const item = props.item;
+  return <div>tri item</div>;
+};
+
+type TriItemListProps = {
+  items: TriItem[];
+};
+
+const TriItemList = (props: TriItemListProps) => {
+  return <div>tri item list</div>;
 };
 
 const TriColumnItem = (props: { item: TriItem }) => {
@@ -518,7 +536,7 @@ export const TriNode = (props: {
       {props.children}
       <div
         className={classNames(
-          "absolute inset-0 my-0.5 -ml-0.5 mr-1.5",
+          "absolute inset-0 my-0.5 -ml-0.5 mr-1.5 pointer-events-none",
           props.isSelected && "bg-blue-500/20 outline-blue-500/50 outline rounded-sm",
         )}
       ></div>
@@ -532,19 +550,6 @@ export const TriNodeItems = (props: { children?: React.ReactNode }) => {
       <div className="absolute left-0 top-0 bottom-0 w-(--bullet-size) h-full flex justify-center">
         <button className="w-[1px] h-full rounded-[4px] bg-(--color-zinc-750)"></button>
       </div>
-      {props.children}
-    </div>
-  );
-};
-
-export const TriNodeField = (props: { children?: React.ReactNode }) => {
-  return (
-    <div
-      className={classNames(
-        "grid grid-cols-[repeat(10,_minmax(140px,_max-content))] grid-flow-col items-start",
-        "gap-4 pt-1 pb-1.5 border-b border-(--color-zinc-750)",
-      )}
-    >
       {props.children}
     </div>
   );
