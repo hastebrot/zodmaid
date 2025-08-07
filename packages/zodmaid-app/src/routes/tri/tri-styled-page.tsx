@@ -461,7 +461,19 @@ const TriColumnItem = (props: { item: TriItem }) => {
 
 const TriColumnItems = (props: { item: TriItem }) => {
   const items = props.item.items ?? [];
-  return items.length > 0 && <TriGridView value={items} />;
+  return (
+    items.length > 0 && (
+      <div
+        className={classNames(
+          "grid",
+          props.item.type === "field:code" &&
+            "font-mono [&_span]:bg-zinc-800 [&_span]:text-amber-500 [&_span]:rounded-sm [&_span]:px-1",
+        )}
+      >
+        <TriGridView value={items} />
+      </div>
+    )
+  );
 };
 
 export const TriTheme = (props: { children?: React.ReactNode }) => {
