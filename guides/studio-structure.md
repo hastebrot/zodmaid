@@ -264,3 +264,35 @@ navigation
   }
 }
 ```
+
+> 2025 / Aug / 6
+
+- tin grid / row / cell
+- title, description
+- items, type, view
+- is folded, is reference
+
+- grid tiling, i.e. covering of a surface with no overlaps and no gaps
+
+- layout tests
+  - grid row / col / name
+  - if view = "list"
+    - item on `$[0][0]`
+    - items on `$[0][0]` (in the subgrid)
+  - if view = "field"
+    - item on `$[0][0]`
+    - items on `$[0][1]`
+  - if view = "table"
+    - item on `$[0][0]`
+    - items on `$[0][0]` (in the subgrid)
+
+- table subgrid
+  - select type plain (in items[])
+    - header cell (with field:type or field:instance)
+  - each field:* (in items[])
+    - header cell (with field:*)
+
+- layout lines
+  - field row divider
+  - table row divider
+  - list indent guide
