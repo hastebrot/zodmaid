@@ -1,5 +1,4 @@
 import { Fragment, type CSSProperties } from "react";
-import { throwError } from "zodmaid/engines/dagreEngine";
 import { BaseGridView, defineGridContext, type BaseCellProps, type GridContextProps } from "zodspy";
 import { TriCell } from "zodspy/components/tri-cell";
 import { TriGrid } from "zodspy/components/tri-grid";
@@ -7,6 +6,7 @@ import { TriRow } from "zodspy/components/tri-row";
 import { TriBulletButton } from "zodspy/components/tri/tri-bullet-button";
 import { TriCellContext } from "zodspy/components/tri/tri-cell-context";
 import { TriCellRenderer } from "zodspy/components/tri/tri-cell-renderer";
+import { type TriItem } from "zodspy/components/tri/tri-data-model";
 import {
   iconAt,
   iconCheck,
@@ -14,295 +14,14 @@ import {
   iconCursorText,
   iconHash,
 } from "zodspy/components/tri/tri-icons";
+import { items } from "zodspy/examples/tri-schema-items";
 import { classNames } from "../../helpers/clsx";
+import { throwError } from "../../helpers/error";
 import { useDocumentTitle } from "../../helpers/react";
-
-export type TriItem = {
-  title: string;
-  description?: string;
-  items?: TriItem[];
-  type?: TriType;
-  view?: TriView;
-  tags?: TriTag[];
-  isFolded?: boolean;
-  isReference?: boolean;
-};
-
-export type TriType =
-  | "plain"
-  | "field:plain"
-  | "field:tag"
-  | "field:email"
-  | "field:bool"
-  | "field:code";
-export type TriView = "list" | "field" | "table";
-export type TriTag = TriItem;
-
-const _rows: TriItem[] = [
-  {
-    title: "Person name",
-    type: "plain",
-    tags: [{ title: "Person" }],
-    items: [
-      {
-        title: "Company",
-        description: "Name of the organization",
-        type: "field:plain",
-        view: "field",
-        items: [
-          // wrap.
-          { title: "Company name", type: "plain", tags: [{ title: "Company" }] },
-        ],
-      },
-      {
-        title: "Role",
-        description: "Job title of the person",
-        type: "field:plain",
-        view: "field",
-        items: [
-          // wrap.
-          { title: "", type: "plain" },
-        ],
-      },
-      {
-        title: "Email",
-        type: "field:email",
-        view: "field",
-        items: [
-          // wrap.
-          { title: "", type: "plain" },
-        ],
-      },
-      {
-        title: "Text",
-        type: "plain",
-        items: [
-          // wrap.
-          { title: "Text", type: "plain" },
-        ],
-      },
-      { title: "Text", type: "plain", isFolded: true },
-      { title: "Text", type: "plain", isFolded: true },
-    ],
-  },
-  {
-    title: "Company name",
-    type: "plain",
-    tags: [{ title: "Company" }],
-    items: [
-      {
-        title: "People",
-        type: "plain",
-        items: [
-          // wrap.
-          { title: "Person name", type: "plain", tags: [{ title: "Person" }] },
-        ],
-      },
-    ],
-  },
-  {
-    title: "Album",
-    type: "field:tag",
-    // view: "field",
-    items: [
-      // wrap.
-      {
-        title: "Name",
-        type: "field:plain",
-        view: "field",
-        items: [{ title: "", type: "plain" }],
-      },
-      {
-        title: "Genre",
-        type: "field:plain",
-        view: "field",
-        items: [{ title: "", type: "plain" }],
-      },
-      {
-        title: "ReleaseDate",
-        type: "field:plain",
-        view: "field",
-        items: [
-          { title: "", type: "plain" },
-          {
-            title: "Pattern",
-            type: "field:code",
-            view: "field",
-            items: [{ title: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$", type: "plain" }],
-          },
-        ],
-      },
-      {
-        title: "Label",
-        type: "field:plain",
-        view: "field",
-        items: [{ title: "", type: "plain" }],
-      },
-      {
-        title: "Tracks",
-        type: "field:plain",
-        view: "field",
-        items: [{ title: "", type: "plain" }],
-      },
-    ],
-  },
-  {
-    title: "Track",
-    type: "field:tag",
-    // view: "field",
-    items: [
-      // wrap.
-      {
-        title: "Title",
-        type: "field:plain",
-        view: "field",
-        items: [{ title: "", type: "plain" }],
-      },
-      {
-        title: "Duration",
-        type: "field:plain",
-        view: "field",
-        items: [
-          {
-            title: "",
-            type: "plain",
-          },
-          {
-            title: "Pattern",
-            type: "field:code",
-            view: "field",
-            items: [{ title: "^[0-9]{2}:[0-9]{2}$", type: "plain" }],
-          },
-        ],
-      },
-      {
-        title: "Writer",
-        type: "field:plain",
-        view: "field",
-        items: [
-          {
-            title: "",
-            type: "plain",
-          },
-          {
-            title: "Optional",
-            type: "field:bool",
-            view: "field",
-            items: [{ title: "True", type: "plain" }],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    title: "Table view",
-    type: "plain",
-    view: "table",
-    items: [
-      {
-        title: "Text",
-        type: "plain",
-        tags: [{ title: "Instance" }],
-        items: [
-          // wrap.
-          { title: "Text", type: "plain" },
-          { title: "Text", type: "plain" },
-          {
-            title: "Field",
-            type: "field:plain",
-            items: [{ title: "", type: "plain" }],
-          },
-          {
-            title: "Field",
-            type: "field:plain",
-            items: [{ title: "", type: "plain" }],
-          },
-          {
-            title: "Field",
-            type: "field:plain",
-            items: [{ title: "", type: "plain" }],
-          },
-        ],
-      },
-      {
-        title: "Text",
-        type: "plain",
-        tags: [{ title: "Instance" }],
-        items: [
-          { title: "Text", type: "plain" },
-          { title: "Text", type: "plain" },
-          {
-            title: "Field",
-            type: "field:plain",
-            items: [{ title: "", type: "plain" }],
-          },
-          {
-            title: "Field",
-            type: "field:plain",
-            items: [{ title: "", type: "plain" }],
-          },
-          {
-            title: "Field",
-            type: "field:plain",
-            items: [{ title: "", type: "plain" }],
-          },
-        ],
-      },
-    ],
-  },
-];
-
-const items: TriItem[] = [
-  // item title, folded, and reference.
-  { title: "Text", isFolded: false },
-  { title: "Text", isFolded: true },
-  { title: "Text", isFolded: false, isReference: true },
-  { title: "Text", isFolded: true, isReference: true },
-
-  // item type, and tags.
-  { title: "Text", type: "plain" },
-  { title: "Text", type: "plain", tags: [{ title: "Text" }] },
-  { title: "Text", type: "field:plain" },
-  { title: "Text", type: "field:tag" },
-  { title: "Text", type: "field:email" },
-  { title: "Text", type: "field:bool" },
-  { title: "Text", type: "field:code" },
-
-  // item description.
-  { title: "Text", description: "Description", type: "plain" },
-  { title: "Text", description: "Description", type: "field:plain" },
-
-  // item view.
-  { title: "Text", type: "plain", view: "list", items: [{ title: "" }] },
-  { title: "Text", type: "plain", view: "list", items: [{ title: "", items: [{ title: "" }] }] },
-  { title: "Text", type: "field:plain", view: "list", items: [{ title: "" }] },
-  {
-    title: "Text",
-    type: "field:plain",
-    view: "list",
-    items: [{ title: "", items: [{ title: "" }] }],
-  },
-  { title: "Text", type: "field:plain", view: "field", items: [{ title: "" }] },
-  {
-    title: "Text",
-    type: "field:plain",
-    view: "field",
-    items: [{ title: "", items: [{ title: "" }] }],
-  },
-  {
-    title: "Text",
-    type: "plain",
-    view: "table",
-    items: [
-      { title: "Text", type: "field:tag", items: [{ title: "" }] },
-      { title: "Text", type: "field:plain", items: [{ title: "" }] },
-    ],
-  },
-];
 
 export const TriStyledPage = () => {
   useDocumentTitle("tri: grid view styled");
-  const rows: TriItem[] = _rows;
+  const rows: TriItem[] = items;
 
   return (
     <div
@@ -409,6 +128,7 @@ const TriColumnItem = (props: { item: TriItem }) => {
   const isReference = props.item.isReference ?? false;
   const hasTags = tags.length > 0;
   const hasTitle = title.trim() !== "";
+
   return (
     <TriNodeList>
       <TriNode isSelected={true} isField={false}>
@@ -479,6 +199,7 @@ const TriColumnItem = (props: { item: TriItem }) => {
 
 const TriColumnItems = (props: { item: TriItem }) => {
   const items = props.item.items ?? [];
+
   return (
     items.length > 0 && (
       <div

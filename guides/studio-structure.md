@@ -313,13 +313,13 @@ navigation
   - is nested
   - is inline
 
-<tri focus group>
-  <tri item layout>
-    <div flex row auto_1fr> (if inline then auto_200px_1fr)
-      <div flex col>
-        <tri bullet button>
-        <tri outline button>
+<tri item layout> has select outline
+  <tri outline button> position absolute left h-100% mt-bullet-height
+  <tri focus group> has select outline
+    <div flex row>
+      <tri bullet button> width height
       <div flex col>
         <tri title> <tri tag list>
         <tri description>
-        <tri item list> (if inline then wrapped in div flex col)
+  <div flex col> ml-bullet-width
+    <tri item list> (if inline then wrapped in div flex col)
