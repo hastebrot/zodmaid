@@ -15,6 +15,7 @@ import { MockupGridPage } from "./tetra/mockup-grid-page";
 import { ReactDataGridPage } from "./tetra/react-data-grid-page";
 import { TriDynamicPage } from "./tri/tri-dynamic-page";
 import { TriStaticPage } from "./tri/tri-static-page";
+import { TriStyledPage } from "./tri/tri-styled-page";
 
 // dagre, https://github.com/antvis/layout/blob/v5/packages/layout/src/dagre.ts
 // - uses @dagrejs/dagre, https://github.com/dagrejs/dagre
@@ -74,6 +75,7 @@ export const routes: RouteObject[] = [
       // wrap.
       { path: "grid-static", Component: () => <TriStaticPage /> },
       { path: "grid-dynamic", Component: () => <TriDynamicPage /> },
+      { path: "grid-styled", Component: () => <TriStyledPage /> },
     ],
   },
 ];
