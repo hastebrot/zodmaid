@@ -313,13 +313,28 @@ navigation
   - is nested
   - is inline
 
+> [!TASK] write story for tri item layout
+
 <tri item layout> has select outline
-  <tri outline button> position absolute left h-100% mt-bullet-height
-  <tri focus group> has select outline
+  <div flex col>
+    <tri focus group> has select outline
+      <div flex row>
+        <tri bullet button> width height
+        <div flex col>
+          <tri title input> <tri tag list> <tri tag button>
+          <tri description input>
+    <tri outline button> position absolute left h-100% mt-bullet-height
+    <div flex col> ml-bullet-width
+      <tri item list>
+
+<tri item layout> simple version
+  <div flex col>
+    <tri focus group> has select outline
+      <div flex row>
+        <tri bullet button>
+        <div flex col>
+          <tri title input> <tri tag list> <tri tag button>
+          <tri description input>
     <div flex row>
-      <tri bullet button> width height
-      <div flex col>
-        <tri title> <tri tag list>
-        <tri description>
-  <div flex col> ml-bullet-width
-    <tri item list> (if inline then wrapped in div flex col)
+      <tri outline button>
+      <tri item list>
