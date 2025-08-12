@@ -3,6 +3,7 @@ import { z } from "zod/v4";
 import { throwError } from "../helpers/error";
 
 type Item = z.infer<typeof Item>;
+type ItemInput = z.input<typeof Item>;
 const Item = z.object({
   title: z.string(),
   color: z.string(),
@@ -48,14 +49,14 @@ export class HillChart {
   hillLine: any;
 
   render(
-    data: { title: string; description: string; items: Item[] },
+    data: { title: string; description: string; items: ItemInput[] },
     width: number,
     height: number,
   ) {
     this.width = width;
     this.height = height;
 
-    this.initItems(data.items);
+    this.initItems(data.items as Item[]);
     this.initScales();
     this.initHill();
 
