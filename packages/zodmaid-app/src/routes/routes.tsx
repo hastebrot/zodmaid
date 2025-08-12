@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate, type RouteObject } from "react-router";
 import { InputFieldSizingPage } from "./iris/input-field-sizing-page";
 import { IrisColorsPage } from "./iris/iris-colors-page";
+import { IrisHillChartPage } from "./iris/iris-hill-chart-page";
 import { IrisLayoutPage } from "./iris/iris-layout-page";
 import { LexTextboxFocusPage } from "./iris/lex-textbox-focus-page";
 import { LexTextboxPage } from "./iris/lex-textbox-page";
@@ -47,6 +48,7 @@ export const routes: RouteObject[] = [
       { path: "textbox", Component: () => <LexTextboxPage /> },
       { path: "textbox-focus", Component: () => <LexTextboxFocusPage /> },
       { path: "input", Component: () => <InputFieldSizingPage /> },
+      { path: "hill-chart", Component: () => <IrisHillChartPage /> },
     ],
   },
   {
