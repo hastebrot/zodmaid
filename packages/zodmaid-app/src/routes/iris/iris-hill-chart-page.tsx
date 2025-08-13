@@ -2,65 +2,51 @@ import { useEffect, useRef } from "react";
 import { HillChart } from "../../components/iris-hill-chart";
 import { useDocumentTitle } from "../../helpers/react";
 
-const randText = () => {
+const randWords = (minWords = 2, maxWords = 5) => {
+  // prettier-ignore
   const loremWords = [
-    "lorem",
-    "ipsum",
-    "dolor",
-    "sit",
-    "amet",
-    "consectetur",
-    "adipiscing",
-    "elit",
-    "sed",
-    "do",
-    "eiusmod",
-    "tempor",
-    "incididunt",
-    "ut",
-    "labore",
-    "et",
-    "dolore",
-    "magna",
-    "aliqua",
-    "enim",
-    "ad",
-    "minim",
-    "veniam",
-    "quis",
-    "nostrud",
-    "exercitation",
-    "ullamco",
-    "laboris",
-    "nisi",
-    "aliquip",
+    "lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit", "sed", "do", "eiusmod",
+    "tempor", "incididunt", "ut", "labore", "et", "dolore", "magna", "aliqua", "enim", "ad", "minim",
+    "veniam", "quis", "nostrud", "exercitation", "ullamco", "laboris", "nisi", "aliquip",
   ];
-  const pickItem = (items: string[]) => items[Math.floor(Math.random() * items.length)];
-  const randNumber = (min: number, max: number) =>
-    Math.floor(Math.random() * (max - min + 1)) + min;
-  function generateLorem(count: number) {
+  const pickItem = (items: string[]) => {
+    return items[Math.floor(Math.random() * items.length)];
+  };
+  const generateLorem = (count: number) => {
     return Array.from({ length: count }, () => pickItem(loremWords)).join(" ");
-  }
-  return generateLorem(randNumber(2, 5));
+  };
+  const randNumber = (minNumber: number, maxNumber: number) => {
+    return Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber;
+  };
+  return generateLorem(randNumber(minWords, maxWords));
 };
 
 const data = {
-  title: "John D.",
-  description: "11-Aug-25 at 15:30",
+  title: "Benjamin G.",
+  description: "13-Aug-25 at 13:30",
   items: [
-    { title: randText(), color: "orange", x: 0 },
-    { title: randText(), color: "orange", x: 0 },
-    { title: randText(), color: "orange", x: 20 },
-    { title: randText(), color: "red", x: 40 },
-    { title: randText(), color: "red", x: 50 },
-    { title: randText(), color: "red", x: 50 },
-    { title: randText(), color: "blue", x: 70 },
-    { title: randText(), color: "green", x: 70 },
-    { title: randText(), color: "green", x: 70 },
-    { title: randText(), color: "blue", x: 100 },
-    { title: randText(), color: "blue", x: 100 },
-    { title: randText(), color: "blue", x: 100 },
+    { title: "#46 Render chart and edit progress", color: "gray", x: 15 },
+    { title: "#47 Edit chart table data", color: "gray", x: 0 },
+    { title: "#48 Update chart history", color: "gray", x: 0 },
   ],
+  // title: "John D.",
+  // description: "11-Aug-25 at 15:30",
+  // items: [
+  //   { title: randWords(), color: "orange", x: 0 },
+  //   { title: randWords(), color: "orange", x: 0 },
+  //   { title: randWords(), color: "orange", x: 20 },
+  //   { title: randWords(), color: "red", x: 40 },
+  //   { title: randWords(), color: "red", x: 50 },
+  //   { title: randWords(), color: "red", x: 50 },
+  //   { title: randWords(), color: "blue", x: 70 },
+  //   { title: randWords(), color: "green", x: 70 },
+  //   { title: randWords(), color: "green", x: 70 },
+  //   { title: randWords(), color: "cyan", x: 80 },
+  //   { title: randWords(), color: "cyan", x: 80 },
+  //   { title: randWords(), color: "blue", x: 100 },
+  //   { title: randWords(), color: "blue", x: 100 },
+  //   { title: randWords(), color: "blue", x: 100 },
+  // ],
 };
 
 export const IrisHillChartPage = () => {
@@ -79,14 +65,17 @@ export const IrisHillChartPage = () => {
   }
   useEffect(() => {
     render();
-    window.addEventListener("resize", () => render());
+    const observer = new ResizeObserver(() => render());
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
     return () => {
-      window.removeEventListener("resize", () => render());
+      observer.disconnect();
     };
-  }, [ref]);
+  }, []);
 
   return (
-    <div className="m-4 p-4 border border-[#33322E]">
+    <div className="m-4 p-4 border border-zinc-500">
       <div ref={ref}></div>
     </div>
   );
