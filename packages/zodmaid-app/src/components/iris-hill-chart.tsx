@@ -2,8 +2,8 @@ import * as d3 from "d3";
 import { z } from "zod/v4";
 import { throwError } from "../helpers/error";
 
-type Item = z.infer<typeof Item>;
 type ItemInput = z.input<typeof Item>;
+type Item = z.infer<typeof Item>;
 const Item = z.object({
   title: z.string(),
   color: z.string(),
@@ -13,36 +13,20 @@ const Item = z.object({
   signX: z.number().optional().default(1),
 });
 
-const mapperX = (x: number) => 50 * Math.sin((Math.PI / 50) * x - (1 / 2) * Math.PI) + 50;
-
-const clampToBounds = (value: number, minValue: number, maxValue: number) => {
-  return Math.max(minValue, Math.min(maxValue, value));
-};
-
-const roundToNearestFactor = (value: number, factor: number) => {
-  return Math.round(value / factor) * factor;
-};
-
-const createSvgElement = (width: number, height: number) => {
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("viewBox", [0, 0, width, height].join(","));
-  svg.setAttribute("width", width.toString());
-  svg.setAttribute("height", height.toString());
-  return svg;
-};
-
 type SvgSelection<T> = d3.Selection<SVGSVGElement, T, null, undefined>;
+
+const mapperX = (x: number) => 50 * Math.sin((Math.PI / 50) * x - (1 / 2) * Math.PI) + 50;
 
 export class HillChart {
   width: number = 0;
   height: number = 0;
-  styles: { fontFamily: string; fontSize: number; lineHeight: number } = {
+  styles = {
     fontFamily: "ui-sans-serif, system-ui, sans-serif",
     fontSize: 14,
     lineHeight: 16,
   };
   paddingTop: number = 0;
-  items: any;
+  items: Item[] = [];
   xScale: any;
   yScale: any;
   hillData: { x: number; y: number }[] = [];
@@ -124,7 +108,7 @@ export class HillChart {
       y: mapperX(i),
     }));
     this.hillLine = d3
-      .line<(typeof this.hillData)[0]>()
+      .line<{ x: number; y: number }>()
       .x((d) => this.xScale(d.x))
       .y((d) => this.yScale(d.y));
   }
@@ -153,7 +137,8 @@ export class HillChart {
   }
 
   renderBase(svg: SvgSelection<Item>) {
-    svg
+    const base = svg.append("g").attr("class", "base");
+    base
       .append("path")
       .attr("class", "hill-line")
       .datum(this.hillData)
@@ -161,7 +146,7 @@ export class HillChart {
       .attr("fill", "none")
       .attr("stroke", "#cccccc")
       .attr("stroke-width", 2);
-    svg
+    base
       .append("line")
       .attr("class", "hill-y")
       .attr("x1", this.xScale(50))
@@ -171,7 +156,7 @@ export class HillChart {
       .attr("stroke", "#cccccc")
       .attr("stroke-width", 1.5)
       .attr("stroke-dasharray", "2,3");
-    svg
+    base
       .append("line")
       .attr("class", "hill-x")
       .attr("x1", this.xScale(0))
@@ -180,7 +165,7 @@ export class HillChart {
       .attr("y2", this.yScale(-5))
       .attr("stroke", "#cccccc")
       .attr("stroke-width", 1.5);
-    svg
+    base
       .append("text")
       .attr("class", "text")
       .attr(
@@ -191,7 +176,7 @@ export class HillChart {
       .attr("y", this.height - 5)
       .attr("fill", "#999999")
       .text("Figure things out");
-    svg
+    base
       .append("text")
       .attr("class", "text")
       .attr(
@@ -292,3 +277,19 @@ export class HillChart {
       .text((d) => d.title);
   }
 }
+
+export const clampToBounds = (value: number, minValue: number, maxValue: number) => {
+  return Math.max(minValue, Math.min(maxValue, value));
+};
+
+export const roundToNearestFactor = (value: number, factor: number) => {
+  return Math.round(value / factor) * factor;
+};
+
+export const createSvgElement = (width: number, height: number) => {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", [0, 0, width, height].join(" "));
+  svg.setAttribute("width", width.toString());
+  svg.setAttribute("height", height.toString());
+  return svg;
+};
