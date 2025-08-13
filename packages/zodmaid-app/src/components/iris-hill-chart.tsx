@@ -2,9 +2,8 @@ import * as d3 from "d3";
 import { z } from "zod/v4";
 import { throwError } from "../helpers/error";
 
-type ItemInput = z.input<typeof Item>;
-type Item = z.infer<typeof Item>;
-const Item = z.object({
+export type HillChartItem = z.infer<typeof HillChartItem>;
+export const HillChartItem = z.object({
   title: z.string(),
   color: z.string().optional().default("gray"),
   x: z.number().optional().default(0),
@@ -12,13 +11,14 @@ const Item = z.object({
   r: z.number().optional().default(10),
   signX: z.number().optional().default(1),
 });
-type SvgSelection<Datum = undefined> = d3.Selection<SVGSVGElement, Datum, null, undefined>;
 
 export type HillChartData = {
   title: string;
   description: string;
-  items: ItemInput[];
+  items: z.input<typeof HillChartItem>[];
 };
+
+type SvgSelection<Datum = undefined> = d3.Selection<SVGSVGElement, Datum, null, undefined>;
 
 export class HillChart {
   width: number = 0;
@@ -29,7 +29,7 @@ export class HillChart {
     lineHeight: 16,
   };
   offsetTop: number = 0;
-  items: Item[] = [];
+  items: HillChartItem[] = [];
   xScale: d3.ScaleLinear<number, number> = d3.scaleLinear();
   yScale: d3.ScaleLinear<number, number> = d3.scaleLinear();
   hillMapToY: (x: number) => number = () => 0;
@@ -40,7 +40,7 @@ export class HillChart {
     this.width = width;
     this.height = height;
 
-    this.initItems(data.items as Item[]);
+    this.initItems(data.items as HillChartItem[]);
     this.initScales();
     this.initHill();
 
@@ -56,8 +56,8 @@ export class HillChart {
     return svg.node() ?? throwError("svg selection is empty");
   }
 
-  initItems(items: Item[]) {
-    const signumX = (d: Item) => {
+  initItems(items: HillChartItem[]) {
+    const signumX = (d: HillChartItem) => {
       if (d.x >= 0 && d.x < 25) return 1;
       if (d.x >= 25 && d.x < 50) return 1;
       if (d.x >= 50 && d.x < 75) return 1;
@@ -70,13 +70,13 @@ export class HillChart {
       color.l = 0.6; // Increase lightness (0 = black, 1 = white).
       return color.toString();
     };
-    items = Item.array().parse(items);
+    items = HillChartItem.array().parse(items);
     items = items.map((it) => {
       it.x = clampToBounds(it.x, 0, 100);
       it.x = roundToNearestFactor(it.x, 5);
       return it;
     });
-    items = items.sort((it: Item, itOther: Item) => it.x - itOther.x);
+    items = items.sort((it: HillChartItem, itOther: HillChartItem) => it.x - itOther.x);
     const dyMap = new Map();
     items = items.map((it) => {
       const dy = dyMap.get(it.x);
@@ -202,7 +202,10 @@ export class HillChart {
   }
 
   renderData(svg: SvgSelection) {
-    const handleDrag = (elem: Element, e: d3.D3DragEvent<Element, Item, Item>) => {
+    const handleDrag = (
+      elem: Element,
+      e: d3.D3DragEvent<Element, HillChartItem, HillChartItem>,
+    ) => {
       const x = e.subject.x + this.xScale.invert(this.xScale(0) + e.dx);
       e.subject.x = clampToBounds(x, 0, 100);
       d3.select(elem).attr(
@@ -210,14 +213,17 @@ export class HillChart {
         `translate(${this.xScale(e.subject.x)}, ${this.yScale(this.hillMapToY(e.subject.x))})`,
       );
     };
-    const handleDragEnd = (_elem: Element, e: d3.D3DragEvent<Element, Item, Item>) => {
+    const handleDragEnd = (
+      _elem: Element,
+      e: d3.D3DragEvent<Element, HillChartItem, HillChartItem>,
+    ) => {
       const x = e.subject.x + this.xScale.invert(this.xScale(0) + e.dx);
       e.subject.x = clampToBounds(x, 0, 100);
       e.subject.x = roundToNearestFactor(e.subject.x, 5);
       this.initItems(this.items);
       this.renderData(svg);
     };
-    const dragHandler = d3.drag<Element, Item>();
+    const dragHandler = d3.drag<Element, HillChartItem>();
     dragHandler.on("drag", function (e) {
       handleDrag(this, e);
     });
