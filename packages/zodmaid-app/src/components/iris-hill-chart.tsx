@@ -6,10 +6,10 @@ export type HillChartItem = z.infer<typeof HillChartItem>;
 export const HillChartItem = z.object({
   title: z.string(),
   color: z.string().optional().default("gray"),
-  x: z.number().optional().default(0),
-  dy: z.number().optional().default(0),
-  r: z.number().optional().default(10),
-  signX: z.number().optional().default(1),
+  sizeXY: z.number().optional().default(10),
+  progressX: z.number().optional().default(0),
+  stackY: z.number().optional().default(0),
+  alignX: z.number().optional().default(1),
 });
 
 export type HillChartData = {
@@ -58,11 +58,11 @@ export class HillChart {
 
   initItems(items: HillChartItem[]) {
     const signumX = (d: HillChartItem) => {
-      if (d.x >= 0 && d.x < 25) return 1;
-      if (d.x >= 25 && d.x < 50) return 1;
-      if (d.x >= 50 && d.x < 75) return 1;
-      if (d.x >= 75 && d.x <= 100) return -1;
-      throw new Error("d.x is out of bounds");
+      if (d.progressX >= 0 && d.progressX < 25) return 1;
+      if (d.progressX >= 25 && d.progressX < 50) return 1;
+      if (d.progressX >= 50 && d.progressX < 75) return 1;
+      if (d.progressX >= 75 && d.progressX <= 100) return -1;
+      throw new Error("d.progressX is out of bounds");
     };
     const toPastelColor = (colorStr: string) => {
       const color = d3.hsl(colorStr);
@@ -72,18 +72,20 @@ export class HillChart {
     };
     items = HillChartItem.array().parse(items);
     items = items.map((it) => {
-      it.x = clampToBounds(it.x, 0, 100);
-      it.x = roundToNearestFactor(it.x, 5);
+      it.progressX = clampToBounds(it.progressX, 0, 100);
+      it.progressX = roundToNearestFactor(it.progressX, 5);
       return it;
     });
-    items = items.sort((it: HillChartItem, itOther: HillChartItem) => it.x - itOther.x);
+    items = items.sort(
+      (it: HillChartItem, itOther: HillChartItem) => it.progressX - itOther.progressX,
+    );
     const dyMap = new Map();
     items = items.map((it) => {
-      const dy = dyMap.get(it.x);
-      it.dy = dy !== undefined ? dy + 1 : 0;
-      dyMap.set(it.x, it.dy);
-      it.r = 10;
-      it.signX = signumX(it);
+      const dy = dyMap.get(it.progressX);
+      it.stackY = dy !== undefined ? dy + 1 : 0;
+      dyMap.set(it.progressX, it.stackY);
+      it.sizeXY = 10;
+      it.alignX = signumX(it);
       it.color = toPastelColor(it.color);
       return it;
     });
@@ -206,20 +208,20 @@ export class HillChart {
       elem: Element,
       e: d3.D3DragEvent<Element, HillChartItem, HillChartItem>,
     ) => {
-      const x = e.subject.x + this.xScale.invert(this.xScale(0) + e.dx);
-      e.subject.x = clampToBounds(x, 0, 100);
+      const x = e.subject.progressX + this.xScale.invert(this.xScale(0) + e.dx);
+      e.subject.progressX = clampToBounds(x, 0, 100);
       d3.select(elem).attr(
         "transform",
-        `translate(${this.xScale(e.subject.x)}, ${this.yScale(this.hillMapToY(e.subject.x))})`,
+        `translate(${this.xScale(e.subject.progressX)}, ${this.yScale(this.hillMapToY(e.subject.progressX))})`,
       );
     };
     const handleDragEnd = (
       _elem: Element,
       e: d3.D3DragEvent<Element, HillChartItem, HillChartItem>,
     ) => {
-      const x = e.subject.x + this.xScale.invert(this.xScale(0) + e.dx);
-      e.subject.x = clampToBounds(x, 0, 100);
-      e.subject.x = roundToNearestFactor(e.subject.x, 5);
+      const x = e.subject.progressX + this.xScale.invert(this.xScale(0) + e.dx);
+      e.subject.progressX = clampToBounds(x, 0, 100);
+      e.subject.progressX = roundToNearestFactor(e.subject.progressX, 5);
       this.initItems(this.items);
       this.renderData(svg);
     };
@@ -240,9 +242,9 @@ export class HillChart {
       .attr("class", "data")
       .attr("style", "cursor: pointer;")
       .attr("transform", (d) => {
-        const x = this.xScale(d.x);
-        const y = this.yScale(this.hillMapToY(d.x));
-        const dy = d.dy ?? 0;
+        const x = this.xScale(d.progressX);
+        const y = this.yScale(this.hillMapToY(d.progressX));
+        const dy = d.stackY ?? 0;
         return `translate(${x}, ${y - dy * this.styles.lineHeight})`;
       })
       .call(dragHandler as any);
@@ -250,7 +252,7 @@ export class HillChart {
       .append("circle")
       .attr("cx", 0)
       .attr("cy", 0)
-      .attr("r", (d) => d.r)
+      .attr("r", (d) => d.sizeXY)
       .attr("fill", (d) => d.color)
       .attr("stroke", "#ffffff")
       .attr("stroke-width", 2)
@@ -264,9 +266,9 @@ export class HillChart {
       });
     group
       .append("line")
-      .attr("x1", (d) => 10 * d.signX)
+      .attr("x1", (d) => 10 * d.alignX)
       .attr("y1", (_d) => 0)
-      .attr("x2", (d) => 20 * d.signX)
+      .attr("x2", (d) => 20 * d.alignX)
       .attr("y2", (_d) => 0)
       .attr("stroke", (d) => d.color)
       .attr("stroke-width", 1.5);
@@ -276,9 +278,9 @@ export class HillChart {
         "style",
         `font-family: ${this.styles.fontFamily}; font-size: ${this.styles.fontSize}px;`,
       )
-      .attr("x", (d) => 22 * d.signX)
+      .attr("x", (d) => 22 * d.alignX)
       .attr("y", (_d) => 5)
-      .attr("text-anchor", (d) => (d.signX === 1 ? "start" : "end"))
+      .attr("text-anchor", (d) => (d.alignX === 1 ? "start" : "end"))
       .attr("stroke", "white")
       .attr("stroke-width", 3)
       .text((d) => d.title);
@@ -288,10 +290,10 @@ export class HillChart {
         "style",
         `font-family: ${this.styles.fontFamily}; font-size: ${this.styles.fontSize}px;`,
       )
-      .attr("x", (d) => 22 * d.signX)
+      .attr("x", (d) => 22 * d.alignX)
       .attr("y", (_d) => 5)
-      .attr("text-anchor", (d) => (d.signX === 1 ? "start" : "end"))
-      .attr("fill", (d) => (d.x === 0 || d.x === 100 ? "#aaa" : "#000"))
+      .attr("text-anchor", (d) => (d.alignX === 1 ? "start" : "end"))
+      .attr("fill", (d) => (d.progressX === 0 || d.progressX === 100 ? "#aaa" : "#000"))
       .text((d) => d.title);
   }
 }
