@@ -6,16 +6,14 @@ type ItemInput = z.input<typeof Item>;
 type Item = z.infer<typeof Item>;
 const Item = z.object({
   title: z.string(),
-  color: z.string(),
-  x: z.number(),
+  color: z.string().optional().default("gray"),
+  x: z.number().optional().default(0),
   dy: z.number().optional().default(0),
   r: z.number().optional().default(10),
   signX: z.number().optional().default(1),
 });
 
-type SvgSelection<T> = d3.Selection<SVGSVGElement, T, null, undefined>;
-
-const mapperX = (x: number) => 50 * Math.sin((Math.PI / 50) * x - (1 / 2) * Math.PI) + 50;
+type SvgSelection<Datum = undefined> = d3.Selection<SVGSVGElement, Datum, null, undefined>;
 
 export class HillChart {
   width: number = 0;
@@ -25,12 +23,13 @@ export class HillChart {
     fontSize: 14,
     lineHeight: 16,
   };
-  paddingTop: number = 0;
+  offsetTop: number = 0;
   items: Item[] = [];
-  xScale: any;
-  yScale: any;
+  xScale: d3.ScaleLinear<number, number> = d3.scaleLinear();
+  yScale: d3.ScaleLinear<number, number> = d3.scaleLinear();
+  hillMapToY: (x: number) => number = () => 0;
   hillData: { x: number; y: number }[] = [];
-  hillLine: any;
+  hillLine: d3.Line<{ x: number; y: number }> = d3.line();
 
   render(
     data: { title: string; description: string; items: ItemInput[] },
@@ -44,7 +43,11 @@ export class HillChart {
     this.initScales();
     this.initHill();
 
-    const svg = d3.select<SVGSVGElement, Item>(createSvgElement(width, height));
+    const svg = d3
+      .create("svg")
+      .attr("viewBox", [0, 0, width, height].join(" "))
+      .attr("width", width)
+      .attr("height", height);
     this.renderTitle(svg, data.title, data.description);
     this.renderBase(svg);
     this.renderData(svg);
@@ -84,13 +87,13 @@ export class HillChart {
       return it;
     });
     const dy = dyMap.get(50);
-    this.paddingTop = dy !== undefined ? dy * 20 : 0;
+    this.offsetTop = dy !== undefined ? dy * 20 : 0;
     this.items = items;
   }
 
   initScales() {
     const paddingX = 10;
-    const paddingTop = 10 + this.paddingTop;
+    const paddingTop = 10 + this.offsetTop;
     const paddingBottom = 40;
     this.xScale = d3
       .scaleLinear()
@@ -103,17 +106,19 @@ export class HillChart {
   }
 
   initHill() {
-    this.hillData = d3.range(0, 100, 0.1).map((i) => ({
-      x: i,
-      y: mapperX(i),
-    }));
+    this.hillMapToY = (x: number) => {
+      return 50 * Math.sin((Math.PI / 50) * x - (1 / 2) * Math.PI) + 50;
+    };
+    this.hillData = d3
+      .range(0, 100, 0.1)
+      .map<{ x: number; y: number }>((i) => ({ x: i, y: this.hillMapToY(i) }));
     this.hillLine = d3
       .line<{ x: number; y: number }>()
       .x((d) => this.xScale(d.x))
       .y((d) => this.yScale(d.y));
   }
 
-  renderTitle(svg: SvgSelection<Item>, title: string, description: string) {
+  renderTitle(svg: SvgSelection, title: string, description: string) {
     svg
       .append("text")
       .text(title)
@@ -136,7 +141,7 @@ export class HillChart {
       );
   }
 
-  renderBase(svg: SvgSelection<Item>) {
+  renderBase(svg: SvgSelection) {
     const base = svg.append("g").attr("class", "base");
     base
       .append("path")
@@ -189,16 +194,16 @@ export class HillChart {
       .text("Make it happen");
   }
 
-  renderData(svg: SvgSelection<Item>) {
-    const handleDrag = (elem: Element, e: any) => {
+  renderData(svg: SvgSelection) {
+    const handleDrag = (elem: Element, e: d3.D3DragEvent<Element, Item, Item>) => {
       const x = e.subject.x + this.xScale.invert(this.xScale(0) + e.dx);
       e.subject.x = clampToBounds(x, 0, 100);
       d3.select(elem).attr(
         "transform",
-        `translate(${this.xScale(e.subject.x)}, ${this.yScale(mapperX(e.subject.x))})`,
+        `translate(${this.xScale(e.subject.x)}, ${this.yScale(this.hillMapToY(e.subject.x))})`,
       );
     };
-    const handleDragEnd = (_elem: Element, e: any) => {
+    const handleDragEnd = (_elem: Element, e: d3.D3DragEvent<Element, Item, Item>) => {
       const x = e.subject.x + this.xScale.invert(this.xScale(0) + e.dx);
       e.subject.x = clampToBounds(x, 0, 100);
       e.subject.x = roundToNearestFactor(e.subject.x, 5);
@@ -216,14 +221,14 @@ export class HillChart {
     svg.selectAll(".group").remove();
     const group = svg
       .selectAll(".group")
-      .data<Item>(this.items)
+      .data(this.items)
       .enter()
       .append("g")
       .attr("class", "group")
       .attr("style", "cursor: pointer;")
       .attr("transform", (d) => {
         const x = this.xScale(d.x);
-        const y = this.yScale(mapperX(d.x));
+        const y = this.yScale(this.hillMapToY(d.x));
         const dy = d.dy ?? 0;
         return `translate(${x}, ${y - dy * this.styles.lineHeight})`;
       })
