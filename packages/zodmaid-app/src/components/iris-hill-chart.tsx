@@ -52,7 +52,7 @@ export class HillChart {
     this.renderBase(svg);
     this.renderData(svg);
     svg.style("transform", "translateY(0px)");
-    return svg.node();
+    return svg.node() ?? throwError("svg selection is empty");
   }
 
   initItems(items: Item[]) {
@@ -107,6 +107,11 @@ export class HillChart {
 
   initHill() {
     this.hillMapToY = (x: number) => {
+      // smooth hill from (0,0) -> peak at (50,100) -> back to (100,0).
+      // amplitude: 50
+      // frequency: Math.PI / 50
+      // phase shift: -(1/2) * Math.PI
+      // vertical shift: 50
       return 50 * Math.sin((Math.PI / 50) * x - (1 / 2) * Math.PI) + 50;
     };
     this.hillData = d3
@@ -173,7 +178,7 @@ export class HillChart {
       .attr("stroke-width", 1.5);
     group
       .append("text")
-      .attr("class", "text")
+      .attr("class", "hill-text")
       .attr(
         "style",
         `font-family: ${this.styles.fontFamily}; font-size: ${this.styles.fontSize}px; text-transform: uppercase; font-weight: 400;`,
@@ -184,7 +189,7 @@ export class HillChart {
       .text("Figure things out");
     group
       .append("text")
-      .attr("class", "text")
+      .attr("class", "hill-text")
       .attr(
         "style",
         `font-family: ${this.styles.fontFamily}; font-size: ${this.styles.fontSize}px; text-transform: uppercase; font-weight: 400;`,

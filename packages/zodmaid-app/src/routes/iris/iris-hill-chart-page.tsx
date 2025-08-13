@@ -57,11 +57,7 @@ export const IrisHillChartPage = () => {
     const height = 260;
     const width = ref.current.clientWidth;
     const svg = new HillChart().render(data, width, height);
-    if (svg) {
-      ref.current.replaceChildren(svg);
-    } else {
-      ref.current.replaceChildren();
-    }
+    ref.current.replaceChildren(svg);
   }
   useEffect(() => {
     render();
