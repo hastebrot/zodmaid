@@ -12,8 +12,13 @@ const Item = z.object({
   r: z.number().optional().default(10),
   signX: z.number().optional().default(1),
 });
-
 type SvgSelection<Datum = undefined> = d3.Selection<SVGSVGElement, Datum, null, undefined>;
+
+export type HillChartData = {
+  title: string;
+  description: string;
+  items: ItemInput[];
+};
 
 export class HillChart {
   width: number = 0;
@@ -31,11 +36,7 @@ export class HillChart {
   hillData: { x: number; y: number }[] = [];
   hillLine: d3.Line<{ x: number; y: number }> = d3.line();
 
-  render(
-    data: { title: string; description: string; items: ItemInput[] },
-    width: number,
-    height: number,
-  ) {
+  render(data: HillChartData, width: number, height: number) {
     this.width = width;
     this.height = height;
 
