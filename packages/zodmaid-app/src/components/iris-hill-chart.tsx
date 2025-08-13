@@ -48,7 +48,7 @@ export class HillChart {
       .attr("viewBox", [0, 0, width, height].join(" "))
       .attr("width", width)
       .attr("height", height);
-    this.renderTitle(svg, data.title, data.description);
+    this.renderMeta(svg, data.title, data.description);
     this.renderBase(svg);
     this.renderData(svg);
     svg.style("transform", "translateY(0px)");
@@ -118,8 +118,9 @@ export class HillChart {
       .y((d) => this.yScale(d.y));
   }
 
-  renderTitle(svg: SvgSelection, title: string, description: string) {
-    svg
+  renderMeta(svg: SvgSelection, title: string, description: string) {
+    const group = svg.append("g").attr("class", "meta");
+    group
       .append("text")
       .text(title)
       .attr("y", this.styles.lineHeight * 0)
@@ -129,7 +130,7 @@ export class HillChart {
         "style",
         `font-family: ${this.styles.fontFamily}; font-size: ${this.styles.fontSize}px; font-weight: 600;`,
       );
-    svg
+    group
       .append("text")
       .text(description)
       .attr("y", this.styles.lineHeight * 1)
@@ -142,8 +143,8 @@ export class HillChart {
   }
 
   renderBase(svg: SvgSelection) {
-    const base = svg.append("g").attr("class", "base");
-    base
+    const group = svg.append("g").attr("class", "base");
+    group
       .append("path")
       .attr("class", "hill-line")
       .datum(this.hillData)
@@ -151,7 +152,7 @@ export class HillChart {
       .attr("fill", "none")
       .attr("stroke", "#cccccc")
       .attr("stroke-width", 2);
-    base
+    group
       .append("line")
       .attr("class", "hill-y")
       .attr("x1", this.xScale(50))
@@ -161,7 +162,7 @@ export class HillChart {
       .attr("stroke", "#cccccc")
       .attr("stroke-width", 1.5)
       .attr("stroke-dasharray", "2,3");
-    base
+    group
       .append("line")
       .attr("class", "hill-x")
       .attr("x1", this.xScale(0))
@@ -170,7 +171,7 @@ export class HillChart {
       .attr("y2", this.yScale(-5))
       .attr("stroke", "#cccccc")
       .attr("stroke-width", 1.5);
-    base
+    group
       .append("text")
       .attr("class", "text")
       .attr(
@@ -181,7 +182,7 @@ export class HillChart {
       .attr("y", this.height - 5)
       .attr("fill", "#999999")
       .text("Figure things out");
-    base
+    group
       .append("text")
       .attr("class", "text")
       .attr(
@@ -218,13 +219,13 @@ export class HillChart {
       handleDragEnd(this, e);
     });
 
-    svg.selectAll(".group").remove();
+    svg.selectAll(".data").remove();
     const group = svg
-      .selectAll(".group")
+      .selectAll(".data")
       .data(this.items)
       .enter()
       .append("g")
-      .attr("class", "group")
+      .attr("class", "data")
       .attr("style", "cursor: pointer;")
       .attr("transform", (d) => {
         const x = this.xScale(d.x);
