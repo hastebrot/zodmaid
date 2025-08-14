@@ -6,35 +6,30 @@ export const IrisHillChartPage = () => {
   useDocumentTitle("iris: hill chart");
   const data = {
     title: "Benjamin G.",
-    description: "14-Aug-25 at 14:30",
+    description: "14-Aug-25 at 16:30",
     items: [
       {
         title: "#46 Render chart and edit progress",
-        scope: "Hill charts",
         color: hashStringToColor("Hill charts"),
         progressX: 50,
       },
       {
         title: "#47 Edit chart table data",
-        scope: "Hill charts",
         color: hashStringToColor("Hill charts"),
-        progressX: 0,
+        progressX: 30,
       },
       {
         title: "#48 Update chart history",
-        scope: "Hill charts",
         color: hashStringToColor("Hill charts"),
-        progressX: 0,
+        progressX: 30,
       },
       {
         title: "#50 Extract tetra module",
-        scope: "Modules",
         color: hashStringToColor("Modules"),
         progressX: 0,
       },
       {
         title: "#51 Extract tri module",
-        scope: "Modules",
         color: hashStringToColor("Modules"),
         progressX: 0,
       },
@@ -93,7 +88,7 @@ export const IrisHillChart = (props: IrisHillChartProps) => {
   return <div ref={ref}></div>;
 };
 
-const randWords = (minWords = 2, maxWords = 5) => {
+export const randWords = (minWords = 2, maxWords = 5) => {
   // prettier-ignore
   const loremWords = [
     "lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit", "sed", "do", "eiusmod",
@@ -120,7 +115,7 @@ const sdbmHash = (input: string): number => {
   return hash >>> 0;
 };
 
-const hashStringToColor = (input: string) => {
+export const hashStringToColor = (input: string) => {
   // prettier-ignore
   const rainbowColors = [
     "red", "orange", "yellow", "green", "blue", "indigo", "violet",
