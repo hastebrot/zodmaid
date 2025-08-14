@@ -5,31 +5,31 @@ import { useDocumentTitle } from "../../helpers/react";
 export const IrisHillChartPage = () => {
   useDocumentTitle("iris: hill chart");
   const data = {
-    // title: "Benjamin G.",
-    // description: "13-Aug-25 at 13:30",
-    // items: [
-    //   { title: "#46 Render chart and edit progress", color: "gray", progressX: 15 },
-    //   { title: "#47 Edit chart table data", color: "gray", progressX: 0 },
-    //   { title: "#48 Update chart history", color: "gray", progressX: 0 },
-    // ],
-    title: "John D.",
-    description: "11-Aug-25 at 15:30",
+    title: "Benjamin G.",
+    description: "14-Aug-25 at 14:30",
     items: [
-      { title: randWords(), color: "orange", progressX: 0 },
-      { title: randWords(), color: "orange", progressX: 0 },
-      { title: randWords(), color: "orange", progressX: 20 },
-      { title: randWords(), color: "red", progressX: 40 },
-      { title: randWords(), color: "red", progressX: 50 },
-      { title: randWords(), color: "red", progressX: 50 },
-      { title: randWords(), color: "blue", progressXx: 70 },
-      { title: randWords(), color: "green", progressX: 70 },
-      { title: randWords(), color: "green", progressX: 70 },
-      { title: randWords(), color: "cyan", progressX: 80 },
-      { title: randWords(), color: "cyan", progressX: 80 },
-      { title: randWords(), color: "blue", progressX: 100 },
-      { title: randWords(), color: "blue", progressX: 100 },
-      { title: randWords(), color: "blue", progressX: 100 },
+      { title: "#46 Render chart and edit progress", color: "gray", progressX: 50 },
+      { title: "#47 Edit chart table data", color: "gray", progressX: 0 },
+      { title: "#48 Update chart history", color: "gray", progressX: 0 },
     ],
+    // title: "John D.",
+    // description: "11-Aug-25 at 15:30",
+    // items: [
+    //   { title: randWords(), color: "orange", progressX: 0 },
+    //   { title: randWords(), color: "orange", progressX: 0 },
+    //   { title: randWords(), color: "orange", progressX: 20 },
+    //   { title: randWords(), color: "red", progressX: 40 },
+    //   { title: randWords(), color: "red", progressX: 50 },
+    //   { title: randWords(), color: "red", progressX: 50 },
+    //   { title: randWords(), color: "blue", progressXx: 70 },
+    //   { title: randWords(), color: "green", progressX: 70 },
+    //   { title: randWords(), color: "green", progressX: 70 },
+    //   { title: randWords(), color: "cyan", progressX: 80 },
+    //   { title: randWords(), color: "cyan", progressX: 80 },
+    //   { title: randWords(), color: "blue", progressX: 100 },
+    //   { title: randWords(), color: "blue", progressX: 100 },
+    //   { title: randWords(), color: "blue", progressX: 100 },
+    // ],
   };
 
   return (
@@ -46,12 +46,12 @@ export type IrisHillChartProps = {
 
 export const IrisHillChart = (props: IrisHillChartProps) => {
   const ref = useRef<HTMLDivElement>(null);
-  function render() {
+  const render = () => {
     if (!ref.current) return;
     const width = ref.current.clientWidth;
     const svg = new HillChart().render(props.data, width, props.height ?? 250);
     ref.current.replaceChildren(svg);
-  }
+  };
   useEffect(() => {
     render();
     const observer = new ResizeObserver(() => render());
@@ -61,7 +61,7 @@ export const IrisHillChart = (props: IrisHillChartProps) => {
     return () => {
       observer.disconnect();
     };
-  }, []);
+  }, [props.data, props.height]);
 
   return <div ref={ref}></div>;
 };

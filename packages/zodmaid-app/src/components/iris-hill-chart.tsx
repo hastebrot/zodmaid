@@ -19,6 +19,7 @@ export type HillChartData = {
 };
 
 type SvgSelection<Datum = undefined> = d3.Selection<SVGSVGElement, Datum, null, undefined>;
+type HillCoordinate = { x: number; y: number };
 
 export class HillChart {
   width: number = 0;
@@ -28,13 +29,15 @@ export class HillChart {
     fontSize: 14,
     lineHeight: 16,
   };
-  offsetTop: number = 0;
+
   items: HillChartItem[] = [];
+  itemOffsetTop: number = 0;
+
   xScale: d3.ScaleLinear<number, number> = d3.scaleLinear();
   yScale: d3.ScaleLinear<number, number> = d3.scaleLinear();
   hillMapToY: (x: number) => number = () => 0;
-  hillData: { x: number; y: number }[] = [];
-  hillLine: d3.Line<{ x: number; y: number }> = d3.line();
+  hillData: HillCoordinate[] = [];
+  hillLine: d3.Line<HillCoordinate> = d3.line();
 
   render(data: HillChartData, width: number, height: number) {
     this.width = width;
@@ -90,13 +93,13 @@ export class HillChart {
       return it;
     });
     const dy = dyMap.get(50);
-    this.offsetTop = dy !== undefined ? dy * 20 : 0;
+    this.itemOffsetTop = dy !== undefined ? dy * 20 : 0;
     this.items = items;
   }
 
   initScales() {
     const paddingX = 10;
-    const paddingTop = 10 + this.offsetTop;
+    const paddingTop = 10 + this.itemOffsetTop;
     const paddingBottom = 40;
     this.xScale = d3
       .scaleLinear()
@@ -109,19 +112,14 @@ export class HillChart {
   }
 
   initHill() {
-    this.hillMapToY = (x: number) => {
-      // smooth hill from (0,0) -> peak at (50,100) -> back to (100,0).
-      // amplitude: 50
-      // frequency: Math.PI / 50
-      // phase shift: -(1/2) * Math.PI
-      // vertical shift: 50
-      return 50 * Math.sin((Math.PI / 50) * x - (1 / 2) * Math.PI) + 50;
-    };
+    // const easeLinearInOut = (x: number) => 1 - 2 * Math.abs(x - 0.5);
+    // this.hillMapToY = (x: number) => easeLinearInOut(x / 100) * 100;
+    this.hillMapToY = (x: number) => d3.easeSinInOut((x * 2) / 100) * 100;
     this.hillData = d3
       .range(0, 100, 0.1)
-      .map<{ x: number; y: number }>((i) => ({ x: i, y: this.hillMapToY(i) }));
+      .map<HillCoordinate>((x) => ({ x, y: this.hillMapToY(x) }));
     this.hillLine = d3
-      .line<{ x: number; y: number }>()
+      .line<HillCoordinate>()
       .x((d) => this.xScale(d.x))
       .y((d) => this.yScale(d.y));
   }
@@ -204,41 +202,10 @@ export class HillChart {
   }
 
   renderData(svg: SvgSelection) {
-    const handleDrag = (
-      elem: Element,
-      e: d3.D3DragEvent<Element, HillChartItem, HillChartItem>,
-    ) => {
-      const x = e.subject.progressX + this.xScale.invert(this.xScale(0) + e.dx);
-      e.subject.progressX = clampToBounds(x, 0, 100);
-      d3.select(elem).attr(
-        "transform",
-        `translate(${this.xScale(e.subject.progressX)}, ${this.yScale(this.hillMapToY(e.subject.progressX))})`,
-      );
-    };
-    const handleDragEnd = (
-      _elem: Element,
-      e: d3.D3DragEvent<Element, HillChartItem, HillChartItem>,
-    ) => {
-      const x = e.subject.progressX + this.xScale.invert(this.xScale(0) + e.dx);
-      e.subject.progressX = clampToBounds(x, 0, 100);
-      e.subject.progressX = roundToNearestFactor(e.subject.progressX, 5);
-      this.initItems(this.items);
-      this.renderData(svg);
-    };
-    const dragHandler = d3.drag<Element, HillChartItem>();
-    dragHandler.on("drag", function (e) {
-      handleDrag(this, e);
-    });
-    dragHandler.on("end", function (e) {
-      handleDragEnd(this, e);
-    });
-
     svg.selectAll(".data").remove();
-    const group = svg
-      .selectAll(".data")
-      .data(this.items)
-      .enter()
-      .append("g")
+    const group = svg.selectAll(".data").data(this.items).enter().append("g");
+    const dragHandler = this.createDragHandler(svg);
+    group
       .attr("class", "data")
       .attr("style", "cursor: pointer;")
       .attr("transform", (d) => {
@@ -295,6 +262,38 @@ export class HillChart {
       .attr("text-anchor", (d) => (d.alignX === 1 ? "start" : "end"))
       .attr("fill", (d) => (d.progressX === 0 || d.progressX === 100 ? "#aaa" : "#000"))
       .text((d) => d.title);
+  }
+
+  createDragHandler(svg: SvgSelection) {
+    const handleDrag = (
+      elem: Element,
+      e: d3.D3DragEvent<Element, HillChartItem, HillChartItem>,
+    ) => {
+      const x = e.subject.progressX + this.xScale.invert(this.xScale(0) + e.dx);
+      e.subject.progressX = clampToBounds(x, 0, 100);
+      d3.select(elem).attr(
+        "transform",
+        `translate(${this.xScale(e.subject.progressX)}, ${this.yScale(this.hillMapToY(e.subject.progressX))})`,
+      );
+    };
+    const handleDragEnd = (
+      _elem: Element,
+      e: d3.D3DragEvent<Element, HillChartItem, HillChartItem>,
+    ) => {
+      const x = e.subject.progressX + this.xScale.invert(this.xScale(0) + e.dx);
+      e.subject.progressX = clampToBounds(x, 0, 100);
+      e.subject.progressX = roundToNearestFactor(e.subject.progressX, 5);
+      this.initItems(this.items);
+      this.renderData(svg);
+    };
+    const dragHandler = d3.drag<Element, HillChartItem>();
+    dragHandler.on("drag", function (e) {
+      handleDrag(this, e);
+    });
+    dragHandler.on("end", function (e) {
+      handleDragEnd(this, e);
+    });
+    return dragHandler;
   }
 }
 

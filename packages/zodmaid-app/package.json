@@ -24,7 +24,7 @@
     "@std/fmt": "npm:@jsr/std__fmt@1.0.8",
     "@tabler/icons-sprite": "^3.34.1",
     "@tailwindcss/vite": "^4.1.11",
-    "@testing-library/jest-dom": "^6.6.4",
+    "@testing-library/jest-dom": "^6.7.0",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/bun": "^1.2.20",
