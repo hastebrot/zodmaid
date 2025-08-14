@@ -8,9 +8,36 @@ export const IrisHillChartPage = () => {
     title: "Benjamin G.",
     description: "14-Aug-25 at 14:30",
     items: [
-      { title: "#46 Render chart and edit progress", color: "gray", progressX: 50 },
-      { title: "#47 Edit chart table data", color: "gray", progressX: 0 },
-      { title: "#48 Update chart history", color: "gray", progressX: 0 },
+      {
+        title: "#46 Render chart and edit progress",
+        scope: "Hill charts",
+        color: hashStringToColor("Hill charts"),
+        progressX: 50,
+      },
+      {
+        title: "#47 Edit chart table data",
+        scope: "Hill charts",
+        color: hashStringToColor("Hill charts"),
+        progressX: 0,
+      },
+      {
+        title: "#48 Update chart history",
+        scope: "Hill charts",
+        color: hashStringToColor("Hill charts"),
+        progressX: 0,
+      },
+      {
+        title: "#50 Extract tetra module",
+        scope: "Modules",
+        color: hashStringToColor("Modules"),
+        progressX: 0,
+      },
+      {
+        title: "#51 Extract tri module",
+        scope: "Modules",
+        color: hashStringToColor("Modules"),
+        progressX: 0,
+      },
     ],
     // title: "John D.",
     // description: "11-Aug-25 at 15:30",
@@ -83,4 +110,22 @@ const randWords = (minWords = 2, maxWords = 5) => {
     return Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber;
   };
   return generateLorem(randNumber(minWords, maxWords));
+};
+
+const sdbmHash = (input: string): number => {
+  let hash = 0;
+  for (let index = 0; index < input.length; index += 1) {
+    hash = input.charCodeAt(index) + (hash << 6) + (hash << 16) - hash;
+  }
+  return hash >>> 0;
+};
+
+const hashStringToColor = (input: string) => {
+  // prettier-ignore
+  const rainbowColors = [
+    "red", "orange", "yellow", "green", "blue", "indigo", "violet",
+    "cyan", "magenta",
+  ];
+  const hash = Math.abs(sdbmHash(input));
+  return rainbowColors[hash % rainbowColors.length];
 };
