@@ -31,6 +31,11 @@ export const IrisHillChartPage = () => {
       {
         title: "#51 Extract tri module",
         color: hashStringToColor("Modules"),
+        progressX: 15,
+      },
+      {
+        title: "#52 Follow-up chart legend and labels",
+        color: hashStringToColor("Hill charts"),
         progressX: 0,
       },
     ],
