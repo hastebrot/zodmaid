@@ -6,7 +6,7 @@ export const IrisHillChartPage = () => {
   useDocumentTitle("iris: hill chart");
   const data = {
     title: "Benjamin G.",
-    description: "14-Aug-25 at 16:30",
+    description: "15-Aug-25 at 11:50",
     items: [
       {
         title: "#46 Render chart and edit progress",
@@ -26,12 +26,12 @@ export const IrisHillChartPage = () => {
       {
         title: "#50 Extract tetra module",
         color: hashStringToColor("Modules"),
-        progressX: 0,
+        progressX: 40,
       },
       {
         title: "#51 Extract tri module",
         color: hashStringToColor("Modules"),
-        progressX: 15,
+        progressX: 25,
       },
       {
         title: "#52 Follow-up chart legend and labels",
