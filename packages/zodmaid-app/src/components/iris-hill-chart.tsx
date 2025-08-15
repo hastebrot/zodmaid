@@ -67,8 +67,8 @@ export class HillChart {
       if (d.progressX >= 75 && d.progressX <= 100) return -1;
       throw new Error("d.progressX is out of bounds");
     };
-    const toPastelColor = (colorStr: string) => {
-      const color = d3.hsl(colorStr);
+    const toPastelColor = (colorSpecifier: string) => {
+      const color = d3.hsl(colorSpecifier);
       color.s = 0.6; // Reduce saturation (0 = gray, 1 = full color).
       color.l = 0.6; // Increase lightness (0 = black, 1 = white).
       return color.toString();
@@ -132,20 +132,17 @@ export class HillChart {
       .attr("y", this.styles.lineHeight * 0)
       .attr("dominant-baseline", "middle")
       .attr("dy", "0.5em")
-      .attr(
-        "style",
-        `font-family: ${this.styles.fontFamily}; font-size: ${this.styles.fontSize}px; font-weight: 600;`,
-      );
+      .style("font-family", this.styles.fontFamily)
+      .style("font-size", `${this.styles.fontSize}px`)
+      .style("font-weight", 600);
     group
       .append("text")
       .text(description)
       .attr("y", this.styles.lineHeight * 1)
       .attr("dominant-baseline", "middle")
       .attr("dy", "0.5em")
-      .attr(
-        "style",
-        `font-family: ${this.styles.fontFamily}; font-size: ${this.styles.fontSize}px;`,
-      );
+      .style("font-family", this.styles.fontFamily)
+      .style("font-size", `${this.styles.fontSize}px`);
   }
 
   renderBase(svg: SvgSelection) {
@@ -180,10 +177,9 @@ export class HillChart {
     group
       .append("text")
       .attr("class", "hill-text")
-      .attr(
-        "style",
-        `font-family: ${this.styles.fontFamily}; font-size: ${this.styles.fontSize}px; text-transform: uppercase; font-weight: 400;`,
-      )
+      .style("font-family", this.styles.fontFamily)
+      .style("font-size", `${this.styles.fontSize}px`)
+      .style("text-transform", "uppercase")
       .attr("x", this.xScale(15))
       .attr("y", this.height - 5)
       .attr("fill", "#999999")
@@ -191,10 +187,9 @@ export class HillChart {
     group
       .append("text")
       .attr("class", "hill-text")
-      .attr(
-        "style",
-        `font-family: ${this.styles.fontFamily}; font-size: ${this.styles.fontSize}px; text-transform: uppercase; font-weight: 400;`,
-      )
+      .style("font-family", this.styles.fontFamily)
+      .style("font-size", `${this.styles.fontSize}px`)
+      .style("text-transform", "uppercase")
       .attr("x", this.xScale(70))
       .attr("y", this.height - 5)
       .attr("fill", "#999999")
@@ -234,34 +229,32 @@ export class HillChart {
     group
       .append("line")
       .attr("x1", (d) => 10 * d.alignX)
-      .attr("y1", (_d) => 0)
+      .attr("y1", 0)
       .attr("x2", (d) => 20 * d.alignX)
-      .attr("y2", (_d) => 0)
+      .attr("y2", 0)
       .attr("stroke", (d) => d.color)
       .attr("stroke-width", 1.5);
     group
       .append("text")
-      .attr(
-        "style",
-        `font-family: ${this.styles.fontFamily}; font-size: ${this.styles.fontSize}px;`,
-      )
-      .attr("x", (d) => 22 * d.alignX)
-      .attr("y", (_d) => 5)
+      .style("font-family", this.styles.fontFamily)
+      .style("font-size", `${this.styles.fontSize}px`)
+      .style("font-variant-numeric", "tabular-nums")
       .attr("text-anchor", (d) => (d.alignX === 1 ? "start" : "end"))
-      .attr("stroke", "white")
-      .attr("stroke-width", 3)
-      .text((d) => d.title);
-    group
-      .append("text")
-      .attr(
-        "style",
-        `font-family: ${this.styles.fontFamily}; font-size: ${this.styles.fontSize}px;`,
-      )
-      .attr("x", (d) => 22 * d.alignX)
-      .attr("y", (_d) => 5)
-      .attr("text-anchor", (d) => (d.alignX === 1 ? "start" : "end"))
-      .attr("fill", (d) => (d.progressX === 0 || d.progressX === 100 ? "#aaa" : "#000"))
-      .text((d) => d.title);
+      .call((text) => {
+        text
+          .append("tspan")
+          .attr("x", (d) => 22 * d.alignX)
+          .attr("y", 5)
+          .attr("stroke", "white")
+          .attr("stroke-width", 3)
+          .text((d) => d.title);
+        text
+          .append("tspan")
+          .attr("x", (d) => 22 * d.alignX)
+          .attr("y", 5)
+          .attr("fill", (d) => (d.progressX === 0 || d.progressX === 100 ? "#aaa" : "#000"))
+          .text((d) => d.title);
+      });
   }
 
   createDragHandler(svg: SvgSelection) {
