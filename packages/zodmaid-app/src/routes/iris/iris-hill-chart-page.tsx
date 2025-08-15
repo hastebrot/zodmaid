@@ -65,7 +65,7 @@ export const IrisHillChartPage = () => {
   };
 
   return (
-    <div className="m-4 p-4 border border-zinc-500 w-[700px]">
+    <div className="m-4 p-4 border-2 border-[#aaa] w-[700px]">
       <IrisHillChart data={data} height={350} />
     </div>
   );
