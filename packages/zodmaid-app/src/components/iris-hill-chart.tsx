@@ -48,12 +48,12 @@ export class HillChart {
       .attr("width", width)
       .attr("height", height);
     this.renderMeta(svg, data.title, data.description);
-    this.renderSvg(svg, data.items as HillChartItem[]);
+    this.renderUpdate(svg, data.items as HillChartItem[]);
     svg.style("transform", "translateY(0px)");
     return svg.node() ?? throwError("svg selection is empty");
   }
 
-  renderSvg(svg: SvgSelection, items: HillChartItem[]) {
+  renderUpdate(svg: SvgSelection, items: HillChartItem[]) {
     this.initItems(items);
     this.initScales();
     this.initHill();
@@ -281,7 +281,7 @@ export class HillChart {
       const x = e.subject.progressX + this.xScale.invert(this.xScale(0) + e.dx);
       e.subject.progressX = clampToBounds(x, 0, 100);
       e.subject.progressX = roundToNearestFactor(e.subject.progressX, 5);
-      this.renderSvg(svg, this.items);
+      this.renderUpdate(svg, this.items);
     };
     const dragHandler = d3
       .drag<T, HillChartItem>()
