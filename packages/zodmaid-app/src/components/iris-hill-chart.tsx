@@ -87,8 +87,8 @@ export class HillChart {
       return it;
     });
     items = items
-      .sort((it: HillChartItem, other: HillChartItem) => it.title.localeCompare(other.title))
-      .sort((it: HillChartItem, other: HillChartItem) => it.progressX - other.progressX);
+      .sort((it, other) => it.title.localeCompare(other.title))
+      .sort((it, other) => it.progressX - other.progressX);
     const dyMap = new Map();
     items = items.map((it) => {
       const dy = dyMap.get(it.progressX);
