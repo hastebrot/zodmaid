@@ -180,8 +180,9 @@ export class HillChart {
       .style("font-family", this.styles.fontFamily)
       .style("font-size", `${this.styles.fontSize}px`)
       .style("text-transform", "uppercase")
-      .attr("x", this.xScale(15))
       .attr("y", this.height - 5)
+      .attr("dx", "25%")
+      .attr("text-anchor", "middle")
       .attr("fill", "#999999")
       .text("Figure things out");
     group
@@ -190,8 +191,9 @@ export class HillChart {
       .style("font-family", this.styles.fontFamily)
       .style("font-size", `${this.styles.fontSize}px`)
       .style("text-transform", "uppercase")
-      .attr("x", this.xScale(70))
       .attr("y", this.height - 5)
+      .attr("dx", "75%")
+      .attr("text-anchor", "middle")
       .attr("fill", "#999999")
       .text("Make it happen");
   }
@@ -202,7 +204,7 @@ export class HillChart {
     const dragHandler = this.createDragHandler<SVGGElement>(svg);
     group
       .attr("class", "data")
-      .attr("style", "cursor: pointer;")
+      .style("cursor", "pointer")
       .attr("transform", (d) => {
         const x = this.xScale(d.progressX);
         const y = this.yScale(this.hillMapToY(d.progressX));
