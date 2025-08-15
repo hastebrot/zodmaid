@@ -86,9 +86,9 @@ export class HillChart {
       it.progressX = roundToNearestFactor(it.progressX, 5);
       return it;
     });
-    items = items.sort(
-      (it: HillChartItem, itOther: HillChartItem) => it.progressX - itOther.progressX,
-    );
+    items = items
+      .sort((it: HillChartItem, other: HillChartItem) => it.title.localeCompare(other.title))
+      .sort((it: HillChartItem, other: HillChartItem) => it.progressX - other.progressX);
     const dyMap = new Map();
     items = items.map((it) => {
       const dy = dyMap.get(it.progressX);
@@ -100,7 +100,7 @@ export class HillChart {
       return it;
     });
     const dy = dyMap.get(50);
-    this.itemOffsetTop = dy !== undefined ? dy * 20 : 0;
+    this.itemOffsetTop = dy !== undefined ? dy * this.styles.lineHeight : 0;
     this.items = items;
   }
 
