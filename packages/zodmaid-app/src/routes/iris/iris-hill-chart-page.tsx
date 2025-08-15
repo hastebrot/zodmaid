@@ -65,14 +65,15 @@ export const IrisHillChartPage = () => {
   };
 
   return (
-    <div className="m-4 p-4 border-2 border-[#aaa] w-[700px]">
-      <IrisHillChart data={data} height={350} />
+    <div className="m-4 p-4 w-fit border-2 border-[#aaa]">
+      <IrisHillChart data={data} width={700} height={350} />
     </div>
   );
 };
 
 export type IrisHillChartProps = {
   data: HillChartData;
+  width?: number;
   height?: number;
 };
 
@@ -80,8 +81,9 @@ export const IrisHillChart = (props: IrisHillChartProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const render = () => {
     if (!ref.current) return;
-    const width = ref.current.clientWidth;
-    const svg = new HillChart().render(props.data, width, props.height ?? 250);
+    const width = props.width ?? ref.current.clientWidth;
+    const height = props.height ?? ref.current.clientHeight;
+    const svg = new HillChart().render(props.data, width, height);
     ref.current.replaceChildren(svg);
   };
   useEffect(() => {

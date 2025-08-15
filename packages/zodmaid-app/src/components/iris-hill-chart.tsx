@@ -55,6 +55,7 @@ export class HillChart {
     this.renderMeta(svg, data.title, data.description);
     this.renderChart(svg, data.items as HillChartItem[]);
     svg.style("transform", "translateY(0px)");
+    // .style("border", `2px solid ${this.styles.strokePrimary}`);
     return svg.node() ?? throwError("svg selection is empty");
   }
 
@@ -82,7 +83,7 @@ export class HillChart {
     };
     items = HillChartItem.array().parse(items);
     items = items.map((it) => {
-      it.progressX = clampToBounds(it.progressX, 0, 100);
+      it.progressX = clampToLimits(it.progressX, 0, 100);
       it.progressX = roundToNearestFactor(it.progressX, 5);
       return it;
     });
@@ -280,7 +281,7 @@ export class HillChart {
       e: d3.D3DragEvent<Element, HillChartItem, HillChartItem>,
     ) => {
       const x = e.subject.progressX + this.xScale.invert(this.xScale(0) + e.dx);
-      e.subject.progressX = clampToBounds(x, 0, 100);
+      e.subject.progressX = clampToLimits(x, 0, 100);
       d3.select(elem).attr(
         "transform",
         `translate(${this.xScale(e.subject.progressX)}, ${this.yScale(this.hillMapToY(e.subject.progressX))})`,
@@ -291,7 +292,7 @@ export class HillChart {
       e: d3.D3DragEvent<Element, HillChartItem, HillChartItem>,
     ) => {
       const x = e.subject.progressX + this.xScale.invert(this.xScale(0) + e.dx);
-      e.subject.progressX = clampToBounds(x, 0, 100);
+      e.subject.progressX = clampToLimits(x, 0, 100);
       e.subject.progressX = roundToNearestFactor(e.subject.progressX, 5);
       this.renderChart(svg, this.items);
     };
@@ -307,7 +308,7 @@ export class HillChart {
   }
 }
 
-export const clampToBounds = (value: number, minValue: number, maxValue: number) => {
+export const clampToLimits = (value: number, minValue: number, maxValue: number) => {
   return Math.max(minValue, Math.min(maxValue, value));
 };
 
