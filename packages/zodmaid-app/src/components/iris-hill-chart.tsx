@@ -199,7 +199,7 @@ export class HillChart {
   renderData(svg: SvgSelection) {
     svg.selectAll(".data").remove();
     const group = svg.selectAll(".data").data(this.items).enter().append("g");
-    const dragHandler = this.createDragHandler(svg);
+    const dragHandler = this.createDragHandler<SVGGElement>(svg);
     group
       .attr("class", "data")
       .attr("style", "cursor: pointer;")
@@ -209,7 +209,7 @@ export class HillChart {
         const dy = d.stackY ?? 0;
         return `translate(${x}, ${y - dy * this.styles.lineHeight})`;
       })
-      .call(dragHandler as any);
+      .call((group) => dragHandler(group));
     group
       .append("circle")
       .attr("cx", 0)
@@ -257,7 +257,7 @@ export class HillChart {
       });
   }
 
-  createDragHandler(svg: SvgSelection) {
+  createDragHandler<T extends Element>(svg: SvgSelection) {
     const handleDrag = (
       elem: Element,
       e: d3.D3DragEvent<Element, HillChartItem, HillChartItem>,
@@ -279,13 +279,14 @@ export class HillChart {
       this.initItems(this.items);
       this.renderData(svg);
     };
-    const dragHandler = d3.drag<Element, HillChartItem>();
-    dragHandler.on("drag", function (e) {
-      handleDrag(this, e);
-    });
-    dragHandler.on("end", function (e) {
-      handleDragEnd(this, e);
-    });
+    const dragHandler = d3
+      .drag<T, HillChartItem>()
+      .on("drag", function (e) {
+        handleDrag(this, e);
+      })
+      .on("end", function (e) {
+        handleDragEnd(this, e);
+      });
     return dragHandler;
   }
 }
