@@ -28,6 +28,11 @@ export class HillChart {
     fontFamily: "ui-sans-serif, system-ui, sans-serif",
     fontSize: 14,
     lineHeight: 16,
+    textPrimary: "#000",
+    textSecondary: "#aaa",
+    strokePrimary: "#aaa",
+    strokeSecondary: "#ccc",
+    fillPrimary: "#fff",
   };
 
   items: HillChartItem[] = [];
@@ -48,20 +53,20 @@ export class HillChart {
       .attr("width", width)
       .attr("height", height);
     this.renderMeta(svg, data.title, data.description);
-    this.renderUpdate(svg, data.items as HillChartItem[]);
+    this.renderChart(svg, data.items as HillChartItem[]);
     svg.style("transform", "translateY(0px)");
     return svg.node() ?? throwError("svg selection is empty");
   }
 
-  renderUpdate(svg: SvgSelection, items: HillChartItem[]) {
-    this.initItems(items);
-    this.initScales();
-    this.initHill();
+  renderChart(svg: SvgSelection, items: HillChartItem[]) {
+    this.setupItems(items);
+    this.setupScales();
+    this.setupHill();
     this.renderBase(svg);
     this.renderData(svg);
   }
 
-  initItems(items: HillChartItem[]) {
+  setupItems(items: HillChartItem[]) {
     const signumX = (d: HillChartItem) => {
       if (d.progressX >= 0 && d.progressX < 25) return 1;
       if (d.progressX >= 25 && d.progressX < 50) return 1;
@@ -99,7 +104,7 @@ export class HillChart {
     this.items = items;
   }
 
-  initScales() {
+  setupScales() {
     const paddingX = 10;
     const paddingTop = 10 + this.itemOffsetTop;
     const paddingBottom = 40;
@@ -113,7 +118,7 @@ export class HillChart {
       .range([this.height - paddingBottom, paddingTop]);
   }
 
-  initHill() {
+  setupHill() {
     // const easeLinearInOut = (x: number) => 1 - 2 * Math.abs(x - 0.5);
     // this.hillMapToY = (x: number) => easeLinearInOut(x / 100) * 100;
     this.hillMapToY = (x: number) => d3.easeSinInOut((x * 2) / 100) * 100;
@@ -130,21 +135,24 @@ export class HillChart {
     const group = svg.append("g").attr("class", "meta");
     group
       .append("text")
-      .text(title)
+      .style("font-family", this.styles.fontFamily)
+      .style("font-size", `${this.styles.fontSize}px`)
+      .style("font-weight", 600)
       .attr("y", this.styles.lineHeight * 0)
       .attr("dominant-baseline", "middle")
       .attr("dy", "0.5em")
-      .style("font-family", this.styles.fontFamily)
-      .style("font-size", `${this.styles.fontSize}px`)
-      .style("font-weight", 600);
+      .attr("fill", this.styles.textPrimary)
+      .text(title);
     group
       .append("text")
-      .text(description)
+      .style("font-family", this.styles.fontFamily)
+      .style("font-size", `${this.styles.fontSize}px`)
       .attr("y", this.styles.lineHeight * 1)
       .attr("dominant-baseline", "middle")
       .attr("dy", "0.5em")
-      .style("font-family", this.styles.fontFamily)
-      .style("font-size", `${this.styles.fontSize}px`);
+      .attr("fill", this.styles.textPrimary)
+      .text(description);
+    group;
   }
 
   renderBase(svg: SvgSelection) {
@@ -156,7 +164,7 @@ export class HillChart {
       .datum(this.hillData)
       .attr("d", this.hillLine)
       .attr("fill", "none")
-      .attr("stroke", "#aaa")
+      .attr("stroke", this.styles.strokePrimary)
       .attr("stroke-width", 2);
     group
       .append("line")
@@ -165,7 +173,7 @@ export class HillChart {
       .attr("y1", this.yScale(0))
       .attr("x2", this.xScale(50))
       .attr("y2", this.yScale(100))
-      .attr("stroke", "#aaa")
+      .attr("stroke", this.styles.strokeSecondary)
       .attr("stroke-width", 1.5)
       .attr("stroke-dasharray", "2,3");
     group
@@ -175,7 +183,7 @@ export class HillChart {
       .attr("y1", this.yScale(-5))
       .attr("x2", this.xScale(100))
       .attr("y2", this.yScale(-5))
-      .attr("stroke", "#aaa")
+      .attr("stroke", this.styles.strokeSecondary)
       .attr("stroke-width", 1.5);
     group
       .append("text")
@@ -186,7 +194,7 @@ export class HillChart {
       .attr("y", this.height - 5)
       .attr("dx", "25%")
       .attr("text-anchor", "middle")
-      .attr("fill", "#999")
+      .attr("fill", this.styles.textSecondary)
       .text("Figure things out");
     group
       .append("text")
@@ -197,7 +205,7 @@ export class HillChart {
       .attr("y", this.height - 5)
       .attr("dx", "75%")
       .attr("text-anchor", "middle")
-      .attr("fill", "#999")
+      .attr("fill", this.styles.textSecondary)
       .text("Make it happen");
   }
 
@@ -221,7 +229,7 @@ export class HillChart {
       .attr("cy", 0)
       .attr("r", (d) => d.sizeXY)
       .attr("fill", (d) => d.color)
-      .attr("stroke", "#fff")
+      .attr("stroke", this.styles.fillPrimary)
       .attr("stroke-width", 2)
       .on("mouseover", function (_e, d) {
         const color = d3.color(d.color)?.darker(1) ?? throwError("no color");
@@ -250,14 +258,18 @@ export class HillChart {
           .append("tspan")
           .attr("x", (d) => 22 * d.alignX)
           .attr("y", 5)
-          .attr("stroke", "#fff")
+          .attr("stroke", this.styles.fillPrimary)
           .attr("stroke-width", 3)
           .text((d) => d.title);
         text
           .append("tspan")
           .attr("x", (d) => 22 * d.alignX)
           .attr("y", 5)
-          .attr("fill", (d) => (d.progressX === 0 || d.progressX === 100 ? "#aaa" : "#000"))
+          .attr("fill", (d) =>
+            d.progressX === 0 || d.progressX === 100
+              ? this.styles.textSecondary
+              : this.styles.textPrimary,
+          )
           .text((d) => d.title);
       });
   }
@@ -281,7 +293,7 @@ export class HillChart {
       const x = e.subject.progressX + this.xScale.invert(this.xScale(0) + e.dx);
       e.subject.progressX = clampToBounds(x, 0, 100);
       e.subject.progressX = roundToNearestFactor(e.subject.progressX, 5);
-      this.renderUpdate(svg, this.items);
+      this.renderChart(svg, this.items);
     };
     const dragHandler = d3
       .drag<T, HillChartItem>()
