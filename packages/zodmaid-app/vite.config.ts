@@ -33,7 +33,7 @@ export default defineConfig({
     minify: true,
     reportCompressedSize: true,
     chunkSizeWarningLimit: 1000,
-    rollupOptions: {
+    rolldownOptions: {
       output: {
         assetFileNames(chunkInfo) {
           if (chunkInfo.names[0] === "tabler-sprite-filled.svg") {

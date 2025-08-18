@@ -1,277 +1,27 @@
-import { useEffect, type CSSProperties } from "react";
-import { z } from "zod/v4";
-import { throwError } from "zodmaid/engines/dagreEngine";
-import {
-  BaseCell,
-  BaseGrid,
-  BaseGridView,
-  BaseRow,
-  defineGridContext,
-  type BaseCellProps,
-  type BaseRowProps,
-  type GridContextProps,
-} from "zodspy";
-import { TanaBullet } from "zodspy/components/tri/tana-bullet";
-import { TanaCellContext } from "zodspy/components/tri/tana-cell-context";
-import { TanaCellRenderer } from "zodspy/components/tri/tana-cell-renderer";
+import { Fragment, type CSSProperties } from "react";
+import { BaseGridView, defineGridContext, type BaseCellProps, type GridContextProps } from "zodspy";
+import { TriCell } from "zodspy/components/tri-cell";
+import { TriGrid } from "zodspy/components/tri-grid";
+import { TriRow } from "zodspy/components/tri-row";
+import { TriBulletButton } from "zodspy/components/tri/tri-bullet-button";
+import { TriCellContext } from "zodspy/components/tri/tri-cell-context";
+import { TriCellRenderer } from "zodspy/components/tri/tri-cell-renderer";
+import { type TriItem } from "zodspy/components/tri/tri-data-model";
 import {
   iconAt,
   iconCheck,
   iconCode,
   iconCursorText,
   iconHash,
-} from "zodspy/components/tri/tana-icons";
-import { musicLibrary } from "zodspy/examples/music-library";
-import { MusicLibrarySchema } from "zodspy/examples/music-library-schema";
+} from "zodspy/components/tri/tri-icons";
+import { items } from "zodspy/examples/tri-schema-items";
 import { classNames } from "../../helpers/clsx";
+import { throwError } from "../../helpers/error";
 import { useDocumentTitle } from "../../helpers/react";
-
-// TODO: fold and unfold nodes.
-// TODO: toolbar with toggle overlay, floating toolbar overlay
-// TODO: state management with owner/key.
-
-export type TriDataModel = {
-  title: string;
-  description?: string;
-  type: string;
-  tags?: string[];
-  items: TriDataModel[];
-  isFolded?: boolean;
-  useFieldView?: boolean;
-  useTableView?: boolean;
-};
 
 export const TriDynamicPage = () => {
   useDocumentTitle("tri: grid view dynamic");
-  useEffect(() => {
-    const data = MusicLibrarySchema.parse(musicLibrary);
-    const schema = z.toJSONSchema(MusicLibrarySchema);
-    console.log(data, schema);
-  }, []);
-  const rows: TriDataModel[] = [
-    {
-      title: "Person name",
-      type: "node",
-      tags: ["Person"],
-      useFieldView: true,
-      items: [
-        {
-          title: "Company",
-          description: "Name of the organization",
-          type: "field:node",
-          items: [
-            // wrap.
-            { title: "Company name", type: "node", tags: ["Company"], items: [] },
-          ],
-        },
-        {
-          title: "Role",
-          description: "Job title of the person",
-          type: "field:node",
-          items: [
-            // wrap.
-            { title: "", type: "node", items: [] },
-          ],
-        },
-        {
-          title: "Email",
-          type: "field:email",
-          items: [
-            // wrap.
-            { title: "", type: "node", items: [] },
-          ],
-        },
-        {
-          title: "Text",
-          type: "node",
-          items: [
-            // wrap.
-            { title: "Text", type: "node", items: [] },
-          ],
-        },
-        { title: "Text", type: "node", items: [], isFolded: true },
-        { title: "Text", type: "node", items: [], isFolded: true },
-      ],
-    },
-    {
-      title: "Company name",
-      type: "node",
-      tags: ["Company"],
-      useFieldView: true,
-      items: [
-        {
-          title: "People",
-          type: "node",
-          items: [
-            // wrap.
-            { title: "Person name", type: "node", tags: ["Person"], items: [] },
-          ],
-        },
-      ],
-    },
-    {
-      title: "Album",
-      type: "field:tag",
-      items: [
-        // wrap.
-        {
-          title: "Name",
-          type: "field:node",
-          items: [{ title: "", type: "node", items: [] }],
-        },
-        {
-          title: "Genre",
-          type: "field:node",
-          items: [
-            {
-              title: "",
-              type: "node",
-              items: [],
-            },
-          ],
-        },
-        {
-          title: "ReleaseDate",
-          type: "field:node",
-          items: [
-            {
-              title: "Pattern",
-              type: "field:code",
-              items: [{ title: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$", type: "node", items: [] }],
-            },
-            {
-              title: "",
-              type: "node",
-              items: [],
-            },
-          ],
-        },
-        {
-          title: "Label",
-          type: "field:node",
-          items: [
-            {
-              title: "",
-              type: "node",
-              items: [],
-            },
-          ],
-        },
-        {
-          title: "Tracks",
-          type: "field:node",
-          items: [
-            {
-              title: "",
-              type: "node",
-              items: [],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      title: "Track",
-      type: "field:tag",
-      items: [
-        // wrap.
-        {
-          title: "Title",
-          type: "field:node",
-          items: [{ title: "", type: "node", items: [] }],
-        },
-        {
-          title: "Duration",
-          type: "field:node",
-          items: [
-            {
-              title: "Pattern",
-              type: "field:code",
-              items: [{ title: "^[0-9]{2}:[0-9]{2}$", type: "node", items: [] }],
-            },
-            {
-              title: "",
-              type: "node",
-              items: [],
-            },
-          ],
-        },
-        {
-          title: "Writer",
-          type: "field:node",
-          items: [
-            {
-              title: "Optional",
-              type: "field:bool",
-              items: [{ title: "True", type: "node", items: [] }],
-            },
-            {
-              title: "",
-              type: "node",
-              items: [],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      title: "Table view",
-      type: "node",
-      useTableView: true,
-      items: [
-        {
-          title: "Text",
-          type: "node",
-          tags: ["Instance"],
-          items: [
-            // wrap.
-            { title: "Text", type: "node", items: [] },
-            { title: "Text", type: "node", items: [] },
-            {
-              title: "Field",
-              type: "field:node",
-              items: [{ title: "", type: "node", items: [] }],
-            },
-            {
-              title: "Field",
-              type: "field:node",
-              items: [{ title: "", type: "node", items: [] }],
-            },
-            {
-              title: "Field",
-              type: "field:node",
-              items: [{ title: "", type: "node", items: [] }],
-            },
-          ],
-        },
-        {
-          title: "Text",
-          type: "node",
-          tags: ["Instance"],
-          items: [
-            // wrap.
-            { title: "Text", type: "node", items: [] },
-            { title: "Text", type: "node", items: [] },
-            {
-              title: "Field",
-              type: "field:node",
-              items: [{ title: "", type: "node", items: [] }],
-            },
-            {
-              title: "Field",
-              type: "field:node",
-              items: [{ title: "", type: "node", items: [] }],
-            },
-            {
-              title: "Field",
-              type: "field:node",
-              items: [{ title: "", type: "node", items: [] }],
-            },
-          ],
-        },
-      ],
-    },
-  ];
+  const rows: TriItem[] = items;
 
   return (
     <div
@@ -294,90 +44,16 @@ export const TriDynamicPage = () => {
   );
 };
 
-export const TriGridView = (gridProps: { value: TriDataModel[] }) => {
-  type DataModel = TriDataModel;
-  const context = defineGridContext<DataModel>({
-    label: "root",
+export const TriGridView = (gridProps: { value: TriItem[] }) => {
+  const context = defineGridContext<TriItem>({
     rows: gridProps.value,
     columns: [
       {
-        label: "node",
-        width: "minmax(180px, min-content)",
+        label: "item",
+        width: "minmax(200px, max-content)",
         cellRenderer(props) {
           const row = props.data.row ?? throwError("row is undefined");
-          const title = row.title;
-          const description = row.description;
-          const type = row.type;
-          const tags = row.tags ?? [];
-          const items = row.items;
-          const isFolded = row.isFolded ?? false;
-          const hasTags = tags.length > 0;
-          const hasTitle = title.trim() !== "";
-          return (
-            <TriNodeList>
-              <TriNode>
-                <div className="flex items-center h-(--text-line-height)">
-                  {type === "node" && (
-                    <TanaBullet
-                      variant="point"
-                      color={!hasTitle ? "gray" : hasTags ? "cyan" : undefined}
-                      hasOutline={isFolded}
-                    />
-                  )}
-                  {type === "field:node" && (
-                    <TanaBullet variant="field" color={true ? "cyan" : undefined}>
-                      <TriBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
-                    </TanaBullet>
-                  )}
-                  {type === "field:email" && (
-                    <TanaBullet variant="field" color={true ? "cyan" : undefined}>
-                      <TriBulletIcon iconSlot={iconAt} />
-                    </TanaBullet>
-                  )}
-                  {type === "field:tag" && (
-                    <TanaBullet variant="field">
-                      <TriBulletIcon iconSlot={iconHash} />
-                    </TanaBullet>
-                  )}
-                  {type === "field:bool" && (
-                    <TanaBullet variant="field">
-                      <TriBulletIcon iconSlot={iconCheck} />
-                    </TanaBullet>
-                  )}
-                  {type === "field:code" && (
-                    <TanaBullet variant="field">
-                      <TriBulletIcon iconSlot={iconCode} />
-                    </TanaBullet>
-                  )}
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-nowrap">{title}</span>
-                  {description && (
-                    <span className="text-nowrap text-[14px]/[20px] text-zinc-500">
-                      {description}
-                    </span>
-                  )}
-                </div>
-                {tags?.map((tag) => (
-                  <div key={tag} className="flex items-center h-(--text-line-height)">
-                    <TanaBullet
-                      variant="action"
-                      textSlot={tag}
-                      hasOutline
-                      color={hasTags ? "cyan" : undefined}
-                    >
-                      <TriBulletIcon iconSlot={iconHash} />
-                    </TanaBullet>
-                  </div>
-                ))}
-              </TriNode>
-              {type === "node" && items && (
-                <TriNodeItems>
-                  <TriGridView value={items} />
-                </TriNodeItems>
-              )}
-            </TriNodeList>
-          );
+          return <TriColumnItem item={row} />;
         },
       },
       {
@@ -385,47 +61,157 @@ export const TriGridView = (gridProps: { value: TriDataModel[] }) => {
         width: "1fr",
         cellRenderer(props) {
           const row = props.data.row ?? throwError("row is undefined");
-          const type = row.type;
-          const items = row.items;
-          return (
-            <div>
-              {type !== "node" && items && (
-                <div className={classNames(type === "field:code" && "font-mono")}>
-                  <TriGridView value={items} />
-                </div>
-              )}
-            </div>
-          );
+          return <TriColumnItems item={row} />;
         },
       },
     ],
     elements: {
       Grid(props) {
-        return <BaseGrid {...props} />;
+        return <TriGrid {...props} className="w-full" />;
       },
       Row(props) {
-        return <TriRow {...props} />;
+        return <TriRow {...props} className="grid grid-cols-subgrid grid-flow-col col-span-full" />;
       },
       Cell(props) {
+        const row = props.data.row ?? throwError("row is undefined");
+        row.type = row.type ?? "plain";
+        row.view = row.view ?? "list";
+        const style = { ...props.style };
+        if (row.view === "list" && props.data.columnIndex === 0) {
+          style.gridColumn = props.data.columnIndex + 1;
+          style.gridColumnEnd = -1;
+        }
+        if (row.view === "list" && props.data.columnIndex === 1) {
+          return <Fragment />;
+        }
+
         return (
-          <TanaCellContext value={{ cellProps: props as BaseCellProps }}>
-            <BaseCell
-              {...props}
-              className={classNames("relative grid cursor-auto text-nowrap")}
-              style={props.style}
-            >
-              <TanaCellRenderer />
-            </BaseCell>
-          </TanaCellContext>
+          <TriCellContext value={{ cellProps: props as BaseCellProps }}>
+            <TriCell {...props} className="relative grid cursor-auto text-nowrap" style={style}>
+              <TriCellRenderer />
+            </TriCell>
+          </TriCellContext>
         );
       },
     },
   });
 
+  return <BaseGridView context={context as GridContextProps} />;
+};
+
+type TriItemProps = {
+  item: TriItem;
+  isNested?: boolean; // is items nested or is items inline
+};
+
+const TriItem = (props: TriItemProps) => {
+  const item = props.item;
+  return <div>tri item</div>;
+};
+
+type TriItemListProps = {
+  items: TriItem[];
+};
+
+const TriItemList = (props: TriItemListProps) => {
+  return <div>tri item list</div>;
+};
+
+const TriColumnItem = (props: { item: TriItem }) => {
+  const title = props.item.title;
+  const description = props.item.description;
+  const type = props.item.type;
+  const view = props.item.view;
+  const tags = props.item.tags ?? [];
+  const items = props.item.items;
+  const isFolded = props.item.isFolded ?? false;
+  const isReference = props.item.isReference ?? false;
+  const hasTags = tags.length > 0;
+  const hasTitle = title.trim() !== "";
+
   return (
-    <div className="w-fit">
-      <BaseGridView context={context as GridContextProps} />
-    </div>
+    <TriNodeList>
+      <TriNode isSelected={true} isField={false}>
+        <div className="flex items-center h-(--text-line-height)">
+          {type === "plain" && (
+            <TriBulletButton
+              variant="point"
+              color={!hasTitle ? "gray" : hasTags ? "cyan" : undefined}
+              hasOutline={isFolded}
+              hasOutlineBorder={isReference}
+            />
+          )}
+          {type === "field:plain" && (
+            <TriBulletButton variant="field" color={true ? "cyan" : undefined}>
+              <TriBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
+            </TriBulletButton>
+          )}
+          {type === "field:tag" && (
+            <TriBulletButton variant="field" color={true ? "cyan" : undefined}>
+              <TriBulletIcon iconSlot={iconHash} />
+            </TriBulletButton>
+          )}
+          {type === "field:email" && (
+            <TriBulletButton variant="field" color={true ? "cyan" : undefined}>
+              <TriBulletIcon iconSlot={iconAt} />
+            </TriBulletButton>
+          )}
+          {type === "field:bool" && (
+            <TriBulletButton variant="field" color={true ? "cyan" : undefined}>
+              <TriBulletIcon iconSlot={iconCheck} />
+            </TriBulletButton>
+          )}
+          {type === "field:code" && (
+            <TriBulletButton variant="field" color={true ? "cyan" : undefined}>
+              <TriBulletIcon iconSlot={iconCode} />
+            </TriBulletButton>
+          )}
+        </div>
+        <div className="flex flex-col">
+          <span className={classNames("text-nowrap", !hasTitle && "text-zinc-500")}>
+            {title === "" ? "Empty" : title}
+          </span>
+          {description && (
+            <span className="text-nowrap text-[14px]/[20px] text-zinc-500">{description}</span>
+          )}
+        </div>
+        {tags?.map((tag) => (
+          <div key={tag.title} className="flex items-center h-(--text-line-height)">
+            <TriBulletButton
+              variant="action"
+              textSlot={tag.title}
+              hasOutline
+              color={hasTags ? "cyan" : undefined}
+            >
+              <TriBulletIcon iconSlot={iconHash} />
+            </TriBulletButton>
+          </div>
+        ))}
+      </TriNode>
+      {view === "list" && items && items.length > 0 && (
+        <TriNodeItems>
+          <TriGridView value={items} />
+        </TriNodeItems>
+      )}
+    </TriNodeList>
+  );
+};
+
+const TriColumnItems = (props: { item: TriItem }) => {
+  const items = props.item.items ?? [];
+
+  return (
+    items.length > 0 && (
+      <div
+        className={classNames(
+          "grid",
+          props.item.type === "field:code" &&
+            "font-mono [&_span]:bg-zinc-800 [&_span]:text-amber-500 [&_span]:rounded-sm [&_span]:px-1",
+        )}
+      >
+        <TriGridView value={items} />
+      </div>
+    )
   );
 };
 
@@ -452,21 +238,31 @@ export const TriTheme = (props: { children?: React.ReactNode }) => {
   );
 };
 
-export const TriRow = (props: BaseRowProps) => {
-  return (
-    <BaseRow
-      {...props}
-      className={classNames("grid grid-cols-subgrid grid-flow-col col-span-full")}
-    />
-  );
-};
-
-export const TriNodeList = (props: { children?: React.ReactNode }) => {
+export const TriNodeList = (props: { children?: React.ReactNode; isField?: boolean }) => {
   return <div className="flex flex-col">{props.children}</div>;
 };
 
-export const TriNode = (props: { children?: React.ReactNode }) => {
-  return <div className="flex items-start gap-2 py-[3px]">{props.children}</div>;
+export const TriNode = (props: {
+  children?: React.ReactNode;
+  isSelected?: boolean;
+  isField?: boolean;
+}) => {
+  return (
+    <div
+      className={classNames(
+        "relative flex items-start gap-2 py-[3px] h-full",
+        props.isField && "border-b border-(--color-zinc-750)",
+      )}
+    >
+      {props.children}
+      <div
+        className={classNames(
+          "absolute inset-0 my-0.5 -ml-0.5 mr-1.5 pointer-events-none",
+          props.isSelected && "bg-blue-500/20 outline-blue-500/50 outline rounded-sm",
+        )}
+      ></div>
+    </div>
+  );
 };
 
 export const TriNodeItems = (props: { children?: React.ReactNode }) => {
@@ -475,19 +271,6 @@ export const TriNodeItems = (props: { children?: React.ReactNode }) => {
       <div className="absolute left-0 top-0 bottom-0 w-(--bullet-size) h-full flex justify-center">
         <button className="w-[1px] h-full rounded-[4px] bg-(--color-zinc-750)"></button>
       </div>
-      {props.children}
-    </div>
-  );
-};
-
-export const TriNodeField = (props: { children?: React.ReactNode }) => {
-  return (
-    <div
-      className={classNames(
-        "grid grid-cols-[repeat(10,minmax(140px,max-content))] grid-flow-col items-start",
-        "gap-4 pt-1 pb-1.5 border-b border-(--color-zinc-750)",
-      )}
-    >
       {props.children}
     </div>
   );
