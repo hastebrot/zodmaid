@@ -90,7 +90,7 @@ export class HillChart {
     items = items
       .sort((it, other) => it.title.localeCompare(other.title))
       .sort((it, other) => it.progressX - other.progressX);
-    const dyMap = new Map();
+    const dyMap = new Map<number, number>();
     items = items.map((it) => {
       const dy = dyMap.get(it.progressX);
       it.stackY = dy !== undefined ? dy + 1 : 0;

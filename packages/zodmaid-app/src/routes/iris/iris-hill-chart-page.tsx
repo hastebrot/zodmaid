@@ -6,41 +6,46 @@ export const IrisHillChartPage = () => {
   useDocumentTitle("iris: hill chart");
   const data = {
     title: "Benjamin G.",
-    description: "15-Aug-25 at 13:50",
+    description: "18-Aug-25 at 12:45",
     items: [
       {
-        title: "#46 Render chart and edit progress",
+        title: "STU-46 Render chart and edit progress",
         color: hashStringToColor("Hill charts"),
         progressX: 50,
       },
       {
-        title: "#47 Edit chart table data",
+        title: "STU-47 Edit chart table data",
         color: hashStringToColor("Hill charts"),
         progressX: 30,
       },
       {
-        title: "#48 Update chart history",
+        title: "STU-48 Update chart history",
         color: hashStringToColor("Hill charts"),
         progressX: 30,
       },
       {
-        title: "#50 Extract tetra module",
+        title: "STU-50 Extract tetra module",
         color: hashStringToColor("Modules"),
         progressX: 40,
       },
       {
-        title: "#51 Extract tri module",
+        title: "STU-51 Extract tri module",
         color: hashStringToColor("Modules"),
         progressX: 50,
       },
       {
-        title: "#52 Follow-up chart legend and labels",
+        title: "STU-52 Follow-up chart legend and labels",
         color: hashStringToColor("Hill charts"),
         progressX: 0,
       },
       {
-        title: "#53 Navigation for iteration weekdays",
+        title: "STU-53 Navigation for iteration weekdays",
         color: hashStringToColor("Hill charts"),
+        progressX: 0,
+      },
+      {
+        title: "FIN-2 Contract first example",
+        color: hashStringToColor("t-accounts"),
         progressX: 0,
       },
     ],
