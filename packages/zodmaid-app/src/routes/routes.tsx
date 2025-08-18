@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate, type RouteObject } from "react-router";
 import { InputFieldSizingPage } from "./iris/input-field-sizing-page";
 import { IrisColorsPage } from "./iris/iris-colors-page";
+import { IrisHillChartPage } from "./iris/iris-hill-chart-page";
 import { IrisLayoutPage } from "./iris/iris-layout-page";
 import { LexTextboxFocusPage } from "./iris/lex-textbox-focus-page";
 import { LexTextboxPage } from "./iris/lex-textbox-page";
@@ -15,6 +16,7 @@ import { MockupGridPage } from "./tetra/mockup-grid-page";
 import { ReactDataGridPage } from "./tetra/react-data-grid-page";
 import { TriDynamicPage } from "./tri/tri-dynamic-page";
 import { TriStaticPage } from "./tri/tri-static-page";
+import { TriStyledPage } from "./tri/tri-styled-page";
 
 // dagre, https://github.com/antvis/layout/blob/v5/packages/layout/src/dagre.ts
 // - uses @dagrejs/dagre, https://github.com/dagrejs/dagre
@@ -46,6 +48,7 @@ export const routes: RouteObject[] = [
       { path: "textbox", Component: () => <LexTextboxPage /> },
       { path: "textbox-focus", Component: () => <LexTextboxFocusPage /> },
       { path: "input", Component: () => <InputFieldSizingPage /> },
+      { path: "hill-chart", Component: () => <IrisHillChartPage /> },
     ],
   },
   {
@@ -74,6 +77,7 @@ export const routes: RouteObject[] = [
       // wrap.
       { path: "grid-static", Component: () => <TriStaticPage /> },
       { path: "grid-dynamic", Component: () => <TriDynamicPage /> },
+      { path: "grid-styled", Component: () => <TriStyledPage /> },
     ],
   },
 ];

@@ -11,16 +11,16 @@ import {
   type BaseRowProps,
   type GridContextProps,
 } from "zodspy";
-import { TanaBullet } from "zodspy/components/tri/tana-bullet";
-import { TanaCellContext } from "zodspy/components/tri/tana-cell-context";
-import { TanaCellRenderer } from "zodspy/components/tri/tana-cell-renderer";
+import { TriBulletButton } from "zodspy/components/tri/tri-bullet-button";
+import { TriCellContext } from "zodspy/components/tri/tri-cell-context";
+import { TriCellRenderer } from "zodspy/components/tri/tri-cell-renderer";
 import {
   iconAt,
   iconCheck,
   iconCode,
   iconCursorText,
   iconHash,
-} from "zodspy/components/tri/tana-icons";
+} from "zodspy/components/tri/tri-icons";
 import { musicLibrary } from "zodspy/examples/music-library";
 import { MusicLibrarySchema } from "zodspy/examples/music-library-schema";
 import { classNames } from "../../helpers/clsx";
@@ -135,14 +135,14 @@ export const TriDynamicPage = () => {
           type: "field:node",
           items: [
             {
-              title: "Pattern",
-              type: "field:code",
-              items: [{ title: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$", type: "node", items: [] }],
-            },
-            {
               title: "",
               type: "node",
               items: [],
+            },
+            {
+              title: "Pattern",
+              type: "field:code",
+              items: [{ title: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$", type: "node", items: [] }],
             },
           ],
         },
@@ -185,14 +185,14 @@ export const TriDynamicPage = () => {
           type: "field:node",
           items: [
             {
-              title: "Pattern",
-              type: "field:code",
-              items: [{ title: "^[0-9]{2}:[0-9]{2}$", type: "node", items: [] }],
-            },
-            {
               title: "",
               type: "node",
               items: [],
+            },
+            {
+              title: "Pattern",
+              type: "field:code",
+              items: [{ title: "^[0-9]{2}:[0-9]{2}$", type: "node", items: [] }],
             },
           ],
         },
@@ -201,14 +201,14 @@ export const TriDynamicPage = () => {
           type: "field:node",
           items: [
             {
-              title: "Optional",
-              type: "field:bool",
-              items: [{ title: "True", type: "node", items: [] }],
-            },
-            {
               title: "",
               type: "node",
               items: [],
+            },
+            {
+              title: "Optional",
+              type: "field:bool",
+              items: [{ title: "True", type: "node", items: [] }],
             },
           ],
         },
@@ -318,40 +318,42 @@ export const TriGridView = (gridProps: { value: TriDataModel[] }) => {
               <TriNode>
                 <div className="flex items-center h-(--text-line-height)">
                   {type === "node" && (
-                    <TanaBullet
+                    <TriBulletButton
                       variant="point"
                       color={!hasTitle ? "gray" : hasTags ? "cyan" : undefined}
                       hasOutline={isFolded}
                     />
                   )}
                   {type === "field:node" && (
-                    <TanaBullet variant="field" color={true ? "cyan" : undefined}>
+                    <TriBulletButton variant="field" color={true ? "cyan" : undefined}>
                       <TriBulletIcon iconSlot={iconCursorText} style={{ marginLeft: "-3px" }} />
-                    </TanaBullet>
+                    </TriBulletButton>
                   )}
                   {type === "field:email" && (
-                    <TanaBullet variant="field" color={true ? "cyan" : undefined}>
+                    <TriBulletButton variant="field" color={true ? "cyan" : undefined}>
                       <TriBulletIcon iconSlot={iconAt} />
-                    </TanaBullet>
+                    </TriBulletButton>
                   )}
                   {type === "field:tag" && (
-                    <TanaBullet variant="field">
+                    <TriBulletButton variant="field" color={true ? "cyan" : undefined}>
                       <TriBulletIcon iconSlot={iconHash} />
-                    </TanaBullet>
+                    </TriBulletButton>
                   )}
                   {type === "field:bool" && (
-                    <TanaBullet variant="field">
+                    <TriBulletButton variant="field">
                       <TriBulletIcon iconSlot={iconCheck} />
-                    </TanaBullet>
+                    </TriBulletButton>
                   )}
                   {type === "field:code" && (
-                    <TanaBullet variant="field">
+                    <TriBulletButton variant="field">
                       <TriBulletIcon iconSlot={iconCode} />
-                    </TanaBullet>
+                    </TriBulletButton>
                   )}
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-nowrap">{title}</span>
+                  <span className={classNames("text-nowrap", !hasTitle && "text-zinc-500")}>
+                    {title === "" ? "Empty" : title}
+                  </span>
                   {description && (
                     <span className="text-nowrap text-[14px]/[20px] text-zinc-500">
                       {description}
@@ -360,18 +362,18 @@ export const TriGridView = (gridProps: { value: TriDataModel[] }) => {
                 </div>
                 {tags?.map((tag) => (
                   <div key={tag} className="flex items-center h-(--text-line-height)">
-                    <TanaBullet
+                    <TriBulletButton
                       variant="action"
                       textSlot={tag}
                       hasOutline
                       color={hasTags ? "cyan" : undefined}
                     >
                       <TriBulletIcon iconSlot={iconHash} />
-                    </TanaBullet>
+                    </TriBulletButton>
                   </div>
                 ))}
               </TriNode>
-              {type === "node" && items && (
+              {type === "node" && items.length > 0 && (
                 <TriNodeItems>
                   <TriGridView value={items} />
                 </TriNodeItems>
@@ -388,9 +390,14 @@ export const TriGridView = (gridProps: { value: TriDataModel[] }) => {
           const type = row.type;
           const items = row.items;
           return (
-            <div>
+            <div className="w-fit">
               {type !== "node" && items && (
-                <div className={classNames(type === "field:code" && "font-mono")}>
+                <div
+                  className={classNames(
+                    type === "field:code" &&
+                      "font-mono [&_span]:bg-zinc-800 [&_span]:text-amber-500 [&_span]:rounded-sm [&_span]:px-1",
+                  )}
+                >
                   <TriGridView value={items} />
                 </div>
               )}
@@ -408,22 +415,22 @@ export const TriGridView = (gridProps: { value: TriDataModel[] }) => {
       },
       Cell(props) {
         return (
-          <TanaCellContext value={{ cellProps: props as BaseCellProps }}>
+          <TriCellContext value={{ cellProps: props as BaseCellProps }}>
             <BaseCell
               {...props}
               className={classNames("relative grid cursor-auto text-nowrap")}
               style={props.style}
             >
-              <TanaCellRenderer />
+              <TriCellRenderer />
             </BaseCell>
-          </TanaCellContext>
+          </TriCellContext>
         );
       },
     },
   });
 
   return (
-    <div className="w-fit">
+    <div className="w-min">
       <BaseGridView context={context as GridContextProps} />
     </div>
   );
@@ -462,11 +469,16 @@ export const TriRow = (props: BaseRowProps) => {
 };
 
 export const TriNodeList = (props: { children?: React.ReactNode }) => {
-  return <div className="flex flex-col">{props.children}</div>;
+  return <div className={classNames("flex flex-col")}>{props.children}</div>;
 };
 
 export const TriNode = (props: { children?: React.ReactNode }) => {
-  return <div className="flex items-start gap-2 py-[3px]">{props.children}</div>;
+  return (
+    <div className="relative flex items-start gap-2 py-[3px]">
+      {props.children}
+      <div className="absolute inset-0 m-0.5 -mx-0.5 bg-blue-500/20 outline outline-blue-500/50 rounded-md"></div>
+    </div>
+  );
 };
 
 export const TriNodeItems = (props: { children?: React.ReactNode }) => {
@@ -484,7 +496,7 @@ export const TriNodeField = (props: { children?: React.ReactNode }) => {
   return (
     <div
       className={classNames(
-        "grid grid-cols-[repeat(10,minmax(140px,max-content))] grid-flow-col items-start",
+        "grid grid-cols-[repeat(10,_minmax(140px,_max-content))] grid-flow-col items-start",
         "gap-4 pt-1 pb-1.5 border-b border-(--color-zinc-750)",
       )}
     >

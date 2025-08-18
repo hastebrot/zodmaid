@@ -1,7 +1,7 @@
 import { type CSSProperties } from "react";
 import { classNames } from "../../helpers/clsx";
 
-export type TanaBulletProps = {
+export type TriBulletButtonProps = {
   children?: React.ReactNode;
   variant: "point" | "button" | "action" | "field";
   color?: "gray" | "orange" | "magenta" | "blue" | "green" | "cyan";
@@ -10,7 +10,7 @@ export type TanaBulletProps = {
   hasOutlineBorder?: boolean;
 };
 
-export const TanaBullet = (props: TanaBulletProps) => {
+export const TriBulletButton = (props: TriBulletButtonProps) => {
   let style = {} as CSSProperties;
   if (props.color === undefined) {
     style = {
