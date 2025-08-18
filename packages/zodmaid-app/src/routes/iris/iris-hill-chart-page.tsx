@@ -31,7 +31,7 @@ export const IrisHillChartPage = () => {
       {
         title: "STU-51 Extract tri module",
         color: hashStringToColor("Modules"),
-        progressX: 50,
+        progressX: 65,
       },
       {
         title: "STU-52 Follow-up chart legend and labels",
