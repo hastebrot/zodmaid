@@ -1,6 +1,6 @@
 import { action, observable } from "mobx";
 import { observer } from "mobx-react-lite";
-import { Fragment, useRef, useState } from "react";
+import { createContext, Fragment, useContext, useRef, useState } from "react";
 import { IrisInput } from "zodspy/components/iris-input";
 import { classNames } from "../../helpers/clsx";
 import { throwError } from "../../helpers/error";
@@ -90,7 +90,23 @@ export const LexTextboxFocusPage = () => {
   );
 };
 
-type SelectionRange = {
+export type GridViewContextProps = {};
+
+export const GridViewContext = createContext<GridViewContextProps | null>(null);
+
+export const useGridViewContext = () => {
+  const value = useContext(GridViewContext);
+  return value ?? throwError("useGridViewContext: value is empty");
+};
+
+export type GridPosition = {
+  grid: string;
+  row: number;
+  col: number;
+  ref: HTMLElement;
+};
+
+export type SelectionRange = {
   start: number | null;
   end: number | null;
   direction: "forward" | "backward" | "none" | null;
@@ -161,5 +177,3 @@ const Items = observer((props: ItemsProps) => {
 // - we use the grid context to store the last cell coordinates
 // - on arrow left or right, the last cell coordinate x is updated
 // - on arrow up or down, the last cell coordinate y is updated
-
-// type Position = { grid: string; row: number; col: number; }
