@@ -49,6 +49,7 @@ export class HillChart {
     this.height = height;
     const svg = d3
       .create("svg")
+      .attr("xmlns", "http://www.w3.org/2000/svg")
       .attr("viewBox", [0, 0, width, height].join(" "))
       .attr("width", width)
       .attr("height", height);

@@ -44,8 +44,18 @@ export const IrisHillChartPage = () => {
         progressX: 0,
       },
       {
-        title: "FIN-2 Contract first example",
-        color: hashStringToColor("t-accounts"),
+        title: "FIN-2 Kaufzahlung bookings",
+        color: hashStringToColor("first-contract", "yellow"),
+        progressX: 0,
+      },
+      {
+        title: "FIN-3 Mietzahlung bookings",
+        color: hashStringToColor("first-contract", "yellow"),
+        progressX: 0,
+      },
+      {
+        title: "FIN-4 Rückkaufzahlung bookings",
+        color: hashStringToColor("first-contract", "yellow"),
         progressX: 0,
       },
     ],
@@ -132,12 +142,12 @@ const sdbmHash = (input: string): number => {
   return hash >>> 0;
 };
 
-export const hashStringToColor = (input: string) => {
+export const hashStringToColor = (input: string, defaultColor?: string) => {
   // prettier-ignore
   const rainbowColors = [
     "red", "orange", "yellow", "green", "blue", "indigo", "violet",
     "cyan", "magenta",
   ];
   const hash = Math.abs(sdbmHash(input));
-  return rainbowColors[hash % rainbowColors.length];
+  return defaultColor ?? rainbowColors[hash % rainbowColors.length];
 };
